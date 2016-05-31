@@ -1,7 +1,7 @@
 # PTN (Packet Transport Network)
 
 ## Just beginning of test about
-### - github (github.org/t-sdn)
+### - github. See also windmill [GitHub TSDN] (https://github.com/t-sdn)
 ### - SDN (REST + SDN). Some features are not RESTful - a la PCEP.
 
 ```
@@ -15,4 +15,6 @@ git remote add origin https://github.com/jdleegui/ptn.git
 git push -u origin master
 git add README.md && git commit -m "Update README.md" && git push -u origin master
 ```
-
+- [x] Start of ptn
+- [x] Create a SDN repository 
+- [ ] Add simple RPC
