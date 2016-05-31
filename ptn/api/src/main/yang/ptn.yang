@@ -6,4 +6,17 @@ module ptn {
     revision "2015-01-05" {
         description "Initial revision of ptn model";
     }
+
+    rpc ems-version {
+        input {
+            leaf query {
+                type string;
+            }
+        }
+        output {
+            leaf version {
+                type string;
+            }
+        }
+    }
 }
