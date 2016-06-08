@@ -1,0 +1,236 @@
+-.ETRI GUIDE NOTE
+ .https://docs.google.com/spreadsheets/d/1_jxg9Ma23P2GiMZd75lsU-aHYp8qoPqUXMC63eCGXlU/edit?pref=2&pli=1#gid=264151967
+ .sudo apt-get install openssh-server
+- lsb_release -r
+- sudo apt-get install openjdk-8-jdk
+- sudo apt-get install eclipse-platform
+- sudp apt-get install maven 
+- sudo apt-get install git-core
+- git clone http://git.opendaylight.org/gerrit/p/controller.git
+  git clone ssh://jdleegui@git.opendaylight.org:29418/controller.git 
+  scp -p -P 29418 jdleegui@git.opendaylight.org:hooks/commit-msg .git/hooks/
+  chmod 755 .git/hooks/commit-msg
+  cd controllers
+  mvn clean install
+  mvn clean install -DskipTests
+- mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller -DarchetypeArtifactId=opendaylight-startup-archetype -DarchetypeRepository=http://nexus.opendaylight.org/content/repositories/opendaylight.release/ -DarchetypeCatalog=http://nexus.opendaylight.org/content/repositories/opendaylight.release/archetype-catalog.xml -DarchetypeVersion=1.0.0-Lithium
+- Help > Insall > Add > m2e (http://download.eclipse.org/technology/m2e/releases) / Reload
+  download.eclipse.org/technology/m2e/releases/1.3
+- Name:       BCSW - Eclipse Plugins Location:   http://bcsw.net/plugins
+
+- mvn clean
+
+task panetask pane
+- bash < <(wget -qO- https://raw.githubusercontent.com/t-sdn/setup/master/install.sh)
+- . .bashrc t clone https://github.com/t-sdn/example
+- eclipse -data ~/workspace -vmargs -Xmx512m -XX:MaxPermSize=1024m 
+  eclipse -consoleLog -debug -vm /usr/share/jdk/bin/java                     
+- dpkg --get-selections | grep -v deinstall
+- dpkg -l|grep jdk
+- sudo apt-get install openjdk-8-jre-headless
+- sudo apt-get install openjdk-8-jre
+- sudo apt-get install openjdk-8-jdk
+- ls -al /usr/lib/jvm
+- sudo apt-get install eclipse-jdt
+- export JAVA_HOME='/usr/lib/jvm/java-8-openjdk-amd64/bin/'
+  export JAVA_HOME='/usr/lib/jvm/java-8-openjdk-amd64'
+- /usr/share/eclipse/eclipse -consoleLog -debug -vm /usr/share/jdk/bin/java
+- sudo apt-cache search eclipse
+  sudo apt-cache search jdk
+  sudo apt-cache search eclipse | more
+  sudo apt-cache search jdk|more
+  sudo apt-cache search maven
+  sudo apt-get install openjdk-8-jdk
+  history
+
+- sudo apt-get autoremove default-jre
+  sudo apt-get autoremove default-jdk
+  sudo apt-get autoremove openjdk-8-jdk
+  sudo apt-get autoremove openjdk-8-jre
+  sudo apt-get autoremove openjdk-8-jre-headless
+  sudo apt-get autoremove openjdk-9-jdk
+  sudo apt-get autoremove openjdk-9-jre
+  sudo apt-get autoremove openjdk-9-jre-headless
+  sudo apt-get autoremove openjdk-8-jdk
+- sudo apt-get autoremove eclipse-jdt
+  sudo apt-get autoremove maven
+  sudo apt-get autoremove eclipse 
+
+
+- https://github.com/t-sdn/setup/blob/master/install.sh
+- bash < <(wget -qO- https://raw.githubusercontent.com/t-sdn/setup/master/install.sh)
+- bash < <(wget -qO- tinyurl.com/t-sdn-install):w
+
+- https://github.com/vorburger/opendaylight-eclipse-setup
+- https://www.eclipse.org/downloads/
+  eclipse-installer/eclipse-inst&
+  eclipse installer > advanced mode > Eclipse IDE for Java Developers, Product Version : (Latest(Neon)), /home/jdleegui/.p2/pool/ > Next
+  OpenDayLight.org / lispflowmapping > next > finish (https://wiki.opendaylight.org/view/GettingStarted:_Eclipse)
+  Root install foler : /home/jdleegui/sdn/
+  Username on *.opendaylight.org : jdleegui
+- jdleegui@sdn:~/sdn/lispflowmapping-master/eclipse/eclipse 
+  skip MaxPermSize
+  Import Project workspace
+  Windows > Preference > General > Network > SSH2 
+  export GIT_SSH=/usr/bin/ssh
+- sudo apt-get install git gitk git-review
+  https://identity.opendaylight.org/carbon/admin/index.jsp?loginStatus=true
+  https://git.opendaylight.org/gerrit.
+  chmod 700 .ssh
+  https://git.opendaylight.org/gerrit/#/settings/
+- https://wiki.opendaylight.org/view/GettingStarted:_Eclipse_Setup
+  ssh-keygen -t rsa
+  cat .ssh/id_rsa.pub 
+  ssh -p 29418 jdleegui@git.opendaylight.org
+  ssh-keyscan -p 29418 git.opendaylight.org
+  ssh -p 29418 -vT jdleegui@git.opendaylight.org
+  eval "$(ssh-agent -s)"
+  ssh-add
+  ssh -p 29418 -vT jdleegui@git.opendaylight.org 
+  ssh-copy-id -p 29418 jdleegui@git.opendaylight.org
+  https://help.github.com/articles/error-agent-admitted-failure-to-sign/
+  https://help.ubuntu.com/community/SSH/OpenSSH/Keyso
+  https://wiki.opendaylight.org/view/Submit_a_Patch
+- https://wiki.opendaylight.org/view/Installing_Eclipse_on_Ubuntu
+  echo 'ECLIPSE=/home/jdleegui/odl/ctrl/eclipse/eclipse' > eclipse
+  echo 'exec $ECLIPSE "$@"' >> eclipse
+  chmod +x eclipse
+  sudo mv eclipse /usr/bin/
+ 
+  echo 'ECLIPSE=/home/jdleegui/tsdn/bgpcep-master/eclipse/eclipse' > eclip
+  echo 'exec $ECLIPSE "$@"' >> eclip
+  chmod +x eclip
+  sudo mv eclipse /usr/bin/
+ 
+
+
+https://confluence.atlassian.com/bitbucketserverkb/git-commands-return-fatal-authentication-failed-779171809.html
+/home/jdleegui/tsdn/bgpcep-master/eclipse/
+
+
+https://confluence.atlassian.com/bitbucketserverkb/git-commands-return-fatal-authentication-failed-779171809.html
+- cp -n ~/.m2/settings.xml{,.orig} ; \wget -q -O - https://raw.githubusercontent.com/opendaylight/odlparent/stable/beryllium/settings.xml > ~/.m2/settings.xml
+- mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller \
+  -DarchetypeArtifactId=opendaylight-startup-archetype \
+  -DarchetypeRepository=https://nexus.opendaylight.org/content/repositories/public/ \
+  -DarchetypeCatalog=https://nexus.opendaylight.org/content/repositories/public/archetype-catalog.xml
+
+Define value for property 'groupId': : org.opendaylight.example
+Define value for property 'artifactId': : example
+Define value for property 'version': 1.0-SNAPSHOT: : 1.0.0-SNAPSHOT
+Define value for property 'package': org.opendaylight.example: :
+Define value for property 'classPrefix': ${artifactId.substring(0,1).toUpperCase()}${artifactId.substring(1)}
+Define value for property 'copyright': : Copyright (c) 2015 Yoyodyne, Inc.
+
+cd test/example/mvn clean install
+jdleegui@sdn:~/test/example/karaf/target/assembly/bin$ ./karaf
+pendaylight-user@root>log:display|grep Example
+opendaylight-user@root>shutdown -f
+
+- mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller \
+  -DarchetypeArtifactId=opendaylight-startup-archetype \
+  -DarchetypeRepository=http://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/ \
+  -DarchetypeCatalog=http://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/archetype-catalog.xml
+
+Define value for property 'groupId': : org.opendaylight.hello
+Define value for property 'artifactId': : hello
+Define value for property 'version': 1.0-SNAPSHOT: : 1.0.0-SNAPSHOT
+Define value for property 'package': org.opendaylight.hello: :
+Define value for property 'classPrefix': ${artifactId.substring(0,1).toUpperCase()}${artifactId.substring(1)}
+Define value for property 'copyright': : Copyright(c) Yoyodyne, Inc.
+cat impl/src/main/java/org/opendaylight/hello/impl/HelloProvider.java 
+
+admin:admin@http://localhost:8181/apidoc/explorer/index.html
+
+- ~/.profile
+
+export ODL_USERNAME=jdleegui
+export MAVEN_OPTS="-Xmx1024m"
+export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
+export PATH=${JAVA_HOME}/bin:${PATH}
+export M2_HOME=${WHERE_YOU_UNZIPPED_MAVEN}/apache-maven-${MVN_VERSION}
+export PATH=${M2_HOME}/bin:${PATH}
+
+export KARAF_DEBUG=true
+export JAVA_DEBUG_OPTS="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005"
+
+cp -n ~/.m2/settings.xml{,.160524_orig} ; wget -q -O - https://raw.githubusercontent.com/opendaylight/odlparent/master/settings.xml > ~/.m2/settings.xml
+apt-get install pkg-config gcc make ant g++ git libboost-dev libcurl4-openssl-dev libjson0-dev libssl-dev unixodbc-dev xmlstarlet
+
+-. https://wiki.opendaylight.org/view/OpenDaylight_Controller:Pulling,_Hacking,_and_Pushing_the_Code_from_the_CLI
+  cd ~/sdn/
+  jdleegui@sdn:~/sdn$ git clone ssh://jdleegui@git.opendaylight.org:29418/controller.git
+  cd controller
+  jdleegui@sdn:~/sdn/controller$ git checkout stable/beryllium
+  jdleegui@sdn:~/sdn/controller$ mvn clean install -DskipTests
+export MAVEN_OPTS="-Xmx1024m -XX:MaxPermSize=256m"
+./karaf/opendaylight-karaf/target/assembly/bin/karaf 
+export JAVA_HOME='/usr/lib/jvm/java-8-openjdk-amd64/bin'
+https://wiki.opendaylight.org/view/OpenDaylight_Controller:Pulling,_Hacking,_and_Pushing_the_Code_from_the_CLI
+https://thecareertools.com/2013/09/28/opendaylight-sdn-controller-for-newbies/
+
+vim ~/.m2/repository/org/apache/maven/plugins/maven-archetype-plugin/2.4/maven-archetype-plugin-2.4.pom
+    <dependency> <groupid>commons-lang</groupid> <artifactid>commons-lang</artifactid> <version>2.3</version> </dependency>
+- https://wiki.opendaylight.org/view/OpenDaylight_Controller:MD-SAL:Toaster_Step-By-Step
+mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller -DarchetypeArtifactId=opendaylight-startup-archetype \
+-DarchetypeRepository=http://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/ \
+-DarchetypeCatalog=http://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/archetype-catalog.xml
+
+- http://www.microsofttranslator.com/bv.aspx?from=zh-CHS&to=en&a=http%3A%2F%2Fblog.csdn.net%2Faaa_aa000%2Farticle%2Fdetails%2F45840977
+  Part 1-Defining an Operational Toaster: Toaster data model defined as the example ( north-facing interface ), and provides a read-only implementation retrieve data toasters.
+  Part 2 Enabling Remote Procedure Calls (RPC)-Lets make some toast!: will be added and implemented to allow users and operating restconf remote procedure call interface, as well as see the operational data-state changes.
+  Part 3- Add some configuration data-My toast is too light!: the third section explains the user can restconf modify the configuration data, as well as our toaster can change listener.
+  Part 4 Add State data to the ToasterService implementation (JMX Access)-Count my toast!: This example will provide additional statistical properties do not appear in the North to the interface , but can be used by JMX Implementation.
+  Part 5 Add a consumer of the ToasterService-Let's make breakfast!: consumers introduced a toaster KitchenService model. It provides a demonstration of other business intelligence controllers can access data model and call RPC calls to provide additional business logic controller.
+  Part 6 Notifications-Oh no, the Toaster is out of bread!: expand our sample provided by adding active notifications from the oven and consumers through the MD-SAL route.
+
+  Part1 :
+    jdleegui@sdn:~$ ls -al ~/sdn/controller/opendaylight/md-sal/samples/
+    clustering-test-app
+    pom.xml
+    target
+    toaster
+    toaster-config
+    toaster-consumer
+    toaster-it
+    toaster-provider
+
+-. https://wiki.opendaylight.org/view/OpenDaylight_Controller:MD-SAL:Toaster_Step-By-Step
+   mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller -DarchetypeArtifactId=opendaylight-startup-archetype \
+   -DarchetypeRepository=http://nexus.opendaylight.org/content/repositories/opendaylight.release/ \
+   -DarchetypeCatalog=http://nexus.opendaylight.org/content/repositories/opendaylight.release/archetype-catalog.xml 
+
+   Define value for property 'groupId': : org.opendaylight.toaster
+   Define value for property 'artifactId': : toaster
+   Define value for property 'version':  1.0-SNAPSHOT: : 0.1.0-SNAPSHOT
+   Define value for property 'package':  org.opendaylight.toaster: : 
+   Define value for property 'classPrefix':  ${artifactId.substring(0,1).toUpperCase()}${artifactId.substring(1)}
+   Define value for property 'copyright': : Copyright(c) Yoyodyne, Inc.
+
+- https://www.eclipse.org/downloads/
+  tar xvf eclipse-inst-linux64.tar.gz 
+  jdleegui@sdn:~/Downloads/eclipse-installer$ ./eclipse-inst 
+  ./odl/java-latest-released/eclipse/eclipse
+
+  ./hello/hello/mvn eclipse:eclipse&
+  ./odl/java-latest-released/eclipse/eclipse &
+
+- NEW download on 160607. (still java 1.8)
+  rm -f -R ~/odl
+  rm -R -f .p2/pool
+
+  mvn -Declipse.workspace=/home/jdleegui/workspace eclipse:add-maven-repo 
+  https://www.opendaylight.org/software/downloads/beryllium-sr2
+  https://nexus.opendaylight.org/content/groups/public/org/opendaylight/integration/distribution-karaf/0.4.2-Beryllium-SR2/distribution-karaf-0.4.2-Beryllium-SR2.zip
+
+  sudo ~/Downloads$ cd eclipse-installer/eclipse-inst -- oomph, Java SE
+  aaa bgpcep controller coretutorials dlux docs elcipse-setup mdsal netconf odlparent ovsdb snbi yangide yang-push yangtools
+  mdsal netconf odlparent ovsdb yangide yang-push yangtools
+  odlparent ovsdb of-config ocpplugin mdsal netconf
+
+  Uncheck -XX:PaxPermSize512m (*** Java 8i does not support this option anymore ***)
+
+- https://www.eclipse.org/downloads/download.php?file=/oomph/epp/mars/R2/eclipse-inst-linux64.tar.gz&mirror_id=1109 
+  tar xvf eclipse-inst-linux64.tar.gz 
+ ./eclipse-installer/eclipse-inst 
+
