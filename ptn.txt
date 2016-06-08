@@ -1,11 +1,12 @@
+-.MUST NOT HAVE
+ .sudo apt-get install eclipse-platform
 -.ETRI GUIDE NOTE
  .https://docs.google.com/spreadsheets/d/1_jxg9Ma23P2GiMZd75lsU-aHYp8qoPqUXMC63eCGXlU/edit?pref=2&pli=1#gid=264151967
  .sudo apt-get install openssh-server
-- lsb_release -r
-- sudo apt-get install openjdk-8-jdk
-- sudo apt-get install eclipse-platform
-- sudp apt-get install maven 
-- sudo apt-get install git-core
+ .lsb_release -r
+ .sudo apt-get install openjdk-8-jdk
+ .sudp apt-get install maven 
+ .sudo apt-get install git-core
 - git clone http://git.opendaylight.org/gerrit/p/controller.git
   git clone ssh://jdleegui@git.opendaylight.org:29418/controller.git 
   scp -p -P 29418 jdleegui@git.opendaylight.org:hooks/commit-msg .git/hooks/
@@ -234,3 +235,4 @@ mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller -Darchetyp
   tar xvf eclipse-inst-linux64.tar.gz 
  ./eclipse-installer/eclipse-inst 
 
+https://git.opendaylight.org/gerrit/Documentation/dev-readme.html
