@@ -7,6 +7,29 @@
  .sudo apt-get install openjdk-8-jdk
  .sudp apt-get install maven 
  .sudo apt-get install git-core
+ .rm -R -f .git/hook
+ .rm -R -f .p2/pool
+-.ODL developer guide
+ .register account https://jdleegui:jdleegui@git.opendaylight.org/gerrit
+ .mkdir ~/.ssh
+ .chmod 700 ~/.ssh
+ .ssh-keygen -t rsa 
+ >jdleegui@sdn:~$ ssh -p 29418 <sshusername>@git.opendaylight.org
+ >bash: sshusername: No such file or directory
+ >jdleegui@sdn:~$ ssh -p 29418 jdleegui@git.opendaylight.org
+ >
+ >  ****    Welcome to Gerrit Code Review    ****
+ >
+ >  Hi jdleegui, you have successfully connected over SSH.
+ >
+ >  Unfortunately, interactive shells are disabled.
+ >  To clone a hosted Git repository, use:
+ >
+ >  git clone ssh://jdleegui@git.opendaylight.org:29418/REPOSITORY_NAME.git
+ >
+ >Connection to git.opendaylight.org closed.
+ >jdleegui@sdn:~$ 
+
 - git clone http://git.opendaylight.org/gerrit/p/controller.git
   git clone ssh://jdleegui@git.opendaylight.org:29418/controller.git 
   scp -p -P 29418 jdleegui@git.opendaylight.org:hooks/commit-msg .git/hooks/
