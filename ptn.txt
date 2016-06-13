@@ -7,10 +7,25 @@
  .sudo apt-get install openjdk-8-jdk
  .sudp apt-get install maven 
  .sudo apt-get install git-core
- .rm -R -f .git/hook
- .rm -R -f .p2/pool
+
+ .rm Downloads/eclipse-inst-linux64.tar.gz 
+ .rm -R -f ~/Downloads/eclipse-installer/
+ .rm -R -f ~/.git/hook
+ .rm -R -f ~/.p2/pool
+ .rm -R -f ~/.p2/
+ .rm -R -f ~/odl
+ .rm -R -f ~/.eclipse
+ .rm -R -f ~/.git
+ .rm -R -f ~/oomph
+ .rm -R -f ~/workspace
+ .rm -R -f ~/workspace1
+ .rm eclipse-jee-mars-2-linux-gtk-x86_64.tar.gz 
+
 -.ODL developer guide
  .register account https://jdleegui:jdleegui@git.opendaylight.org/gerrit
+ .https://wiki.opendaylight.org/view/OpenDaylight_Controller:Gerrit_Setup
+ .http://projects.eclipse.org/projects/tools.oomph(1.4.2)
+ .https://wiki.eclipse.org/Eclipse_Installer(comming soon 2016-06-22)
  .mkdir ~/.ssh
  .chmod 700 ~/.ssh
  .ssh-keygen -t rsa 
@@ -29,6 +44,35 @@
  >
  >Connection to git.opendaylight.org closed.
  >jdleegui@sdn:~$ 
+-.https://wiki.opendaylight.org/view/GettingStarted:_Eclipse
+ .jdleegui@sdn:~/Downloads/eclipse-installer$ vim eclipse-inst.ini 
+ -Xmx1024M > -Xmx2048 > 
+ - --launcher.XXMaxPermSize
+ - 256M > 512M 
+
+ -.after setup
+ .jdleegui@sdn:~/oomph/mars/eclipse$ vim eclipse.ini
+ .-Xmx1024m >> --Xmx2048m >> 
+ .-XX:MaxPermSize=256m >> -XX:MaxPermSize=512m
+
+-.jdleegui@sdn:~$ ./Downloads/eclipse-installer/eclipse-inst 
+ .jdleegui@sdn:~/Downloads$ sudo ./eclipse-installer/eclipse-inst 
+ .update oomph
+ .rm -f -R ~/Downloads/eclipse-installer/
+ .rm -R -f ~/.eclipse
+ .rm -R -f ~/.git
+ .rm -f -R ~/.p2/pool
+ .rm -R -f ~/.p2
+ .rm -R -f ~/oomph/
+ .visit http://www.eclipse.org/downloads/
+ .jdleegui@sdn:~/Downloads$ mv eclipse-inst-linux64.tar.gz ~/Documents/SDN/TMP/ 
+ .jdleegui@sdn:~/Downloads$ tar xvf eclipse-inst-linux64.tar.gz 
+ .jdleegui@sdn:~/Downloads$ sudo ./eclipse-installer/eclipse-inst 
+ .update installer > Advanced Mode > Eclipse.org:Eclipse IDE for Java Developers
+ .OpenDaylight.org:aaa,controller,odlparent,ovsdb
+ ./home/jdleegui/oomph, mars
+ .odlparent-master, Neon, jdleeegui
+ .Uncheck Eclipse ini-XXXMaxPermSize512m
 
 - git clone http://git.opendaylight.org/gerrit/p/controller.git
   git clone ssh://jdleegui@git.opendaylight.org:29418/controller.git 
