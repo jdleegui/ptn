@@ -1,0 +1,31 @@
+module tsdn-connection {
+    yang-version 1;
+    namespace "urn:etri:params:xml:ns:yang:tsdn-connection";
+    prefix "tconnection";
+    
+   import ietf-inet-types {prefix inet; revision-date "2013-07-15";}
+   import yang-ext {prefix ext; revision-date "2013-07-09";} 
+
+    revision "2015-01-05" {
+        description "Initial revision of tsdn connection";
+    }
+
+    typedef connection-type {
+        type enumeration {
+            enum forward;
+            enum transform;
+            enum multiplex;
+            enum de-multiplex;
+            enum cross-connect;
+            enum unknown;
+        }
+    }
+
+    typedef connection-id {
+        //type inet:uri; 
+        type string;  
+        description "Identifier for a particular connection";
+    }
+
+    
+}

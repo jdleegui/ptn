@@ -1,0 +1,89 @@
+module tsdn-tunnel-xc {
+    yang-version 1;
+    namespace "urn:etri:params:xml:ns:yang:tsdn-tunnel-xc";
+    prefix "ttunnel";
+    
+    import ietf-inet-types {prefix inet; revision-date "2013-07-15";}
+    import tsdn-general-types {prefix "ttypes"; revision-date "2015-01-05"; }
+ 
+    revision "2015-01-05" {
+        description "Initial revision of tunnel xc model";
+    }
+
+    typedef tunnel-xc-id {
+        //type inet:uri; 
+        type string;  
+        description "Identifier for a particular xc tunnel";
+    }
+    typedef tunnel-xc-ref {
+        type instance-identifier;
+        description "A reference that points to an nodes/node/{node_id}/tunnel-xc in the data tree.";
+    }
+
+    typedef tunnel-xc-operational-status-type {
+        type enumeration {
+            enum normal;
+            enum unknown;
+            enum broken;
+            enum creating;
+            enum updating;
+            enum deleting;
+            enum interrupted;             
+        }        
+    }
+    typedef tunnel-xc-configuration-action-type {
+        type enumeration {
+            enum unknown;
+            enum create;
+            enum update;
+            enum delete;
+            enum interrupt;   
+        }        
+    }
+
+     typedef cross-connect-type {
+        type enumeration {
+            enum packet;
+            enum otn;  
+            enum sdh;
+            enum wdm;
+            enum all; 
+            enum unknown;        
+        }
+    }
+   
+    grouping common-tunnel-xc {
+    	leaf local-id {
+            type string;
+            description "The unique identifier in a particular local domain.";
+        }        
+        leaf name {
+            type string;
+            description "The name of the instance.";
+        }
+        leaf cross-connect-type {
+            type cross-connect-type;
+	  		description "The type of the cross-connect.";
+        }
+        leaf tunnel-xc-operational-status {
+            type tunnel-xc-operational-status-type;
+            description "The operational status of the tunnel cross-connect.";
+        }
+        leaf tunnel-xc-configuration-action {
+            type tunnel-xc-configuration-action-type;
+            description "The last configuration action of the tunnel cross-connect.";
+        }
+        leaf tunnel-xc-configuration-result {
+            type ttypes:configuration-result-type;
+            description "The configuration result of the action.";
+        }
+        leaf deployment-enabler {
+            type ttypes:enabler-type;
+            description "The enabler of the deployment.";
+        } 
+		leaf deployment-status {
+            type ttypes:deployment-status-type;
+            description "The status of the deployment.";
+        }  
+    }
+}

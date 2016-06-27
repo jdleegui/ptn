@@ -1,0 +1,667 @@
+module mpls-tp-provision {
+    yang-version 1;
+    namespace "urn:etri:params:xml:ns:yang:mpls-tp-provision";
+    prefix "mtprov";
+    
+   import ietf-inet-types {prefix inet; revision-date "2013-07-15";}
+   import yang-ext {prefix ext; revision-date "2013-07-09";}
+   import tsdn-port {prefix "tport"; revision-date "2015-01-05"; }
+   import tsdn-node {prefix "tnode"; revision-date "2015-01-05"; }
+   import tsdn-general-types {prefix "ttypes"; revision-date "2015-01-05"; }
+   import tsdn-access-if {prefix "taccessif"; revision-date "2015-01-05"; }
+   import tsdn-tunnel {prefix "ttunnel"; revision-date "2015-01-05"; }
+   import tsdn-tunnel-xc {prefix "ttunnelxc"; revision-date "2015-01-05"; }
+   import mpls-tp-general-types {prefix mttypes; revision-date "2015-01-05";}
+   import tsdn-connection {prefix tcon; revision-date "2015-01-05";} 
+   
+      
+    revision "2015-01-05" {
+        description "Initial revision of otn provision";
+    }
+
+    grouping mpls-tp-path-provision {
+
+    	leaf higher-tunnel-ref {
+        	type ttunnel:tunnel-ref;
+    	}
+    	leaf higher-tunnel-name {
+        	type string;
+    	}
+    	leaf mpls-if-ref {
+        	type mttypes:mpls-if-ref;
+    	}
+    	leaf mpls-if-name {
+        	type string;
+    	}
+	}
+	grouping mpls-tp-oam-provision {
+
+        leaf oam-enabler {
+            type ttypes:enabler-type;
+            description "The enabler of the oam.";
+        }        
+    	leaf oam-local-id {
+        	type string;
+        	description "The global unique oam identifier for tunnel oam.";
+		}
+		leaf oam-remote-id {
+        	type string;
+		}
+		leaf oam-group-name {
+        	type string;
+       	 	description "The name of the oam group instance, global unique.";
+		}
+		leaf oam-message-interval-time {
+        	type decimal64 {
+        		fraction-digits 1;
+        		range "3.3..1000";
+        	}
+		}
+		leaf oam-type {
+        	type ttypes:tunnel-oam-type;
+  	  	 	description "The type of the oam.";
+		}
+	}
+	grouping pw-oam-provision {
+
+        leaf oam-enabler {
+            type ttypes:enabler-type;
+            description "The enabler of the oam.";
+        }        
+    	leaf oam-local-id {
+        	type string;
+        	description "The global unique oam identifier for pw oam.";
+		}
+		leaf oam-remote-id {
+        	type string;
+		}
+		leaf oam-group-name {
+        	type string;
+       	 	description "The name of the oam group instance, global unique.";
+		}
+		leaf oam-message-interval-time {
+        	type decimal64 {
+        		fraction-digits 1;
+        		range "0..1000000";
+        	}
+		}
+		leaf oam-type {
+        	type ttypes:pw-oam-type;
+  	  	 	description "The type of the pw oam.";
+		}
+	}
+
+    grouping mpls-tp-vpn-provision {
+        leaf vpn-id {
+            type uint16;
+            description "The unique identifier for the vpn.";
+        } 
+    }
+    grouping mpls-tp-pw-provision {
+
+        leaf pw-id {
+            type mttypes:pw-id;
+            description "The unique identifier for the pw.";
+        }        
+/*      leaf request-id {
+            type string;
+            description "The global unique identifier for the request.";
+        }*/
+        leaf name {
+            type string;
+            description "The name of the instance.";
+        }
+        leaf vpn-ref {
+      		type mttypes:vpn-ref;
+	   	}
+		uses mttypes:mpls-tp-flow-qos;
+    	
+    	leaf deployment-enabler {
+            type ttypes:enabler-type;
+            description "The enabler of the deployment.";
+        }  
+  	
+        leaf service-type {
+            type ttypes:service-type;
+	  	    description "The type of the service.";
+        }
+        leaf end-node-ref {
+            type tnode:node-ref;
+        }        
+        leaf-list access-if-ref {
+            type taccessif:access-if-ref;
+        }
+        leaf-list access-if-name {
+            type string;
+        }
+
+        container working-path {
+			leaf tunnel-ref {
+	         	type ttunnel:tunnel-ref;
+	        }
+	        leaf tunnel-name {
+	         	type string;
+	        }
+			uses mttypes:label-set;	
+			uses pw-oam-provision;	 
+		}
+		container protection-path {
+			leaf tunnel-ref {
+	         	type ttunnel:tunnel-ref;
+	        }
+	        leaf tunnel-name {
+	         	type string;
+	        }			
+			uses mttypes:label-set;	
+			uses pw-oam-provision;	 	 
+		}
+		container protection {
+	    	leaf protection-type {
+	        	type ttypes:pw-protection-type;
+	  	    	description "The type of the protection.";
+			}
+			leaf protection-revert-type {
+	        	type ttypes:pw-protection-revert-type;
+	  	    	description "The type of the protection revert.";	        	
+			}
+			leaf protection-protocol-type {
+	        	type ttypes:pw-protection-protocol-type;
+	  	    	description "The type of the protection protocol.";
+			}
+			leaf protection-hold-off-time {
+	        	type uint16;
+			}
+		}
+    }
+    grouping mpls-tp-pw-xc-provision {
+
+        leaf pw-xc-id {
+            type mttypes:pw-xc-id;
+            description "The unique identifier for the tunnel pw.";
+        }
+        leaf name {
+            type string;
+            description "The name of the instance.";
+        }
+		uses mttypes:mpls-tp-flow-qos;
+
+    	leaf deployment-enabler {
+            type ttypes:enabler-type;
+            description "The enabler of the deployment.";
+        }
+        leaf src-node-ref {
+            type tnode:node-ref;
+        }       
+        leaf dest-node-ref {
+            type tnode:node-ref;
+        }
+        container east-path {
+	        leaf tunnel-ref {
+	         	type ttunnel:tunnel-ref;         	
+	        }
+	        leaf tunnel-name {
+	         	type string;         	
+	        }
+           	uses mttypes:label-set;   
+        }
+        container west-path {
+	        leaf tunnel-ref {
+	         	type ttunnel:tunnel-ref;         	
+	        }
+	        leaf tunnel-name {
+	         	type string;         	
+	        }
+           	uses mttypes:label-set;   
+        }	
+    	leaf protection-type {
+        	type ttypes:pw-protection-type;
+	  	    description "The type of the protection.";
+    	}
+    	leaf path-type {
+            type ttypes:path-type;
+	  	    description "The type of the path.";
+        }         
+    }
+    grouping mpls-tp-tunnel-provision {
+
+
+        leaf tunnel-id {
+            type ttunnel:tunnel-id;
+            description "The unique identifier for the tunnel.";
+        }   
+        leaf name {
+            type string;
+            description "The name of the instance.";
+        }
+		uses mttypes:mpls-tp-flow-qos;
+        
+        leaf deployment-enabler {
+            type ttypes:enabler-type;
+            description "The enabler of the deployment.";
+        }
+        leaf src-node-ref {
+            type tnode:node-ref;
+        }       
+        leaf dest-node-ref {
+            type tnode:node-ref;
+        }             
+    
+        container working-path {
+			uses mpls-tp-path-provision;
+			uses mttypes:label-set;	
+			uses mpls-tp-oam-provision;	 
+		}
+		container protection-path {
+			uses mpls-tp-path-provision;
+			uses mttypes:label-set;	
+			uses mpls-tp-oam-provision;	 	 
+		}
+		container protection {
+	    	leaf protection-type {
+	        	type ttypes:tunnel-protection-type;
+	  	    	description "The type of the protection.";
+			}
+			leaf protection-revert-type {
+	        	type ttypes:tunnel-protection-revert-type;
+	  	    	description "The type of the protection revert.";	        	
+			}
+			leaf protection-protocol-type {
+	        	type ttypes:tunnel-protection-protocol-type;
+	  	    	description "The type of the protection protocol.";
+			}
+			leaf protection-hold-off-time {
+	        	type uint16;
+			}
+		}	
+    }
+    grouping mpls-tp-tunnel-xc-provision {
+
+        leaf tunnel-xc-id {
+            type ttunnelxc:tunnel-xc-id;
+            description "The unique identifier for the tunnel xc.";
+        } 
+        leaf name {
+            type string;
+            description "The name of the instance.";
+        }
+		uses mttypes:mpls-tp-flow-qos;
+		leaf deployment-enabler {
+            type ttypes:enabler-type;
+            description "The enabler of the deployment.";
+        }
+        leaf src-node-ref {
+            type tnode:node-ref;
+        }       
+        leaf dest-node-ref {
+            type tnode:node-ref;
+        }
+        container east-path {
+			uses mpls-tp-path-provision;
+			uses mttypes:label-set;	
+		}
+		container west-path {
+			uses mpls-tp-path-provision;
+			uses mttypes:label-set;	
+		}
+    	leaf protection-type {
+        	type ttypes:tunnel-protection-type;
+	  	    description "The type of the protection.";
+    	}
+    	leaf path-type {
+            type ttypes:path-type;
+	  	    description "The type of the path.";
+        }            	
+    }
+    grouping mpls-tp-mpls-if-provision {
+
+        leaf mpls-if-id {
+            type mttypes:mpls-if-id;
+            description "The unique identifier for the mpls-if-id.";
+        }
+        leaf name {
+            type string;
+            description "The name of the instance.";
+        }
+        uses mttypes:mpls-tp-flow-qos;
+		leaf deployment-enabler {
+            type ttypes:enabler-type;
+            description "The enabler of the deployment.";
+        }        
+        leaf node-connector-ref {
+            type tport:node-connector-ref;
+        }
+        
+        list "constraint" {
+            key "index";
+         
+            leaf index {
+	            type ttypes:constraint-id;
+	            description "The unique identifier for the constraint.";
+        	}
+			uses ttypes:common-constraint;
+			leaf port-constraint-type {
+            	type ttypes:port-constraint-type;
+	  	   		description "The type of the port constraint.";
+        	}
+        }
+    }
+    grouping mpls-tp-access-if-provision {
+
+		leaf access-if-id {
+            type taccessif:access-if-id;
+            description "The unique identifier for the access-if-id.";
+        } 
+        leaf name {
+            type string;
+            description "The name of the instance.";
+        }
+        leaf access-if-type {
+            type taccessif:access-if-type;
+	  	    description "The type of the access if.";
+        }
+        uses mttypes:mpls-tp-flow-qos;
+		leaf deployment-enabler {
+            type ttypes:enabler-type;
+            description "The enabler of the deployment.";
+        } 
+        leaf vpn-ref {
+      		type mttypes:vpn-ref;
+	   	}
+        leaf service-type {
+            type ttypes:service-type;
+	  	    description "The type of the service.";
+        }
+        leaf node-connector-ref {
+            type tport:node-connector-ref;
+        }
+        
+        list "constraint" {
+            key "index";
+         
+            leaf index {
+	            type ttypes:constraint-id;
+        	}
+			uses ttypes:common-constraint;
+			leaf port-constraint-type {
+            	type ttypes:port-constraint-type;
+	  	    	description "The type of the port constraint.";
+        	}
+        }
+    }
+    
+    grouping mpls-tp-connection {
+        leaf node-ref {
+    	  	 type tnode:node-ref;
+    	}       
+        list tunnel{
+        	key "tunnel-id";
+            uses mpls-tp-tunnel-provision;
+        }
+        container tunnel-xc {
+        	uses mpls-tp-tunnel-xc-provision;
+		}
+        list mpls-if{
+        	key "mpls-if-id";
+            uses mpls-tp-mpls-if-provision;
+        }
+        list access-if{
+        	key "access-if-id";
+            uses mpls-tp-access-if-provision;
+        }
+        container pw {
+        	uses mpls-tp-pw-provision;
+		}
+        container pw-xc {
+        	uses mpls-tp-pw-xc-provision;
+		}
+        leaf next-connection-index {
+        	type tcon:connection-id;
+    	}
+    }
+    grouping path-connection {
+        leaf start-connection-index{
+	        type tcon:connection-id;
+	    }    
+	    list connection{
+	    	key "index";
+	    	leaf index {
+	       		type tcon:connection-id;
+	        }
+			uses mpls-tp-connection;           
+	    }
+	}
+    
+    
+    grouping mpls-tp-service-provision {
+
+        uses mttypes:mpls-tp-flow-qos;
+
+        leaf name {
+            type string;
+            description "The name of the instance.";
+        }
+        leaf vpn-id {
+      		type uint16;
+      		description "The unique identifier for the vpn-id.";
+	   	}
+        
+		leaf deployment-enabler {
+            type ttypes:enabler-type;
+            description "The enabler of the deployment.";
+        } 
+
+        leaf service-type {
+            type ttypes:service-type;
+	  	    description "The type of the service.";
+        }
+		
+		list service-constraint{
+            key "index";
+            leaf index {
+	            type ttypes:constraint-id;
+        	}
+            uses ttypes:common-constraint;
+            leaf service-constraint-type {
+            	type ttypes:service-constraint-type;
+	  	    	description "The type of the service constraint.";
+        	}
+        }
+        container intra-domain-provision{
+        	list "node" {
+            	key "node-id";
+            	leaf node-id {
+		            type tnode:node-id;
+		            description "The unique identifier for the node.";
+		        }
+	            leaf node-ref {
+		            type tnode:node-ref;
+		        }
+		        leaf node-role {
+		        	type tnode:node-role-type;
+	  	    		description "The type of the node role.";
+		        }  
+		        list "access-if" {
+    		        key "index";
+    		        leaf index {
+			            type string;
+			            description "Human readable name for an access-if.";
+			        }
+			        leaf node-connector-ref {
+			            type tport:node-connector-ref;
+			        }
+					leaf access-if-type {
+			            type taccessif:access-if-type;
+	  	    			description "The type of the access if.";
+			        }
+			        list port-constraint{
+			            key "index";
+			         
+			            leaf index {
+				            type ttypes:constraint-id;
+			        	}
+			            uses ttypes:common-constraint;
+			            leaf port-constraint-type {
+			            	type ttypes:port-constraint-type;
+	  	 					description "The type of the port constraint.";
+			        	}			
+			        }
+		        }
+		    }
+		}
+        container inter-domain-provision{
+            list "topology" {
+            	key "topology-id";
+            	leaf topology-id {
+		            type ttypes:topology-id;
+		            description "The unique identifier for the topology-id.";
+		        }
+		        leaf topology-ref {
+		        	type ttypes:topology-ref;
+		        }
+				container end-to-transit-provision{
+					list "pw" {
+		            	key "index";
+		            	leaf index {
+				            type string;
+				        }	
+				        container working-path {
+					        leaf link-ref {
+					        	type ttypes:link-ref;
+					        }
+					        container mpls-label{
+					        	uses mttypes:label-set;
+					        }
+					        container pw-label{
+					        	uses mttypes:label-set;
+					        }
+					    }    
+				        container protection-path {
+					        leaf link-ref {
+					        	type ttypes:link-ref;
+					        }
+					        container mpls-label{
+					        	uses mttypes:label-set;
+					        }
+					        container pw-label{
+					        	uses mttypes:label-set;
+					        }
+					    } 
+				    } 
+				}
+				container transit-to-transit-provision{
+					list "tunnel-xc" {
+		            	key "index";
+		            	leaf index {
+				            type string;
+				        }	
+				        leaf src-link-ref {
+				        	type ttypes:link-ref;
+				        }
+				        container src-mpls-label{
+				        	uses mttypes:label-set;
+				        }
+				        leaf dest-link-ref {
+				        	type ttypes:link-ref;
+				        }
+				        container dest-mpls-label{
+				        	uses mttypes:label-set;
+				        }				        
+				        leaf path-type {
+				            type ttypes:path-type;
+	  	   					description "The type of the path.";
+				        } 
+				    } 
+				}
+			}
+		}
+    }
+    grouping mpls-tp-complete-path-set-provision-service-provision {
+
+        uses mttypes:mpls-tp-flow-qos;
+
+        leaf name {
+            type string;
+            description "The name of the instance.";
+        }
+        leaf vpn-id {
+      		type uint16;
+      		description "The unique identifier for the vpn-id.";
+	   	}
+        
+		leaf deployment-enabler {
+            type ttypes:enabler-type;
+            description "The enabler of the deployment.";
+        } 
+
+        leaf service-type {
+            type ttypes:service-type;
+	  	    description "The type of the service.";
+        }
+		
+		list service-constraint{
+            key "index";
+            leaf index {
+	            type ttypes:constraint-id;
+        	}
+            uses ttypes:common-constraint;
+            leaf service-constraint-type {
+            	type ttypes:service-constraint-type;
+	  	    	description "The type of the service constraint.";
+        	}
+        }
+        container intra-domain-provision{
+        	list "node" {
+            	key "node-id";
+            	leaf node-id {
+		            type tnode:node-id;
+		            description "The unique identifier for the node.";
+		        }
+	            leaf node-ref {
+		            type tnode:node-ref;
+		        }
+		        leaf node-role {
+		        	type tnode:node-role-type;
+	  	    		description "The type of the node role.";
+		        }  
+		        list "access-if" {
+    		        key "index";
+    		        leaf index {
+			            type string;
+			            description "Human readable name for an access-if.";
+			        }
+			        leaf node-connector-ref {
+			            type tport:node-connector-ref;
+			        }
+					leaf access-if-type {
+			            type taccessif:access-if-type;
+	  	    			description "The type of the access if.";
+			        }
+			        list port-constraint{
+			            key "index";
+			         
+			            leaf index {
+				            type ttypes:constraint-id;
+			        	}
+			            uses ttypes:common-constraint;
+			            leaf port-constraint-type {
+			            	type ttypes:port-constraint-type;
+	  	 					description "The type of the port constraint.";
+			        	}			
+			        }
+		        }
+		    }
+		} 
+        list pw-connection {
+        	key "pw-id";
+        	leaf pw-id {
+	            type string;
+	        }
+			container working-path	{
+				uses path-connection;
+			}	
+			container protection-path	{
+				uses path-connection;
+			}     
+	    }			
+    }
+}

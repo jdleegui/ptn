@@ -1,6 +1,7 @@
+1.  guide : https://github.com/opendaylight/docs/blob/master/manuals/developer-guide/src/main/asciidoc/developing-app.adoc
 mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller -DarchetypeArtifactId=opendaylight-startup-archetype \
--DarchetypeRepository=http://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/ \
--DarchetypeCatalog=http://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/archetype-catalog.xml
+-DarchetypeRepository=https://nexus.opendaylight.org/content/repositories/public/ \
+-DarchetypeCatalog=https://nexus.opendaylight.org/content/repositories/public/archetype-catalog.xml 
 
 Define value for property 'groupId': : org.opendaylight.ptn
 Define value for property 'artifactId': : ptn

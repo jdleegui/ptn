@@ -1,0 +1,93 @@
+module tsdn-node {
+    yang-version 1;
+    namespace "urn:etri:params:xml:ns:yang:tsdn-node";
+    prefix "tnode";
+    
+   import ietf-inet-types {prefix inet; revision-date "2013-07-15";}
+ 
+    revision "2015-01-05" {
+        description "Initial revision of node model";
+    }
+    
+    typedef node-id {
+        //type inet:uri; 
+        type string;  
+        description "Identifier for a particular node";
+    } 
+
+    typedef node-ref {
+        type instance-identifier;
+        description "A reference that points to an nodes/node in the data tree.";
+    }
+    
+    identity node-context {
+        description "A node-context is a classifier for node elements which allows an RPC to provide a service on behalf of a particular element in the data tree.";
+    }    
+    
+   typedef node-role-type {
+        type enumeration {
+            enum uni-source;
+            enum uni-sink;
+            enum uni-transit;
+            enum bi-edge;
+            enum bi-transit;   
+            enum unknown;         
+        }
+    }
+    
+    typedef node-type {
+        type enumeration {
+            enum otn;
+            enum sdh;
+            enum ptn;
+            enum mpls-tp;
+            enum roadm;
+            enum all;
+            enum unknown;
+        }
+    }
+    typedef node-status-type {
+        type enumeration {
+            enum normal;
+            enum unknown;
+            enum broken;
+            enum interrupted;              
+        }
+    }
+    
+    grouping common-node{
+        leaf local-id {
+            type string;
+            description "The unique identifier in a particular local domain.";
+        }        
+        leaf name {
+            type string;
+        }
+        leaf node-type {
+            type node-type;
+	  	    description "The type of the node.";
+        }        
+        leaf ip-address {
+            type inet:ip-address;
+        }
+        leaf manufacturer {
+            type string;
+        }
+        leaf manufacturer-model-name {
+            type string;
+        }
+        leaf hardware {
+            type string;
+        }
+        leaf software {
+            type string;
+        }
+        leaf serial-number {
+            type string;
+        }
+        leaf node-status {
+            type node-status-type;
+            description "The status of the node.";
+        }
+    }
+}
