@@ -10,8 +10,8 @@ git push -u origin master
 git add README.md && git commit -m "Update README.md" && git push -u origin master
 ```
 ## 1. Craate project.
-```
-guide : https://github.com/opendaylight/docs/blob/master/manuals/developer-guide/src/main/asciidoc/developing-app.adoc
+- [Proper guide] ( https://github.com/opendaylight/docs/blob/master/manuals/developer-guide/src/main/asciidoc/developing-app.adoc )
+``` 
 mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller -DarchetypeArtifactId=opendaylight-startup-archetype \
 -DarchetypeRepository=https://nexus.opendaylight.org/content/repositories/public/ \
 -DarchetypeCatalog=https://nexus.opendaylight.org/content/repositories/public/archetype-catalog.xml 
