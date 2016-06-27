@@ -26,8 +26,9 @@ Define value for property 'classPrefix': ${artifactId.substring(0,1).toUpperCase
 Define value for property 'copyright': : Copyright(c) Coweaver, Inc.
 ```
 ## 3. Add yang files
+- Two files required to be downloaded and put them all together. ietf-inet-types.yang and yang-ext.yang
+- The revision date should be replaced with new updated revision date '2013-07-15'
 ```
-git add README.md 
 git add ptn/api/src/main/yang/ietf-inet-types.yang 
 git add ptn/api/src/main/yang/mpls-tp-connection.yang 
 git add ptn/api/src/main/yang/mpls-tp-general-types.yang
