@@ -1,8 +1,5 @@
 # PTN (Packet Transport Network)
 
-## Just beginning of test about
-### - github. See also windmill [GitHub TSDN] (https://github.com/t-sdn)
-### - SDN (REST + SDN). Some features are not RESTful - a la PCEP.
 ## 0. Setup environment
 ```
 git init
@@ -15,7 +12,6 @@ git add README.md && git commit -m "Update README.md" && git push -u origin mast
 ## 1. Craate project.
 ```
 guide : https://github.com/opendaylight/docs/blob/master/manuals/developer-guide/src/main/asciidoc/developing-app.adoc
-```
 mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller -DarchetypeArtifactId=opendaylight-startup-archetype \
 -DarchetypeRepository=https://nexus.opendaylight.org/content/repositories/public/ \
 -DarchetypeCatalog=https://nexus.opendaylight.org/content/repositories/public/archetype-catalog.xml 
