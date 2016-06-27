@@ -1,0 +1,97 @@
+mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller -DarchetypeArtifactId=opendaylight-startup-archetype \
+-DarchetypeRepository=http://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/ \
+-DarchetypeCatalog=http://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/archetype-catalog.xml
+
+Define value for property 'groupId': : org.opendaylight.ptn
+Define value for property 'artifactId': : ptn
+Define value for property 'version': 1.0-SNAPSHOT: : 1.0.0-SNAPSHOT
+Define value for property 'package': org.opendaylight.hello: :
+Define value for property 'classPrefix': ${artifactId.substring(0,1).toUpperCase()}${artifactId.substring(1)}
+Define value for property 'copyright': : Copyright(c) Coweaver, Inc.
+
+vim "ptn/api/src/main/yang/ptn.yang"
+module ptn {
+    yang-version 1;
+    namespace "urn:opendaylight:params:xml:ns:yang:ptn";
+    prefix "ptn";
+
+    revision "2015-01-05" {
+        description "Initial revision of ptn model";
+    }
+
+    rpc ems-version {
+        input {
+            leaf query {
+                type string;
+            }
+        }
+        output {
+            leaf version {
+                type string;
+            }
+        }
+    }
+}
+    
+vim "ptn/impl/src/main/java/org/opendaylight/ptn/impl/PtnProvider.java"
+/*
+ * Copyright © 2015 Copyright(c) Coweaver, Inc. and others.  All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v1.0 which accompanies this distribution,
+ * and is available at http://www.eclipse.org/legal/epl-v10.html
+ */
+package org.opendaylight.ptn.impl;
+
+import org.opendaylight.controller.sal.binding.api.BindingAwareBroker.ProviderContext;
+import org.opendaylight.controller.sal.binding.api.BindingAwareBroker.RpcRegistration;
+import org.opendaylight.controller.sal.binding.api.BindingAwareProvider;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.ptn.rev150105.PtnService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class PtnProvider implements BindingAwareProvider, AutoCloseable {
+
+    private static final Logger LOG = LoggerFactory.getLogger(PtnProvider.class);
+    private RpcRegistration<PtnService> ptnService;
+
+    @Override public void onSessionInitiated(ProviderContext session) {
+        LOG.info("PtnProvider Session Initiated");
+        ptnService = session.addRpcImplementation(PtnService.class, new EmsVersionImpl());
+    }
+
+    @Override public void close() throws Exception {
+        LOG.info("PtnProvider Closed");
+        if (ptnService != null) {
+            ptnService.close();
+        }
+    }
+}
+
+vim "ptn/impl/src/main/java/org/opendaylight/ptn/impl/EmsVersionImpl.java"
+
+/*
+ * Copyright © 2015 Copyright(c) Coweaver, Inc. and others.  All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v1.0 which accompanies this distribution,
+ * and is available at http://www.eclipse.org/legal/epl-v10.html
+ */
+package org.opendaylight.ptn.impl;
+
+import java.util.concurrent.Future;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.ptn.rev150105.PtnService;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.ptn.rev150105.EmsVersionInput;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.ptn.rev150105.EmsVersionOutput;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.ptn.rev150105.EmsVersionOutputBuilder;
+import org.opendaylight.yangtools.yang.common.RpcResult;
+import org.opendaylight.yangtools.yang.common.RpcResultBuilder;
+
+public class EmsVersionImpl implements PtnService {
+    @Override public Future<RpcResult<EmsVersionOutput>> emsVersion(EmsVersionInput input) {
+        EmsVersionOutputBuilder ptnBuilder = new EmsVersionOutputBuilder();
+        ptnBuilder.setVersion("Ptn " + input.getQuery());
+        return RpcResultBuilder.success(ptnBuilder.build()).buildFuture();
+    }
+}
+
