@@ -1,9 +1,0 @@
-module ptn {
-    yang-version 1;
-    namespace "urn:opendaylight:params:xml:ns:yang:ptn";
-    prefix "ptn";
-
-    revision "2015-01-05" {
-        description "Initial revision of ptn model";
-    }
-}
