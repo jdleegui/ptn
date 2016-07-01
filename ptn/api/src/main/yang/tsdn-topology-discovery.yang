@@ -1,0 +1,87 @@
+module tsdn-topology-discovery  {
+    yang-version 1;
+    namespace "urn:opendaylight:params:xml:ns:yang:tsdn-topology-discovery";
+    prefix "ttd";
+
+    import ietf-inet-types {prefix inet; revision-date "2013-07-15";}
+    import yang-ext {prefix ext; revision-date "2013-07-09";}
+    import tsdn-inventory {prefix "inv"; revision-date "2015-01-05"; }
+    import tsdn-port {prefix tport; revision-date "2015-01-05";} 
+    import tsdn-node {prefix tnode; revision-date "2015-01-05";}
+    import tsdn-general-types {prefix "ttypes"; revision-date "2015-01-05"; }
+    
+
+    revision 2015-01-05 {
+        description
+            "Initial revision.";
+    }
+  
+   grouping link {
+        leaf link-id {
+            type ttypes:link-id;
+            description "The unique identifier for the link.";
+        }
+        leaf src-node {
+            type tnode:node-ref;
+        }
+        leaf src-node-connector {
+            type tport:node-connector-ref;
+        }
+        leaf src-node-topology-ref {
+        	type ttypes:topology-ref;
+        }
+        leaf dest-node {
+            type tnode:node-ref;
+        }
+        leaf dest-node-connector {
+            type tport:node-connector-ref;
+        }
+        leaf dest-node-topology-ref {
+        	type ttypes:topology-ref;
+        }
+    }
+    grouping topology {
+        leaf topology-id {
+            type ttypes:topology-id;
+            description "The unique identifier for the topology.";
+        }
+        leaf local-id {
+            type string;
+            description "The unique identifier in a particular local domain.";
+        } 
+        leaf network-type {
+			type ttypes:network-type;
+  	    	description "The type of the network.";
+        } 
+        leaf provider {
+            type string;
+            description "The name of the network provider who operates the topology, TELCO.";
+        }
+        leaf lower-layer-path-computation-feature {
+            type ttypes:enabled-type;
+            description "The supporting feature of the lower layer path computation in the topology.";
+        }
+        leaf complete-path-set-provision-feature {
+            type ttypes:enabled-type;
+            description "The supporting feature of the complete path set provision in the topology.";
+        }
+    }
+
+    notification link-updated {
+		uses link;
+    }   
+   
+    notification link-removed {
+        uses link;
+    }
+    
+    notification topology-updated {
+		uses topology;
+    }   
+   
+    notification topology-removed {
+        uses topology;
+    }
+    
+}
+

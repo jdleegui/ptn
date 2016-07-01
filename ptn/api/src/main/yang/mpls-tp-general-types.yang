@@ -1,0 +1,176 @@
+module mpls-tp-general-types {
+    yang-version 1;
+    namespace "urn:opendaylight:params:xml:ns:yang:mpls-tp-general-types";
+    prefix "otypes";
+    
+   import ietf-inet-types {prefix inet; revision-date "2013-07-15";}
+   import yang-ext {prefix ext; revision-date "2013-07-09";}
+
+
+    revision "2015-01-05" {
+        description "Initial revision of mpls-tp general types";
+    }
+    typedef vpn-id {
+        type uint16;  
+        description "Identifier for a particular vpn";
+    }
+    
+    typedef vpn-ref {
+        type instance-identifier;
+        description "A reference that points to an nodes/node in the data tree.";
+    }
+    typedef mpls-if-id {
+        //type inet:uri; 
+        type string;  
+        description "Identifier for a particular mpls-if";
+    }
+    
+    typedef mpls-if-ref {
+        type instance-identifier;
+        description "A reference that points to an nodes/node in the data tree.";
+    }
+
+    typedef mpls-if-operational-status-type {
+        type enumeration {
+            enum normal;
+            enum unknown;
+            enum broken;
+            enum creating;
+            enum updating;
+            enum deleting;
+            enum interrupted;           
+        }        
+    }
+    typedef mpls-if-configuration-action-type {
+        type enumeration {
+            enum unknown;
+            enum create;
+            enum update;
+            enum delete;
+            enum interrupt;  
+        }        
+    }
+    typedef pw-id {
+        //type inet:uri; 
+        type string;  
+        description "Identifier for a particular pw";
+    }
+    
+    typedef pw-ref {
+        type instance-identifier;
+        description "A reference that points to an nodes/node in the data tree.";
+    }
+
+    typedef pw-operational-status-type {
+        type enumeration {
+            enum normal;
+            enum unknown;
+            enum broken;
+            enum creating;
+            enum updating;
+            enum deleting;
+            enum interrupted;             
+        }        
+    }
+    typedef pw-configuration-action-type {
+        type enumeration {
+            enum unknown;
+            enum create;
+            enum update;
+            enum delete;
+            enum interrupt;   
+        }        
+    }
+    typedef pw-xc-id {
+        //type inet:uri; 
+        type string;  
+        description "Identifier for a particular pw-xc";
+    }
+    
+    typedef pw-xc-ref {
+        type instance-identifier;
+        description "A reference that points to an nodes/node in the data tree.";
+    }
+
+    typedef pw-xc-operational-status-type {
+        type enumeration {
+            enum normal;
+            enum unknown;
+            enum broken;
+            enum creating;
+            enum updating;
+            enum deleting;
+            enum interrupted;             
+        }        
+    }
+    typedef pw-xc-configuration-action-type {
+        type enumeration {
+            enum unknown;
+            enum create;
+            enum update;
+            enum delete;
+            enum interrupt;  
+        }        
+    }
+    
+    typedef cos-id {
+        //type inet:uri; 
+        type string;  
+        description "Identifier for a Class of Service";
+    }
+    
+/*
+    typedef otn-tunnel-rate-type {
+        type enumeration {
+            enum odu0;
+            enum odu1;  
+            enum odu2;
+            enum odu3;
+            enum odu4; 
+            enum odu-flex;         
+        }
+    }
+    typedef otn-switching-rate-type {
+        type enumeration {
+            enum odu0;
+            enum odu1;  
+            enum odu2;
+            enum odu3;
+            enum odu4; 
+            enum odu-flex;         
+        }
+    }
+    list class-of-service{
+        key "cos-id";
+        leaf cos-id {
+            type mttypes:cos-id;
+    	}
+    	uses mttypes:mpls-tp-flow-qos;
+	}       
+    
+    
+    */
+    grouping mpls-tp-flow-qos {
+        leaf cir {
+            type uint32;
+        }
+        leaf pir {
+            type uint32;
+        } 
+        leaf cbs {
+            type uint32;
+        } 
+        leaf ebs {
+            type uint32;
+        } 
+	}
+	grouping label-set {
+    	leaf in-label {
+			type uint32;
+		}
+		leaf out-label {
+			type uint32;
+		}
+	}
+
+}

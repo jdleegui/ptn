@@ -1,0 +1,143 @@
+module tsdn-port {
+    yang-version 1;
+    namespace "urn:opendaylight:params:xml:ns:yang:tsdn-port";
+    prefix "tport";
+    
+   import ietf-inet-types {prefix inet; revision-date "2013-07-15";}
+//   import yang-ext {prefix ext; revision-date "2013-07-09";}
+ 
+    revision "2015-01-05" {
+        description "Initial revision of port model";
+    }
+
+    typedef node-connector-id {
+       // type inet:uri; 
+        type string;  
+        description "Identifier for a particular node-connector";
+    }
+    
+    typedef node-connector-ref {
+        type instance-identifier;
+        description "A reference that points to an nodes/node/{node_id}/node-connector in the data tree.";
+    }
+    
+    identity node-connector-context {
+        description "A node-connector-context is a classifier for node-connector elements which allows an RPC to provide a service on behalf of a particular element in the data tree.";
+    }
+
+    typedef port-status-type {
+        type enumeration {
+            enum down;
+            enum blocked;
+            enum up;
+            enum unknown;
+        }
+    }
+    
+    typedef port-type {
+        type enumeration {
+            enum ge;
+            enum 10ge-lan;
+            enum 10ge-wan;
+            enum fe;
+            enum ge-gfpt;
+            enum ge-ttt-agmp;
+            enum 40ge;
+            enum 100ge;
+            enum otu1;
+            enum otu2;
+            enum otu2e;
+            enum otu3;
+            enum otu3e;
+            enum otu4;
+            enum odu0;
+            enum odu1;
+            enum odu2;
+            enum odu2e;
+            enum odu3;
+            enum odu3e;
+            enum odu4;  
+            enum odu-flex;
+            enum stm1;
+            enum stm4;
+            enum stm16;
+            enum stm64;
+            enum stm256;
+            enum oc3;                
+            enum oc12;
+            enum oc48;
+            enum oc192;
+            enum oc768;
+            enum wdm;
+            enum packet;
+            enum all; 
+            enum unknown;    
+        }
+    }
+    typedef port-role-type {
+        type enumeration {
+            enum uni;
+            enum nni;
+            enum unknown;
+        }
+    }
+    
+    grouping common-port {
+    	leaf local-id {
+            type string;
+            description "The unique identifier in a particular local domain.";
+        }        
+        leaf name {
+            type string;
+            description "The name of the instance.";
+        }
+    	leaf number {
+   			type string;
+    	}
+    	leaf port-type {
+    		type port-type;
+	  	   	description "The type of the port."; 
+    	}
+    	leaf port-role {
+    		type port-role-type; 
+    	}
+    	leaf port-status {
+            type port-status-type;
+            description "The status of the port.";
+        }
+    }
+    grouping physical-port {
+    	container shelf {
+    		leaf type {
+    			type string;
+    		}
+    		leaf index {
+    			type string;
+    		}
+    	}
+    	container slot {
+    		leaf type {
+    			type string;
+    		}
+    		leaf index {
+    			type string;
+    		}
+    	}
+    	container sub-slot {
+    		leaf type {
+    			type string;
+    		}
+    		leaf index {
+    			type string;
+    		}
+    	}
+    	container port {
+    		leaf type {
+    			type string;
+    		}
+    		leaf index {
+    			type string;
+    		}
+    	}
+    }
+}
