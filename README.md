@@ -21,13 +21,15 @@ mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller -Darchetyp
 Define value for property 'groupId': : org.opendaylight.ptn
 Define value for property 'artifactId': : ptn
 Define value for property 'version': 1.0-SNAPSHOT: : 1.0.0-SNAPSHOT
-Define value for property 'package': org.opendaylight.hello: :
+Define value for property 'package': org.opendaylight.ptn: :
 Define value for property 'classPrefix': ${artifactId.substring(0,1).toUpperCase()}${artifactId.substring(1)}
 Define value for property 'copyright': : Copyright(c) Coweaver, Inc.
 ```
 ## 3. Add yang files
 - Two files required to be downloaded and put them all together. ietf-inet-types.yang and yang-ext.yang
 - The revision date should be replaced with new updated revision date '2013-07-15'
+- confer yang to java in https://wiki.onosproject.org/display/ONOS/YANG+utils#YANGutils-Namespace
+- remove java folder if some error remained still after clean after you change yang files.
 ```
 git add ptn/api/src/main/yang/ietf-inet-types.yang 
 git add ptn/api/src/main/yang/mpls-tp-connection.yang 
