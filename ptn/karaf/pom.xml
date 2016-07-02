@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Copyright(c) Coweaver, Inc. and others. All rights reserved.
+Copyright © 2015 Copyright(c) Coweaver, Inc. and others. All rights reserved.
 This program and the accompanying materials are made available under the
 terms of the Eclipse Public License v1.0 which accompanies this distribution,
 and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
@@ -9,13 +9,13 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
   <parent>
     <groupId>org.opendaylight.controller</groupId>
     <artifactId>karaf-parent</artifactId>
-    <version>1.5.5-SNAPSHOT</version>
+    <version>1.6.1-Beryllium-SR1</version>
     <relativePath/>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.opendaylight.ptn</groupId>
   <artifactId>ptn-karaf</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.0-SNAPSHOT</version>
   <name>${project.artifactId}</name>
   <prerequisites>
     <maven>3.1.1</maven>
@@ -57,13 +57,6 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-deploy-plugin</artifactId>
-        <configuration>
-          <skip>true</skip>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-install-plugin</artifactId>
         <configuration>
           <skip>true</skip>
         </configuration>
