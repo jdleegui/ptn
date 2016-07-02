@@ -1,0 +1,209 @@
+module mpls-tp-topology-inventory {
+    yang-version 1;
+    namespace "urn:opendaylight:params:xml:ns:yang:mpls-tp-topology-inventory";
+    prefix "mttopoinv";
+    
+    import tsdn-network-topology {prefix "topo"; revision-date "2015-01-05"; }
+//    import tsdn-inventory {prefix "inv"; revision-date "2015-01-05"; }
+    import yang-ext {prefix ext; revision-date "2013-07-09";}
+    import ptn-port {prefix "ptnport"; revision-date "2015-01-05"; }
+    import tsdn-node {prefix "tnode"; revision-date "2015-01-05"; }
+    import tsdn-port {prefix "tport"; revision-date "2015-01-05"; }
+    import mpls-tp-inventory {prefix "mtinv"; revision-date "2015-01-05"; }
+    import tsdn-tunnel {prefix "ttunnel"; revision-date "2015-01-05"; }
+    import tsdn-tunnel-xc {prefix "ttunnelxc"; revision-date "2015-01-05"; }
+    import tsdn-general-types {prefix ttypes; revision-date "2015-01-05";}
+    import mpls-tp-general-types {prefix mttypes; revision-date "2015-01-05";}
+    import tsdn-access-if {prefix "taccessif"; revision-date "2015-01-05"; }
+
+    revision "2015-01-05" {
+        description "Initial revision of otn topology inventory model";
+    }
+/*    
+    typedef tunnel-leafref {
+        type leafref {
+            path "/topo:network-topology/topo:tunnel/topo:tunnel-id";
+        }
+        description
+            "A type for an absolute reference a tunnel instance.";
+    }
+*/    
+
+    grouping mpls-tp-pw {
+
+       leaf pw-id {
+            type mttypes:pw-id;
+            description "The unique identifier for the pw.";
+        }
+      	leaf inventory-pw-ref {
+        	type mttypes:pw-ref;
+      	}   
+
+    }    
+    grouping mpls-tp-pw-xc {
+
+       leaf pw-xc-id {
+            type mttypes:pw-xc-id;
+            description "The unique identifier for the pw xc.";
+        }
+      	leaf inventory-pw-xc-ref {
+        	type mttypes:pw-xc-ref;
+      	}         
+    	
+    }    
+    grouping mpls-tp-tunnel {
+
+       leaf tunnel-id {
+            type ttunnel:tunnel-id;
+            description "The unique identifier for the tunnel.";
+        }
+      	leaf inventory-tunnel-ref {
+        	type ttunnel:tunnel-ref;
+      	}   	
+    }
+    grouping mpls-tp-tunnel-xc {
+
+        leaf tunnel-xc-id {
+            type ttunnelxc:tunnel-xc-id;
+            description "The unique identifier for the tunnel xc.";
+        }
+      	leaf inventory-tunnel-xc-ref {
+        	type ttunnelxc:tunnel-xc-ref;
+      	}       
+    	
+    }
+    grouping mpls-tp-access-if {
+
+       leaf access-if-id {
+            type taccessif:access-if-id;
+            description "The unique identifier for the access-if-id.";
+        }
+      	leaf inventory-access-if-ref {
+        	type taccessif:access-if-ref;
+      	}
+    }
+    
+    grouping mpls-tp-mpls-if {
+
+       leaf mpls-if-id {
+            type mttypes:mpls-if-id;
+            description "The unique identifier for the mpls-if-id.";
+        }
+      	leaf inventory-mpls-if-ref {
+        	type mttypes:mpls-if-ref;
+      	}
+    }
+    grouping mpls-tp-vpn {
+
+      	leaf vpn-id {
+        	type mttypes:vpn-id;
+        	description "The unique identifier for the mpls-tp-vpn-id.";
+      	}  
+      	leaf inventory-vpn-ref {
+        	type mttypes:vpn-ref;
+      	}
+    }
+    grouping mpls-tp-node{
+
+        leaf inventory-node-ref {
+            type tnode:node-ref;
+        }
+        leaf node-type {
+            type tnode:node-type;
+	  	    description "The type of the node.";
+        }
+        leaf node-status {
+            type tnode:node-status-type;
+            description "The status of the node.";
+        }
+        leaf topology-ref {
+        	type ttypes:topology-ref;
+        }
+        uses ttypes:switching-capacity;
+        
+        
+        list "tunnel" {
+            key "tunnel-id";
+            uses mpls-tp-tunnel;
+        }
+        list "mpls-if" {
+            key "mpls-if-id";
+            uses mpls-tp-mpls-if;
+        }
+        list "tunnel-xc" {
+            key "tunnel-xc-id";
+            uses mpls-tp-tunnel-xc;
+        }
+        list "access-if" {
+            key "access-if-id";
+            uses mpls-tp-access-if;
+        }
+        list "pw" {
+            key "pw-id";
+            uses mpls-tp-pw;
+        }
+        list "pw-xc" {
+            key "pw-xc-id";
+            uses mpls-tp-pw-xc;
+        }
+        list "vpn" {
+            key "vpn-id";
+            uses mpls-tp-vpn;
+        }
+    }
+    
+    grouping mpls-tp-node-connector {
+        leaf inventory-node-connector-ref {
+            type tport:node-connector-ref;
+        }
+        leaf port-type {
+            type tport:port-type;
+	  	    description "The type of the port.";
+        }
+        leaf port-status {
+            type tport:port-status-type;
+            description "The status of the port.";
+        }
+    }
+    
+    grouping mpls-tp-link {
+    
+        leaf-list source-node-connector-mpls-if-ref {
+	        type mttypes:mpls-if-ref;
+	    }
+	    leaf-list destination-node-connector-mpls-if-ref {
+	        type mttypes:mpls-if-ref;
+	    }
+        leaf link-type {
+            type topo:link-type;
+	  	    description "The type of the link.";
+        }
+        leaf link-status {
+            type topo:link-status-type;
+            description "The status of the link.";
+        }
+        uses ptnport:supported-bandwidth;
+    }
+    
+    grouping mpls-tp-topology-tunnel{
+	    uses ptnport:supported-bandwidth;
+    }
+    
+    augment "/topo:network-topology/topo:topology/topo:node" {
+        ext:augment-identifier "mpls-tp-topology-node";
+        uses mpls-tp-node;
+    }
+    
+    augment "/topo:network-topology/topo:tunnel" {
+        ext:augment-identifier "mpls-tp-network-topology-tunnel";
+        uses mpls-tp-topology-tunnel;
+    }
+    augment "/topo:network-topology/topo:topology/topo:node/topo:node-connector" {
+        ext:augment-identifier "mpls-tp-topology-node-connector";
+		uses mpls-tp-node-connector;
+    }
+    augment "/topo:network-topology/topo:topology/topo:link" {
+        ext:augment-identifier "mpls-tp-topology-link";
+		uses mpls-tp-link;
+    }
+}

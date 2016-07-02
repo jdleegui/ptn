@@ -6,4 +6,30 @@ module ptn {
     revision "2015-01-05" {
         description "Initial revision of ptn model";
     }
+
+    rpc hello {
+        input {
+            leaf name {
+                type string;
+            }
+        }
+        output {
+            leaf reply {
+                type string;
+            }
+        }
+    }
+    
+    container hello-registry {
+        list hello-registry-entry {
+            key "name";
+            leaf name {
+                type string;
+            }
+            leaf reply {
+                type string;
+            }
+        }
+    }
+    
 }
