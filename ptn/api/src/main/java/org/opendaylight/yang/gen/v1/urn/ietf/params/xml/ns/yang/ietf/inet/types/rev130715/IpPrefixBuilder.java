@@ -1,4 +1,4 @@
-package org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.ietf.inet.types.rev130715;
+package org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev130715;
 
 
 /**
@@ -10,9 +10,9 @@ package org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.ietf.in
  * loss of user code.
  *
  */
-public class IpAddressNoZoneBuilder {
+public class IpPrefixBuilder {
 
-    public static IpAddressNoZone getDefaultInstance(java.lang.String defaultValue) {
+    public static IpPrefix getDefaultInstance(java.lang.String defaultValue) {
         throw new java.lang.UnsupportedOperationException("Not yet implemented");
     }
 

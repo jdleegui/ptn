@@ -16,8 +16,8 @@ import org.opendaylight.controller.md.sal.binding.api.WriteTransaction;
 import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
 import org.opendaylight.controller.md.sal.common.api.data.ReadFailedException;
 import org.opendaylight.controller.md.sal.common.api.data.TransactionCommitFailedException;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.ietf.inet.types.rev130715.IpAddress;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.ietf.inet.types.rev130715.Ipv4Address;
+import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev130715.IpAddress;
+import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev130715.Ipv4Address;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inventory.rev150105.DeleteAccessIfInput;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inventory.rev150105.DeleteAccessIfOutput;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inventory.rev150105.DeleteCompletePathSetProvisionServiceInput;
@@ -95,7 +95,7 @@ public class TsdnInventoryImpl implements TsdnInventoryService {
 		LOG.info("TsdnInventoryImpl::TsdnInventoryImpl() cloning data broker " + db.toString());
 
 		for (int i = 1; i < 20; i++) { 
-		//	writeToNodes(NodeId.getDefaultInstance("Node"+i));
+			writeToNodes(NodeId.getDefaultInstance("Node"+i));
 		}
 		// initializeDataTree(db);
 	}  
@@ -124,13 +124,13 @@ public class TsdnInventoryImpl implements TsdnInventoryService {
 		
 		transaction.put(LogicalDatastoreType.OPERATIONAL, iid, node);
 		CheckedFuture<Void, TransactionCommitFailedException> future = transaction.submit();
-		
 		Futures.addCallback(future, new LoggingFuturesCallBack<Void>("TsdnInventoryImpl::writeToNodes(IndeId input) failed to write nodes to node", LOG));
 		readFromNodeId(input);
 	}
 	
 	private NodeId readFromNodeId(NodeId nodeId) {
-		ReadOnlyTransaction transaction = db.newReadOnlyTransaction();
+		LOG.info("TsdnInventoryImpl:readFromNodeId(NodeId input="+nodeId.toString()+").");
+			ReadOnlyTransaction transaction = db.newReadOnlyTransaction();
 		InstanceIdentifier <Node> iid = toInstanceIdentifier(nodeId);
 		CheckedFuture<Optional<Node>, ReadFailedException> future =
 			transaction.read(LogicalDatastoreType.CONFIGURATION, iid);
