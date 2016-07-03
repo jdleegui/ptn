@@ -7,14 +7,17 @@
  */
 package org.opendaylight.ptn.impl;
 
+import java.util.ArrayList;
 import java.util.concurrent.Future;
 
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
+import org.opendaylight.controller.md.sal.binding.api.ReadOnlyTransaction;
 import org.opendaylight.controller.md.sal.binding.api.WriteTransaction;
 import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
+import org.opendaylight.controller.md.sal.common.api.data.ReadFailedException;
 import org.opendaylight.controller.md.sal.common.api.data.TransactionCommitFailedException;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.ptn.rev150105.HelloRegistry;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.ptn.rev150105.HelloRegistryBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.ietf.inet.types.rev130715.IpAddress;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.ietf.inet.types.rev130715.Ipv4Address;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inventory.rev150105.DeleteAccessIfInput;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inventory.rev150105.DeleteAccessIfOutput;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inventory.rev150105.DeleteCompletePathSetProvisionServiceInput;
@@ -41,6 +44,8 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inv
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inventory.rev150105.GetTunnelOutput;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inventory.rev150105.GetTunnelXcInput;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inventory.rev150105.GetTunnelXcOutput;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inventory.rev150105.Nodes;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inventory.rev150105.NodesBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inventory.rev150105.SetAccessIfInput;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inventory.rev150105.SetAccessIfOutput;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inventory.rev150105.SetCompletePathSetProvisionServiceInput;
@@ -62,11 +67,18 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inv
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inventory.rev150105.UpdateTunnelOutput;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inventory.rev150105.UpdateTunnelXcInput;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inventory.rev150105.UpdateTunnelXcOutput;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inventory.rev150105.nodes.Node;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inventory.rev150105.nodes.NodeBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inventory.rev150105.nodes.NodeKey;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.node.rev150105.NodeId;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.node.rev150105.NodeStatusType;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.node.rev150105.NodeType;
 import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
 import org.opendaylight.yangtools.yang.common.RpcResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Optional;
 import com.google.common.util.concurrent.CheckedFuture;
 import com.google.common.util.concurrent.Futures;
 
@@ -74,22 +86,141 @@ public class TsdnInventoryImpl implements TsdnInventoryService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(TsdnInventoryImpl.class);
 	private DataBroker db;
+	private ArrayList <Node> nodeList;
+	private Nodes nodes = null;
 
 	public TsdnInventoryImpl(DataBroker adb) {
 		// TODO_Auto-generated constructor stub
 		db = adb;
-		LOG.info("TsdnInventoryImpl::TsdnInventoryService() cloning data broker " + db.toString());
-		initializeDataTree(db);
+		LOG.info("TsdnInventoryImpl::TsdnInventoryImpl() cloning data broker " + db.toString());
+
+		for (int i = 1; i < 20; i++) { 
+		//	writeToNodes(NodeId.getDefaultInstance("Node"+i));
+		}
+		// initializeDataTree(db);
+	}  
+	
+	@SuppressWarnings("unused")
+	private void writeToNodes(NodeId input) {
+		LOG.info("TsdnInventoryImpl:writeToNodes(NodeId input="+input.toString()+").");
+		WriteTransaction transaction = db.newWriteOnlyTransaction();
+		InstanceIdentifier<Node> iid = toInstanceIdentifier(input);
+		Node node = new NodeBuilder()				
+				.setHardware("[NODE_COWAVER_HARDWARE]")
+				.setIpAddress(new IpAddress(Ipv4Address.getDefaultInstance("50.23.21.5")))
+				.setKey(new NodeKey(input))
+				.setLocalId("[NODE_COWAVER_LOCAL_ID]")
+				.setManufacturer("[NODE_COWAVER_MANUFACTURER]")
+				.setManufacturerModelName("[NODE_COWAVER_MODEL_NAME]")
+				.setName("[NODE_COWAVER_NAME]")
+				.setNodeConnector(null)
+				.setNodeId(input)
+				.setNodeStatus(NodeStatusType.Normal)
+				.setNodeType(NodeType.Ptn)         
+				.setSerialNumber("[NODE_COWAVER_SERIAL_NUMBER]")
+				.setSoftware("[NODE_COWAVER_SOFTWARE]")				
+				.setTopologyRef(null)
+				.build();
+		
+		transaction.put(LogicalDatastoreType.OPERATIONAL, iid, node);
+		CheckedFuture<Void, TransactionCommitFailedException> future = transaction.submit();
+		
+		Futures.addCallback(future, new LoggingFuturesCallBack<Void>("TsdnInventoryImpl::writeToNodes(IndeId input) failed to write nodes to node", LOG));
+		readFromNodeId(input);
+	}
+	
+	private NodeId readFromNodeId(NodeId nodeId) {
+		ReadOnlyTransaction transaction = db.newReadOnlyTransaction();
+		InstanceIdentifier <Node> iid = toInstanceIdentifier(nodeId);
+		CheckedFuture<Optional<Node>, ReadFailedException> future =
+			transaction.read(LogicalDatastoreType.CONFIGURATION, iid);
+		Optional<Node> optional = Optional.absent();
+		try {
+			optional = future.checkedGet();
+		} catch (ReadFailedException e) {
+			LOG.warn("Reading node input failed:", e);
+		}
+		if(optional.isPresent()) {
+			nodeId = optional.get().getNodeId();
+		}
+		return nodeId;
 	}
 
+	private InstanceIdentifier<Node> toInstanceIdentifier(NodeId input) {
+        InstanceIdentifier<Node> iid = InstanceIdentifier.create(Nodes.class)
+        		.child(Node.class, new NodeKey(input));    	
+        return iid;
+    }
+
+	@SuppressWarnings("unused")
 	private void initializeDataTree(DataBroker db) {
 		LOG.info("TsdnInventoryImpl::initializeDataTree() preparing to initialize the greeting registry");
 		WriteTransaction transaction = db.newWriteOnlyTransaction();
-		InstanceIdentifier<HelloRegistry> iid = InstanceIdentifier.create(HelloRegistry.class);
-		//NodesBuilder();
-		new NodesBuiler();
-		HelloRegistry helloRegistry = new HelloRegistryBuilder().build();
-		transaction.put(LogicalDatastoreType.OPERATIONAL, iid, helloRegistry);
+		InstanceIdentifier<Nodes> iid = InstanceIdentifier.create(Nodes.class);
+		
+		Node node = new NodeBuilder()
+				.setHardware("[coweaver_hward_ware]")
+				.setHardware("[Node:HW:YsKim/JsPark/SsLim/SwWhang]")
+				.setSoftware("[Node:SW:MJSeo/HhChoi/NwLee/KsKim]")				
+				.setNodeId(NodeId.getDefaultInstance("Node"))
+				.setLocalId("Local ID")
+				.setName("[Node:CoweaverName]")
+				.setNodeType(NodeType.Ptn)         
+				.setIpAddress(new IpAddress(Ipv4Address.getDefaultInstance("50.23.21.5")))
+				.setManufacturer("[Coweaver]")
+				.setManufacturerModelName("[COWEVER-UT7200]")
+				.setSerialNumber("[COW-010-3227-1453]")
+				.setNodeStatus(NodeStatusType.Normal)
+				.setNodeConnector(null)
+				.build();
+		
+		nodeList = new ArrayList<Node>();
+		nodeList.add(node);
+		
+		nodes = new NodesBuilder()
+				.setNode(nodeList)
+				.build();
+		
+		transaction.put(LogicalDatastoreType.OPERATIONAL, iid, nodes);
+		CheckedFuture<Void, TransactionCommitFailedException> future = transaction.submit();
+		Futures.addCallback(future, new LoggingFuturesCallBack<>(
+				"TsdnInventoryImpl::initializeDataTree() failed to create greeting registry ", LOG));
+	}
+
+	@SuppressWarnings("unused")
+	private void initializeDataTree2(DataBroker db) {
+		LOG.info("TsdnInventoryImpl::initializeDataTree() preparing to initialize the greeting registry");
+		WriteTransaction transaction = db.newWriteOnlyTransaction();
+		InstanceIdentifier<Node> iid = InstanceIdentifier.create(Node.class);
+		Node node = new NodeBuilder()
+				.setHardware("[coweaver_hward_ware]")
+				.setHardware("[Node:HW:YsKim/JsPark/SsLim/SwWhang]")
+				.setSoftware("[Node:SW:MJSeo/HhChoi/NwLee/KsKim]")				
+				.setNodeId(NodeId.getDefaultInstance("Node"))
+				.setLocalId("Local ID")
+				.setName("[Node:CoweaverName]")
+				.setNodeType(NodeType.Ptn)         
+				.setIpAddress(new IpAddress(Ipv4Address.getDefaultInstance("50.23.21.5")))
+				.setManufacturer("[Coweaver]")
+				.setManufacturerModelName("[COWEVER-UT7200]")
+				.setSerialNumber("[COW-010-3227-1453]")
+				.setNodeStatus(NodeStatusType.Normal)
+				.setNodeConnector(null)							
+				.build();
+		transaction.put(LogicalDatastoreType.OPERATIONAL, iid, node);
+		CheckedFuture<Void, TransactionCommitFailedException> future = transaction.submit();
+		Futures.addCallback(future, new LoggingFuturesCallBack<>(
+				"TsdnInventoryImpl::initializeDataTree() failed to create greeting registry ", LOG));
+	}
+
+	@SuppressWarnings("unused")
+	private void initializeDataTree1(DataBroker db) {
+		LOG.info("TsdnInventoryImpl::initializeDataTree() preparing to initialize the greeting registry");
+		WriteTransaction transaction = db.newWriteOnlyTransaction();
+		InstanceIdentifier<Nodes> iid = InstanceIdentifier.create(Nodes.class);
+		Nodes nodes = new NodesBuilder()
+				.build();
+		transaction.put(LogicalDatastoreType.OPERATIONAL, iid, nodes);
 		CheckedFuture<Void, TransactionCommitFailedException> future = transaction.submit();
 		Futures.addCallback(future, new LoggingFuturesCallBack<>(
 				"TsdnInventoryImpl::initializeDataTree() failed to create greeting registry ", LOG));

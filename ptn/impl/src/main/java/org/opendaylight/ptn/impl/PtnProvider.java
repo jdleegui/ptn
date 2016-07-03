@@ -26,8 +26,8 @@ public class PtnProvider implements BindingAwareProvider, AutoCloseable {
     public void onSessionInitiated(ProviderContext session) {
         LOG.info("PtnProvider Session Initiated");
         DataBroker db = session.getSALService(DataBroker.class);
-        tsdnInventoryService = session.addRpcImplementation(TsdnInventoryService.class, new TsdnInventoryImpl(db));
         ptnService = session.addRpcImplementation(PtnService.class,  new PtnImpl(db));
+        tsdnInventoryService = session.addRpcImplementation(TsdnInventoryService.class, new TsdnInventoryImpl(db));
     }
 
     @Override
