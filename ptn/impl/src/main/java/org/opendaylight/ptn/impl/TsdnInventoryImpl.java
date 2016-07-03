@@ -10,6 +10,11 @@ package org.opendaylight.ptn.impl;
 import java.util.concurrent.Future;
 
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
+import org.opendaylight.controller.md.sal.binding.api.WriteTransaction;
+import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
+import org.opendaylight.controller.md.sal.common.api.data.TransactionCommitFailedException;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.ptn.rev150105.HelloRegistry;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.ptn.rev150105.HelloRegistryBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inventory.rev150105.DeleteAccessIfInput;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inventory.rev150105.DeleteAccessIfOutput;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inventory.rev150105.DeleteCompletePathSetProvisionServiceInput;
@@ -57,12 +62,37 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inv
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inventory.rev150105.UpdateTunnelOutput;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inventory.rev150105.UpdateTunnelXcInput;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inventory.rev150105.UpdateTunnelXcOutput;
+import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
 import org.opendaylight.yangtools.yang.common.RpcResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.common.util.concurrent.CheckedFuture;
+import com.google.common.util.concurrent.Futures;
 
 public class TsdnInventoryImpl implements TsdnInventoryService {
 
-	public TsdnInventoryImpl(DataBroker db) {
-		// TODO Auto-generated constructor stub
+	private static final Logger LOG = LoggerFactory.getLogger(TsdnInventoryImpl.class);
+	private DataBroker db;
+
+	public TsdnInventoryImpl(DataBroker adb) {
+		// TODO_Auto-generated constructor stub
+		db = adb;
+		LOG.info("TsdnInventoryImpl::TsdnInventoryService() cloning data broker " + db.toString());
+		initializeDataTree(db);
+	}
+
+	private void initializeDataTree(DataBroker db) {
+		LOG.info("TsdnInventoryImpl::initializeDataTree() preparing to initialize the greeting registry");
+		WriteTransaction transaction = db.newWriteOnlyTransaction();
+		InstanceIdentifier<HelloRegistry> iid = InstanceIdentifier.create(HelloRegistry.class);
+		//NodesBuilder();
+		new NodesBuiler();
+		HelloRegistry helloRegistry = new HelloRegistryBuilder().build();
+		transaction.put(LogicalDatastoreType.OPERATIONAL, iid, helloRegistry);
+		CheckedFuture<Void, TransactionCommitFailedException> future = transaction.submit();
+		Futures.addCallback(future, new LoggingFuturesCallBack<>(
+				"TsdnInventoryImpl::initializeDataTree() failed to create greeting registry ", LOG));
 	}
 
 	@Override

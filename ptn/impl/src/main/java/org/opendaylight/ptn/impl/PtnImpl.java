@@ -39,20 +39,20 @@ public class PtnImpl implements PtnService {
 	public PtnImpl(DataBroker adb) {
 		// TODO_Auto-generated constructor stub
 		db = adb;
-		LOG.info("PtnImpl created with data broker "+db.toString());
+		LOG.info("PtnImpl::PtnImpl() cloning data broker "+db.toString());
 		initializeDataTree(db);
 	}
 
 	
     private void initializeDataTree(DataBroker db) {
-        LOG.info("Preparing to initialize the greeting registry");
+        LOG.info("PtnImpl::initializeDataTree() Preparing to initialize the greeting registry");
         WriteTransaction transaction = db.newWriteOnlyTransaction();
         InstanceIdentifier<HelloRegistry> iid = InstanceIdentifier.create(HelloRegistry.class);
         HelloRegistry helloRegistry = new HelloRegistryBuilder()
                 .build();
         transaction.put(LogicalDatastoreType.OPERATIONAL, iid, helloRegistry);
         CheckedFuture<Void, TransactionCommitFailedException> future = transaction.submit();
-        Futures.addCallback(future, new LoggingFuturesCallBack<>("Failed to create greeting registry ", LOG));
+        Futures.addCallback(future, new LoggingFuturesCallBack<>("PtnImpl::initializeDataTree() failed to create greeting registry ", LOG));
     }
     
 	@Override
