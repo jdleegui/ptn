@@ -195,26 +195,6 @@ module tsdn-inventory {
             description "The unique identifier for the service.";
     	}
     }
-    
-    rpc get-node-list {
-        description "get list of registered node";
-        input {
-            leaf name {
-                type string;
-            }
-        }
-    
-        output {
-	  	    leaf response {
-	  	    	type ttypes:response-type;
-	  	    	description "The type of the response.";
-	  	   	}
-		  	leaf reason {
-	            type string;
-	        }
-	  	   	uses node;
-    	}
-    }
                 
     rpc get-node {
     	description "get information of the node";

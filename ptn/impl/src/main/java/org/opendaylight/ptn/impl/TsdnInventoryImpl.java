@@ -37,8 +37,6 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inv
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inventory.rev150105.GetNodeConnectorInput;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inventory.rev150105.GetNodeConnectorOutput;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inventory.rev150105.GetNodeInput;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inventory.rev150105.GetNodeListInput;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inventory.rev150105.GetNodeListOutput;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inventory.rev150105.GetNodeOutput;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inventory.rev150105.GetTunnelInput;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inventory.rev150105.GetTunnelOutput;
@@ -81,6 +79,9 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.CheckedFuture;
 import com.google.common.util.concurrent.Futures;
+//import com.google.gson.Gson;
+//import com.google.gson.GsonBuilder;
+
 
 public class TsdnInventoryImpl implements TsdnInventoryService {
 
@@ -88,19 +89,27 @@ public class TsdnInventoryImpl implements TsdnInventoryService {
 	private DataBroker db;
 	private ArrayList <Node> nodeList;
 	private Nodes nodes = null;
-
+//	private final Gson gsonTsdnNodeInterface;
+//	private GsonBuilder gsonTsdnNodeBuilder;
+	
 	public TsdnInventoryImpl(DataBroker adb) {
 		// TODO_Auto-generated constructor stub
 		db = adb;
 		LOG.info("TsdnInventoryImpl::TsdnInventoryImpl() cloning data broker " + db.toString());
 
+//		gsonTsdnNodeBuilder.registerTypeAdapter(Node.class, new TsdnNodeSerializer());
+//		LOG.info("TsdnInventoryImpl::IsdnInventoryImpl() Trying to prettyPrinting()");
+//		gsonTsdnNodeBuilder.setPrettyPrinting();
+//		LOG.info("TsdnInventoryImpl::IsdnInventoryImpl() Trying to bring()");
+//		gsonTsdnNodeInterface = gsonTsdnNodeBuilder.create();
+//		LOG.info("TsdnInventoryImpl::IsdnInventoryImpl() Trying to end create()");
+		
 		for (int i = 1; i < 20; i++) { 
 			writeToNodes(NodeId.getDefaultInstance("Node"+i));
 		}
-		// initializeDataTree(db);
+		initializeDataTree(db);
 	}  
 	
-	@SuppressWarnings("unused")
 	private void writeToNodes(NodeId input) {
 		LOG.info("TsdnInventoryImpl:writeToNodes(NodeId input="+input.toString()+").");
 		WriteTransaction transaction = db.newWriteOnlyTransaction();
@@ -121,7 +130,9 @@ public class TsdnInventoryImpl implements TsdnInventoryService {
 				.setSoftware("[NODE_COWAVER_SOFTWARE]")				
 				.setTopologyRef(null)
 				.build();
-		
+
+		LOG.info("TsdnInventoryImpl:writeToNodes with instance ("+iid.toString()+node.getNodeId().toString()+").");
+		LOG.info("TsdnInventoryImpl:writeToNodes with node ("+node.toString()+").");
 		transaction.put(LogicalDatastoreType.OPERATIONAL, iid, node);
 		CheckedFuture<Void, TransactionCommitFailedException> future = transaction.submit();
 		Futures.addCallback(future, new LoggingFuturesCallBack<Void>("TsdnInventoryImpl::writeToNodes(IndeId input) failed to write nodes to node", LOG));
@@ -152,9 +163,8 @@ public class TsdnInventoryImpl implements TsdnInventoryService {
         return iid;
     }
 
-	@SuppressWarnings("unused")
 	private void initializeDataTree(DataBroker db) {
-		LOG.info("TsdnInventoryImpl::initializeDataTree() preparing to initialize the greeting registry");
+		LOG.info("TsdnInventoryImpl::initializeDataTree() preparing to initialize the nodes");
 		WriteTransaction transaction = db.newWriteOnlyTransaction();
 		InstanceIdentifier<Nodes> iid = InstanceIdentifier.create(Nodes.class);
 		
@@ -180,16 +190,16 @@ public class TsdnInventoryImpl implements TsdnInventoryService {
 		nodes = new NodesBuilder()
 				.setNode(nodeList)
 				.build();
-		
+		LOG.info("TsdnInventoryImpl:initializeDatrTree with instance ("+iid.toString()+").");
 		transaction.put(LogicalDatastoreType.OPERATIONAL, iid, nodes);
 		CheckedFuture<Void, TransactionCommitFailedException> future = transaction.submit();
 		Futures.addCallback(future, new LoggingFuturesCallBack<>(
-				"TsdnInventoryImpl::initializeDataTree() failed to create greeting registry ", LOG));
+				"TsdnInventoryImpl::initializeDataTree() failed to create initialize data tree ", LOG));
 	}
 
 	@SuppressWarnings("unused")
 	private void initializeDataTree2(DataBroker db) {
-		LOG.info("TsdnInventoryImpl::initializeDataTree() preparing to initialize the greeting registry");
+		LOG.info("TsdnInventoryImpl::initializeDataTree() preparing to initialize data tree2");
 		WriteTransaction transaction = db.newWriteOnlyTransaction();
 		InstanceIdentifier<Node> iid = InstanceIdentifier.create(Node.class);
 		Node node = new NodeBuilder()
@@ -240,7 +250,8 @@ public class TsdnInventoryImpl implements TsdnInventoryService {
 
 	@Override
 	public Future<RpcResult<SetTunnelOutput>> setTunnel(SetTunnelInput input) {
-		// TODO Auto-generated method stub
+		// TODO_Auto-generated method stub
+		LOG.info("TsdnInventoryImpl::setTunnel(SetTunnelInput input) called ("+input.toString()+").");
 		return null;
 	}
 
@@ -313,11 +324,13 @@ public class TsdnInventoryImpl implements TsdnInventoryService {
 		return null;
 	}
 
-	@Override
-	public Future<RpcResult<GetNodeListOutput>> getNodeList(GetNodeListInput input) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+//	@Override
+//	public Future<RpcResult<GetNodeListOutput>> getNodeList() {
+//		// TODO_Auto-generated method stub
+//	     LOG.info( "TsdnInventoryImpl::getNodeList()." );
+//	     // return Futures.immediateFuture( RpcResultBuilder.<Void> success().build() );
+//	     return null;
+//	}
 
 	@Override
 	public Future<RpcResult<GetTunnelOutput>> getTunnel(GetTunnelInput input) {

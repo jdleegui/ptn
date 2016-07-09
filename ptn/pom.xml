@@ -57,4 +57,10 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
     <tag>HEAD</tag>
     <url>https://wiki.opendaylight.org/view/ptn:Main</url>
   </scm>
+  <dependencies>
+  	<dependency>
+  		<groupId>com.google.code.gson</groupId>
+  		<artifactId>gson</artifactId>
+  		</dependency>
+  </dependencies>
 </project>
