@@ -16,6 +16,8 @@ import org.opendaylight.controller.md.sal.binding.api.WriteTransaction;
 import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
 import org.opendaylight.controller.md.sal.common.api.data.ReadFailedException;
 import org.opendaylight.controller.md.sal.common.api.data.TransactionCommitFailedException;
+import org.opendaylight.controller.sal.binding.api.BindingAwareBroker.ProviderContext;
+import org.opendaylight.controller.sal.binding.api.BindingAwareBroker.RoutedRpcRegistration;
 import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev130715.IpAddress;
 import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev130715.Ipv4Address;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inventory.rev150105.DeleteAccessIfInput;
@@ -68,7 +70,9 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inv
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inventory.rev150105.nodes.Node;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inventory.rev150105.nodes.NodeBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.inventory.rev150105.nodes.NodeKey;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.node.rev150105.NodeContext;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.node.rev150105.NodeId;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.node.rev150105.NodeRef;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.node.rev150105.NodeStatusType;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.tsdn.node.rev150105.NodeType;
 import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
@@ -89,13 +93,23 @@ public class TsdnInventoryImpl implements TsdnInventoryService {
 	private DataBroker db;
 	private ArrayList <Node> nodeList;
 	private Nodes nodes = null;
+	private ProviderContext session;
 //	private final Gson gsonTsdnNodeInterface;
 //	private GsonBuilder gsonTsdnNodeBuilder;
+	private RoutedRpcRegistration<TsdnInventoryService> reg;
 	
 	public TsdnInventoryImpl(DataBroker adb) {
 		// TODO_Auto-generated constructor stub
 		db = adb;
-		LOG.info("TsdnInventoryImpl::TsdnInventoryImpl() cloning data broker " + db.toString());
+		LOG.info("TsdnInventoryImpl::TsdnInventoryImpl(db) cloning data broker " + db.toString());
+		initializeDataTree(db);
+	}  
+	
+	public TsdnInventoryImpl(ProviderContext asession) {
+		// TODO_Auto-generated constructor stub
+		session = asession;
+		db = session.getSALService(DataBroker.class);
+		LOG.info("TsdnInventoryImpl::TsdnInventoryImpl(session) cloning data broker " + db.toString());
 
 //		gsonTsdnNodeBuilder.registerTypeAdapter(Node.class, new TsdnNodeSerializer());
 //		LOG.info("TsdnInventoryImpl::IsdnInventoryImpl() Trying to prettyPrinting()");
@@ -104,10 +118,7 @@ public class TsdnInventoryImpl implements TsdnInventoryService {
 //		gsonTsdnNodeInterface = gsonTsdnNodeBuilder.create();
 //		LOG.info("TsdnInventoryImpl::IsdnInventoryImpl() Trying to end create()");
 		
-		for (int i = 1; i < 20; i++) { 
-			writeToNodes(NodeId.getDefaultInstance("Node"+i));
-		}
-		initializeDataTree(db);
+		
 	}  
 	
 	private void writeToNodes(NodeId input) {
@@ -130,6 +141,11 @@ public class TsdnInventoryImpl implements TsdnInventoryService {
 				.setSoftware("[NODE_COWAVER_SOFTWARE]")				
 				.setTopologyRef(null)
 				.build();
+		
+		NodeRef nodeRef = createNodeRef(input.toString());
+		LOG.info("will regist "+input.toString()+"."+nodeRef.getValue());
+		//session.addRoutedRpcImplementation(TsdnInventoryImpl.class, node);
+		reg.registerPath(NodeContext.class, nodeRef.getValue());
 
 		LOG.info("TsdnInventoryImpl:writeToNodes with instance ("+iid.toString()+node.getNodeId().toString()+").");
 		LOG.info("TsdnInventoryImpl:writeToNodes with node ("+node.toString()+").");
@@ -137,6 +153,22 @@ public class TsdnInventoryImpl implements TsdnInventoryService {
 		CheckedFuture<Void, TransactionCommitFailedException> future = transaction.submit();
 		Futures.addCallback(future, new LoggingFuturesCallBack<Void>("TsdnInventoryImpl::writeToNodes(IndeId input) failed to write nodes to node", LOG));
 		readFromNodeId(input);
+	}
+
+	public void setRegister(RoutedRpcRegistration<TsdnInventoryService> firstReg) {
+		// TODO_Auto-generated method stub
+		this.reg = firstReg;
+		for (int i = 1; i < 20; i++) { 
+			writeToNodes(NodeId.getDefaultInstance("Node"+i));
+		}
+	}
+	
+	// https://git.opendaylight.org/gerrit/gitweb?p=controller.git;a=blob;f=opendaylight/md-sal/sal-binding-it/src/test/java/org/opendaylight/controller/test/sal/binding/it/RoutedServiceTest.java;h=d49d6f0e25e271e43c8550feb5eef63d96301184;hb=HEAD
+	// https://github.com/opendaylight/docs/blob/master/manuals/developer-guide/src/main/asciidoc/controller/md-sal-rpc-routing.adoc
+	private static NodeRef createNodeRef(String string) {
+		NodeKey key = new NodeKey(new NodeId(string));
+		InstanceIdentifier<Node> path = InstanceIdentifier.builder(Nodes.class).child(Node.class, key).build();
+		return new NodeRef(path);
 	}
 	
 	private NodeId readFromNodeId(NodeId nodeId) {
@@ -238,13 +270,15 @@ public class TsdnInventoryImpl implements TsdnInventoryService {
 
 	@Override
 	public Future<RpcResult<UpdateDelegatedServiceOutput>> updateDelegatedService(UpdateDelegatedServiceInput input) {
-		// TODO Auto-generated method stub
+		// TODO_Auto-generated method stub
+		LOG.info("TsdnInventoryImpl::updateDelegatedService called("+input.toString()+").");
 		return null;
 	}
 
 	@Override
 	public Future<RpcResult<GetDelegatedServiceOutput>> getDelegatedService(GetDelegatedServiceInput input) {
-		// TODO Auto-generated method stub
+		// TODO_Auto-generated method stub
+		LOG.info("TsdnInventoryImpl:: called("+input.toString()+").");
 		return null;
 	}
 
@@ -257,127 +291,138 @@ public class TsdnInventoryImpl implements TsdnInventoryService {
 
 	@Override
 	public Future<RpcResult<DeleteTunnelXcOutput>> deleteTunnelXc(DeleteTunnelXcInput input) {
-		// TODO Auto-generated method stub
+		// TODO_Auto-generated method stub
+		LOG.info("TsdnInventoryImpl:: called("+input.toString()+").");
 		return null;
 	}
 
 	@Override
 	public Future<RpcResult<UpdateCompletePathSetProvisionServiceOutput>> updateCompletePathSetProvisionService(
 			UpdateCompletePathSetProvisionServiceInput input) {
-		// TODO Auto-generated method stub
+		// TODO_Auto-generated method stub
+		LOG.info("TsdnInventoryImpl:: called("+input.toString()+").");
 		return null;
 	}
 
 	@Override
 	public Future<RpcResult<SetCompletePathSetProvisionServiceOutput>> setCompletePathSetProvisionService(
 			SetCompletePathSetProvisionServiceInput input) {
-		// TODO Auto-generated method stub
+		// TODO_Auto-generated method stub
+		LOG.info("TsdnInventoryImpl:: called("+input.toString()+").");
 		return null;
 	}
 
 	@Override
 	public Future<RpcResult<DeleteAccessIfOutput>> deleteAccessIf(DeleteAccessIfInput input) {
-		// TODO Auto-generated method stub
+		// TODO_Auto-generated method stub
+		LOG.info("TsdnInventoryImpl:: called("+input.toString()+").");
 		return null;
 	}
 
 	@Override
 	public Future<RpcResult<UpdateTunnelOutput>> updateTunnel(UpdateTunnelInput input) {
-		// TODO Auto-generated method stub
+		// TODO_Auto-generated method stub
+		LOG.info("TsdnInventoryImpl:: called("+input.toString()+").");
 		return null;
 	}
 
 	@Override
 	public Future<RpcResult<SetTunnelXcOutput>> setTunnelXc(SetTunnelXcInput input) {
-		// TODO Auto-generated method stub
+		// TODO_Auto-generated method stub
+		LOG.info("TsdnInventoryImpl:: called("+input.toString()+").");
 		return null;
 	}
 
 	@Override
 	public Future<RpcResult<SetAccessIfOutput>> setAccessIf(SetAccessIfInput input) {
-		// TODO Auto-generated method stub
+		// TODO_Auto-generated method stub
+		LOG.info("TsdnInventoryImpl:: called("+input.toString()+").");
 		return null;
 	}
 
 	@Override
 	public Future<RpcResult<DeleteDelegatedServiceOutput>> deleteDelegatedService(DeleteDelegatedServiceInput input) {
-		// TODO Auto-generated method stub
+		// TODO_Auto-generated method stub
+		LOG.info("TsdnInventoryImpl:: called("+input.toString()+").");
 		return null;
 	}
 
 	@Override
 	public Future<RpcResult<DeleteTunnelOutput>> deleteTunnel(DeleteTunnelInput input) {
-		// TODO Auto-generated method stub
+		// TODO_Auto-generated method stub
+		LOG.info("TsdnInventoryImpl:: called("+input.toString()+").");
 		return null;
 	}
 
 	@Override
 	public Future<RpcResult<GetNodeConnectorOutput>> getNodeConnector(GetNodeConnectorInput input) {
-		// TODO Auto-generated method stub
+		// TODO_Auto-generated method stub
+		LOG.info("TsdnInventoryImpl:: called("+input.toString()+").");
 		return null;
 	}
 
 	@Override
 	public Future<RpcResult<DeleteCompletePathSetProvisionServiceOutput>> deleteCompletePathSetProvisionService(
 			DeleteCompletePathSetProvisionServiceInput input) {
-		// TODO Auto-generated method stub
+		// TODO_Auto-generated method stub
+		LOG.info("TsdnInventoryImpl::deleteCompletePathSetPrivisionService called("+input.toString()+").");
 		return null;
 	}
 
-//	@Override
-//	public Future<RpcResult<GetNodeListOutput>> getNodeList() {
-//		// TODO_Auto-generated method stub
-//	     LOG.info( "TsdnInventoryImpl::getNodeList()." );
-//	     // return Futures.immediateFuture( RpcResultBuilder.<Void> success().build() );
-//	     return null;
-//	}
-
 	@Override
 	public Future<RpcResult<GetTunnelOutput>> getTunnel(GetTunnelInput input) {
-		// TODO Auto-generated method stub
+		// TODO_Auto-generated method stub
+		LOG.info("TsdnInventoryImpl::getTunnel called("+input.toString()+").");
 		return null;
 	}
 
 	@Override
 	public Future<RpcResult<GetCompletePathSetProvisionServiceOutput>> getCompletePathSetProvisionService(
 			GetCompletePathSetProvisionServiceInput input) {
-		// TODO Auto-generated method stub
+		// TODO_Auto-generated method stub
+		LOG.info("TsdnInventoryImpl::getCompletePathSEtPrivisionService called("+input.toString()+").");
 		return null;
 	}
 
 	@Override
 	public Future<RpcResult<SetDelegatedServiceOutput>> setDelegatedService(SetDelegatedServiceInput input) {
-		// TODO Auto-generated method stub
+		// TODO_Auto-generated method stub
+		LOG.info("TsdnInventoryImpl::setDelegatedService called("+input.toString()+").");
 		return null;
 	}
 
 	@Override
 	public Future<RpcResult<GetNodeOutput>> getNode(GetNodeInput input) {
-		// TODO Auto-generated method stub
+		// TODO_Auto-generated method stub
+		LOG.info("TsdnInventoryImpl::getNode called("+input.toString()+").");
 		return null;
 	}
 
 	@Override
 	public Future<RpcResult<UpdateTunnelXcOutput>> updateTunnelXc(UpdateTunnelXcInput input) {
-		// TODO Auto-generated method stub
+		// TODO_Auto-generated method stub
+		LOG.info("TsdnInventoryImpl::updateTunnelXc called("+input.toString()+").");
 		return null;
 	}
 
 	@Override
 	public Future<RpcResult<GetTunnelXcOutput>> getTunnelXc(GetTunnelXcInput input) {
-		// TODO Auto-generated method stub
+		// TODO_Auto-generated method stub
+		LOG.info("TsdnInventoryImpl::getTunnelXc called("+input.toString()+").");
 		return null;
 	}
 
 	@Override
 	public Future<RpcResult<UpdateAccessIfOutput>> updateAccessIf(UpdateAccessIfInput input) {
-		// TODO Auto-generated method stub
+		// TODO_Auto-generated method stub
+		LOG.info("TsdnInventoryImpl::updateAccessIf called("+input.toString()+").");
 		return null;
 	}
 
 	@Override
 	public Future<RpcResult<GetAccessIfOutput>> getAccessIf(GetAccessIfInput input) {
-		// TODO Auto-generated method stub
+		// TODO_Auto-generated method stub
+		LOG.info("TsdnInventoryImpl::getAccessIf called("+input.toString()+").");
 		return null;
 	}
 

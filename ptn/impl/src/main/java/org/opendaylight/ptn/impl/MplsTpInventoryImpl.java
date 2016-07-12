@@ -44,107 +44,130 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.mpls.tp.
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.mpls.tp.inventory.rev150105.UpdateVpnInput;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.mpls.tp.inventory.rev150105.UpdateVpnOutput;
 import org.opendaylight.yangtools.yang.common.RpcResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class MplsTpInventoryImpl implements MplsTpInventoryService {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(MplsTpInventoryImpl.class);
+	private DataBroker db;
 
-	public MplsTpInventoryImpl(DataBroker db) {
+	public MplsTpInventoryImpl(DataBroker adb) {
 		// TODO Auto-generated constructor stub
+		db = adb;
+		LOG.info("MplsTpInventoryImpl::method called("+db.toString()+").");
 	}
 
 	@Override
 	public Future<RpcResult<GetPwOutput>> getPw(GetPwInput input) {
-		// TODO Auto-generated method stub
+		// TODO_Auto-generated method stub
+		LOG.info("MplsTpInventoryImpl::method called("+input.toString()+").");
 		return null;
 	}
 
 	@Override
 	public Future<RpcResult<SetVpnOutput>> setVpn(SetVpnInput input) {
-		// TODO Auto-generated method stub
+		// TODO_Auto-generated method stub
+		LOG.info("MplsTpInventoryImpl::method called("+input.toString()+").");
 		return null;
 	}
 
 	@Override
 	public Future<RpcResult<UpdateMplsIfOutput>> updateMplsIf(UpdateMplsIfInput input) {
 		// TODO Auto-generated method stub
+		LOG.info("TsdnInventoryImpl:: called("+input.toString()+").");
 		return null;
 	}
 
 	@Override
 	public Future<RpcResult<DeletePwXcOutput>> deletePwXc(DeletePwXcInput input) {
-		// TODO Auto-generated method stub
+		// TODO_Auto-generated method stub
+		LOG.info("MplsTpInventoryImpl::method called("+input.toString()+").");
 		return null;
 	}
 
 	@Override
 	public Future<RpcResult<DeleteMplsIfOutput>> deleteMplsIf(DeleteMplsIfInput input) {
-		// TODO Auto-generated method stub
+		// TODO_Auto-generated method stub
+		LOG.info("MplsTpInventoryImpl::method called("+input.toString()+").");
 		return null;
 	}
 
 	@Override
 	public Future<RpcResult<SetPwXcOutput>> setPwXc(SetPwXcInput input) {
-		// TODO Auto-generated method stub
+		// TODO_Auto-generated method stub
+		LOG.info("MplsTpInventoryImpl::method called("+input.toString()+").");
 		return null;
 	}
 
 	@Override
 	public Future<RpcResult<UpdateVpnOutput>> updateVpn(UpdateVpnInput input) {
-		// TODO Auto-generated method stub
+		// TODO_Auto-generated method stub
+		LOG.info("MplsTpInventoryImpl::method called("+input.toString()+").");
 		return null;
 	}
 
 	@Override
 	public Future<RpcResult<UpdatePwXcOutput>> updatePwXc(UpdatePwXcInput input) {
-		// TODO Auto-generated method stub
+		// TODO_Auto-generated method stub
+		LOG.info("MplsTpInventoryImpl::method called("+input.toString()+").");
 		return null;
 	}
 
 	@Override
 	public Future<RpcResult<SetMplsIfOutput>> setMplsIf(SetMplsIfInput input) {
-		// TODO Auto-generated method stub
+		// TODO_Auto-generated method stub
+		LOG.info("MplsTpInventoryImpl::method called("+input.toString()+").");
 		return null;
 	}
 
 	@Override
 	public Future<RpcResult<DeleteVpnOutput>> deleteVpn(DeleteVpnInput input) {
-		// TODO Auto-generated method stub
+		// TODO_Auto-generated method stub
+		LOG.info("MplsTpInventoryImpl::method called("+input.toString()+").");
 		return null;
 	}
 
 	@Override
 	public Future<RpcResult<GetMplsIfOutput>> getMplsIf(GetMplsIfInput input) {
-		// TODO Auto-generated method stub
+		// TODO_Auto-generated method stub
+		LOG.info("MplsTpInventoryImpl::method called("+input.toString()+").");
 		return null;
 	}
 
 	@Override
 	public Future<RpcResult<DeletePwOutput>> deletePw(DeletePwInput input) {
-		// TODO Auto-generated method stub
+		// TODO_Auto-generated method stub
+		LOG.info("MplsTpInventoryImpl::method called("+input.toString()+").");
 		return null;
 	}
 
 	@Override
 	public Future<RpcResult<UpdatePwOutput>> updatePw(UpdatePwInput input) {
-		// TODO Auto-generated method stub
+		// TODO_Auto-generated method stub
+		LOG.info("MplsTpInventoryImpl::method called("+input.toString()+").");
 		return null;
 	}
 
 	@Override
 	public Future<RpcResult<SetPwOutput>> setPw(SetPwInput input) {
-		// TODO Auto-generated method stub
+		// TODO_Auto-generated method stub
+		LOG.info("MplsTpInventoryImpl::method called("+input.toString()+").");
 		return null;
 	}
 
 	@Override
 	public Future<RpcResult<GetVpnOutput>> getVpn(GetVpnInput input) {
-		// TODO Auto-generated method stub
+		// TODO_Auto-generated method stub
+		LOG.info("MplsTpInventoryImpl::method called("+input.toString()+").");
 		return null;
 	}
 
 	@Override
 	public Future<RpcResult<GetPwXcOutput>> getPwXc(GetPwXcInput input) {
-		// TODO Auto-generated method stub
+		// TODO_Auto-generated method stub
+		LOG.info("MplsTpInventoryImpl::method called("+input.toString()+").");
 		return null;
 	}
 

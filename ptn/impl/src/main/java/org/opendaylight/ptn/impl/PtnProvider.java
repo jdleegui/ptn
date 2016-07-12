@@ -9,6 +9,7 @@ package org.opendaylight.ptn.impl;
 
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
 import org.opendaylight.controller.sal.binding.api.BindingAwareBroker.ProviderContext;
+import org.opendaylight.controller.sal.binding.api.BindingAwareBroker.RoutedRpcRegistration;
 import org.opendaylight.controller.sal.binding.api.BindingAwareBroker.RpcRegistration;
 import org.opendaylight.controller.sal.binding.api.BindingAwareProvider;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.mpls.tp.inventory.rev150105.MplsTpInventoryService;
@@ -23,6 +24,7 @@ public class PtnProvider implements BindingAwareProvider, AutoCloseable {
     private RpcRegistration <PtnService> ptnService;
 	private RpcRegistration <TsdnInventoryService> tsdnInventoryService;
 	private RpcRegistration <MplsTpInventoryService> mplsTpInventoryService;
+	private RoutedRpcRegistration<TsdnInventoryService> firstReg;
 
     @Override
     public void onSessionInitiated(ProviderContext session) {
@@ -30,6 +32,9 @@ public class PtnProvider implements BindingAwareProvider, AutoCloseable {
         DataBroker db = session.getSALService(DataBroker.class);
         ptnService = session.addRpcImplementation(PtnService.class,  new PtnImpl(db));
         tsdnInventoryService = session.addRpcImplementation(TsdnInventoryService.class, new TsdnInventoryImpl(db));
+        TsdnInventoryImpl tsdnInventoryImpl = new TsdnInventoryImpl(session);
+        firstReg = session.addRoutedRpcImplementation(TsdnInventoryService.class, tsdnInventoryImpl);
+        tsdnInventoryImpl.setRegister(firstReg);
         mplsTpInventoryService = session.addRpcImplementation(MplsTpInventoryService.class, new MplsTpInventoryImpl(db));
     }
 
