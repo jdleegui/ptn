@@ -15,7 +15,13 @@ git add README.md && git commit -m "Update README.md" && git push -u origin mast
 ``` 
 mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller -DarchetypeArtifactId=opendaylight-startup-archetype \
 -DarchetypeRepository=https://nexus.opendaylight.org/content/repositories/public/ \
--DarchetypeCatalog=https://nexus.opendaylight.org/content/repositories/public/archetype-catalog.xml 
+-DarchetypeCatalog=https://nexus.opendaylight.org/content/repositories/public/archetype-catalog.xml
+```
+- [ Create New Project in eclipse GUI mode ]
+```
+- File > New > Other > Maven Project > Next > Opendaylight(public)
+  (If the ODL(public) not exist, then create it with category as 'https://nexus.opendaylight.org/content/repositories/public/')
+- Select the 'opendaylight-startup-archetype'
 ```
 ## 2. Define default project name
 ```
@@ -24,7 +30,11 @@ Define value for property 'artifactId': : ptn
 Define value for property 'version': 1.0-SNAPSHOT: : 1.0.0-SNAPSHOT
 Define value for property 'package': org.opendaylight.ptn: :
 Define value for property 'classPrefix': ${artifactId.substring(0,1).toUpperCase()}${artifactId.substring(1)}
-Define value for property 'copyright': : Copyright(c) Coweaver, Inc.
+Define value for property 'copyright': : Copyright(c) Lguplus, Inc.
+```
+- [In GUI mode, the postfix of 'package' is duplicated, trim it. say 'org.opendaylight.ptn.ptn'
+```
+
 ```
 ## 3. Add yang files
 - Two files required to be downloaded and put them all together. ietf-inet-types.yang and yang-ext.yang
