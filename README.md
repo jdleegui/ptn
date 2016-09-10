@@ -9,7 +9,7 @@ git remote add origin https://github.com/jdleegui/ptn.git
 git push -u origin master
 git add README.md && git commit -m "Update README.md" && git push -u origin master
 ```
-## 1. Craate project.
+## 1. Create project.
 - [APP CREATING GUIDE] ( https://github.com/opendaylight/docs/blob/master/manuals/developer-guide/src/main/asciidoc/developing-app.adoc )
 - [YANG GUIDE] ( https://wiki.onosproject.org/display/ONOS/YANG+utils#YANGutils-Namespace )
 ``` 
