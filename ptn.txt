@@ -1,3 +1,8 @@
+-.Install JAVA
+ .sudo apt-get auto-remove
+ .sudo apt-get autoremove
+ .sudo apt-get install default-jdk
+ 
 -.MUST NOT HAVE
  .sudo apt-get install eclipse-platform
 -.ETRI GUIDE NOTE
