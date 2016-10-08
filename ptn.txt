@@ -1,5 +1,4 @@
 -.Install JAVA
- .sudo apt-get auto-remove
  .sudo apt-get autoremove
  .sudo apt-get install default-jdk
  
@@ -180,13 +179,16 @@ task panetask pane
 https://confluence.atlassian.com/bitbucketserverkb/git-commands-return-fatal-authentication-failed-779171809.html
 /home/jdleegui/tsdn/bgpcep-master/eclipse/
 
-
 https://confluence.atlassian.com/bitbucketserverkb/git-commands-return-fatal-authentication-failed-779171809.html
-- cp -n ~/.m2/settings.xml{,.orig} ; \wget -q -O - https://raw.githubusercontent.com/opendaylight/odlparent/stable/beryllium/settings.xml > ~/.m2/settings.xml
-- mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller \
-  -DarchetypeArtifactId=opendaylight-startup-archetype \
-  -DarchetypeRepository=https://nexus.opendaylight.org/content/repositories/public/ \
-  -DarchetypeCatalog=https://nexus.opendaylight.org/content/repositories/public/archetype-catalog.xml
+
+cp -n ~/.m2/settings.xml{,.orig};
+wget -q -O - https://raw.githubusercontent.com/opendaylight/odlparent/stable/boron/settings.xml > ~/.m2/settings.xml
+
+mvn archetype:generate \
+-DarchetypeGroupId=org.opendaylight.controller \
+-DarchetypeArtifactId=opendaylight-startup-archetype \
+-DarchetypeRepository=https://nexus.opendaylight.org/content/repositories/public/ \
+-DarchetypeCatalog=https://nexus.opendaylight.org/content/repositories/public/archetype-catalog.xml
 
 Define value for property 'groupId': : org.opendaylight.example
 Define value for property 'artifactId': : example
