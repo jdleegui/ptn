@@ -30,27 +30,34 @@ ls ~/.m2/settings.xml
 mv ~/.m2/repository/ ~/BAK/
 ```
 # Create project
-## 1. Make project based on '1.1.3-Beryllium-SR3'
+## 1. Or make project based on '1.1.3-Beryllium-SR3' using the public general architype (*recomend)
 ```
-mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller -DarchetypeArtifactId=opendaylight-startup-archetype -DarchetypeRepository=http://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/ -DarchetypeCatalog=http://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/archetype-catalog.xml -DarchetypeVersion=1.1.3-Beryllium-SR3
-```
-
-- [APP CREATING GUIDE] ( https://github.com/opendaylight/docs/blob/master/manuals/developer-guide/src/main/asciidoc/developing-app.adoc )
-- [YANG GUIDE] ( https://wiki.onosproject.org/display/ONOS/YANG+utils#YANGutils-Namespace )
-``` 
-mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller -DarchetypeArtifactId=opendaylight-startup-archetype \
+mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller \
+-DarchetypeArtifactId=opendaylight-startup-archetype \
 -DarchetypeRepository=https://nexus.opendaylight.org/content/repositories/public/ \
--DarchetypeCatalog=https://nexus.opendaylight.org/content/repositories/public/archetype-catalog.xml
+-DarchetypeCatalog=https://nexus.opendaylight.org/content/repositories/public/archetype-catalog.xml \
+-DarchetypeVersion=1.1.3-Beryllium-SR3
+```
+## 2. Make project based on '1.1.3-Beryllium-SR3' using the snapshot architype
+```
+mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller \
+-DarchetypeArtifactId=opendaylight-startup-archetype \
+-DarchetypeRepository=http://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/ \
+-DarchetypeCatalog=http://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/archetype-catalog.xml \
+-DarchetypeVersion=1.1.3-Beryllium-SR3
+```
+## 3. Compile 
+```
+mvn clean install -DskipTests -Dcheckstyle.skip=true
 ```
 - [ Create New Project in eclipse GUI mode ]
-```   
-   
-   93  mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller -DarchetypeArtifactId=opendaylight-startup-archetype -DarchetypeRepository=https://nexus.opendaylight.org/content/repositories/public/ -DarchetypeCatalog=https://nexus.opendaylight.org/content/repositories/public/archetype-catalog.xml
+```
+
    94  ls
    95  ls -al
    96  cd hello/
    97  ls
-   98  mvn clean install -DskipTests
+   98  
    99  ls
   100  ./karaf/target/assembly/bin/karaf 
   101  xt
@@ -175,7 +182,7 @@ mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller -Darchetyp
   220  cd impl/
   221  cd ..
   222  cd api/
-  223  mvn clean install -DskipTests -Dcheckstyle.skip=true
+  223  
   224  cd ..
   225  cd impl
   226  mvn clean install -DskipTests -Dcheckstyle.skip=true
@@ -368,31 +375,3 @@ mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller -Darchetyp
   413  clear
   414  ./eclipse/java-neon/eclipse/eclipse &
   415  xt
-  416  reboot
-  417  xt
-  418  ls -al
-  419  clear
-  420  ls -al
-  421  eclise
-  422  poweroff
-  423  xt
-  424  cd eclipse/
-  425  cd e
-  426  ls
-  427  cd java-neon/
-  428  ls
-  429  cd eclipse/
-  430  eclipse &
-  431  ls
-  432  eclipse &
-  433  cd eclipse/
-  434  ls
-  435  cd java-neon/
-  436  ls
-  437  cd eclipse/
-  438  ls
-  439  eclipse &
-  440  ls ~/.
-  441  history
-  442  cd
-443 history > /tmp/simple.txt
