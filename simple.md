@@ -114,8 +114,8 @@ import org.opendaylight.controller.sal.binding.api.BindingAwareProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Tsdn_demoProvider implements BindingAwareProvider, ~~AutoCloseable~~ {
-
+public class Tsdn_demoProvider implements BindingAwareProvider /* , AutoCloseable */
+{
     private static final Logger LOG = LoggerFactory.getLogger(Tsdn_demoProvider.class);
 
     @Override
@@ -123,11 +123,10 @@ public class Tsdn_demoProvider implements BindingAwareProvider, ~~AutoCloseable~
         LOG.info("Tsdn_demoProvider Session Initiated");
     }
 
-    ~~@Override
-    public void close() throws Exception {
-        LOG.info("Tsdn_demoProvider Closed");
-    }~~
-
+//  @Override
+//  public void close() throws Exception {
+//      LOG.info("Tsdn_demoProvider Closed");
+//  }
 }
 
 ```
@@ -151,11 +150,11 @@ public class Tsdn_demoProvider extends AbstractBrokerAwareActivator implements B
         LOG.info("Tsdn_demoProvider Session Initiated");
     }
 
-	@Override
-	protected void onBrokerAvailable(BindingAwareBroker broker, BundleContext arg1) {
-		LOG.info("Tsdn_demoProvider onBrokerAvailable");
-		broker.registerProvider(this);
-	}
+    @Override
+    protected void onBrokerAvailable(BindingAwareBroker broker, BundleContext arg1) {
+        LOG.info("Tsdn_demoProvider onBrokerAvailable");
+        broker.registerProvider(this);
+    }
 }
 ```
 ## Download Pre-built zip ODL
