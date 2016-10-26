@@ -66,9 +66,23 @@ Define value for property 'copyright': : LGUplus.
 ```
 Download Pre-built zip file "https://nexus.opendaylight.org/content/repositories/opendaylight.release/org/opendaylight/integration/distribution-karaf/0.4.4-Beryllium-SR4/distribution-karaf-0.4.4-Beryllium-SR4.zip"
 ```
-## 3. Compile 
+## 5. Run OpendayLight PreBuild distribution and trace log.
 ```
-mvn clean install -DskipTests -Dcheckstyle.skip=true
+unzip distribution-karaf-0.4.4-Beryllium-SR4.zip 
+distribution-karaf-0.4.4-Beryllium-SR4 ~/workspace/
+workspace/distribution-karaf-0.4.4-Beryllium-SR4/bin/karaf
+tail -F distribution-karaf-0.4.4-Beryllium-SR4/data/log/karaf.log 
+```
+## 6. Install basic features which required to run our project.
+ ```
+opendaylight-user@root>feature:install odl-dlux-all
+opendaylight-user@root>feature:install odl-restconf-all 
+opendaylight-user@root>feature:install odl-mdsal-all 
+```
+## 7. Compile API folder first and copy the created jar into the deply folder.
+```
+ptn/api/mvn clean install -DskipTests -Dcheckstyle.skip=true
+cp ptn/api/target/ptn-api-1.0.0-SNAPSHOT.jar ~/workspace/distribution-karaf-0.4.4-Beryllium-SR4/deploy/
 ```
 - [ Create New Project in eclipse GUI mode ]
 ```
