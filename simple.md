@@ -119,10 +119,10 @@ workspace/distribution-karaf-0.4.4-Beryllium-SR4/bin/karaf
 tail -F distribution-karaf-0.4.4-Beryllium-SR4/data/log/karaf.log 
 ```
 ## 6. Install basic features which required to run our project.
-- opendaylight-user@root>feature:install odl-dlux-all
-- opendaylight-user@root>feature:install odl-restconf-all 
-- opendaylight-user@root>feature:install odl-mdsal-all 
- ```
+- [Install DLUX] opendaylight-user@root>feature:install odl-dlux-all
+- [Install RESTCONF] opendaylight-user@root>feature:install odl-restconf-all 
+- [Install MDSAL] opendaylight-user@root>feature:install odl-mdsal-all 
+```
 feature:install odl-dlux-all
 feature:install odl-restconf-all 
 feature:install odl-mdsal-all 
