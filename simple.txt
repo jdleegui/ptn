@@ -1,32 +1,3 @@
-    1  ls -al
-    2  xt
-    3  ping 192.168.123.254
-    4  ls -al
-    5  clear
-    6  scp 
-    7  clear
-    8  ls -al
-    9  scp jdleegui@192.168.123.116:/home/jdleegui/.bashrc bashrc_gui
-   10  scp jdleegui@192.168.123.116:/home/jdleegui/a.txt ~/
-   11  exit
-   12  xxtt
-   13  xt
-   14  vim 
-   15  s
-   16  ls -al
-   17  clear
-   18  vim a.txt
-   19  vim .bashrc
-   20  vi bashrc
-   21  vi .bashrc
-   22  xterm &
-   23  vim .bashrc
-   24  vi .bashrc
-   25  exit
-   26  vim bashrc_gui 
-   27  vi bashrc_gui 
-   28  :q
-   29  xt
    30  sudo apt-get update
    31  sudo apt-get dist-upgrade
    32  sudo apt-get install openjdk-8-jre-headless
