@@ -46,19 +46,19 @@ mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller \
 -DarchetypeCatalog=http://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/archetype-catalog.xml \
 -DarchetypeVersion=1.1.3-Beryllium-SR3
 ```
+```
+Define value for property 'groupId': : com.lgu
+Define value for property 'artifactId': : ptn
+Define value for property 'package':  com.lgu: : 
+Define value for property 'classPrefix':  Ptn: : 
+Define value for property 'copyright': : LGUplus.
+```
 ## 3. Compile 
 ```
 mvn clean install -DskipTests -Dcheckstyle.skip=true
 ```
 - [ Create New Project in eclipse GUI mode ]
 ```
-
-   94  ls
-   95  ls -al
-   96  cd hello/
-   97  ls
-   98  
-   99  ls
   100  ./karaf/target/assembly/bin/karaf 
   101  xt
   102  ps -ef
