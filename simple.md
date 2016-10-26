@@ -107,13 +107,31 @@ Define value for property 'copyright': : LGUplus, Inc.
 ```
 ## Change existing java code like the same as following.
 ```
-/*
- * Copyright © 2015 LGUplus. and others.  All rights reserved.
- *
- * This program and the accompanying materials are made available under the
- * terms of the Eclipse Public License v1.0 which accompanies this distribution,
- * and is available at http://www.eclipse.org/legal/epl-v10.html
- */
+package tsdn.demo.impl;
+
+import org.opendaylight.controller.sal.binding.api.BindingAwareBroker.ProviderContext;
+import org.opendaylight.controller.sal.binding.api.BindingAwareProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class Tsdn_demoProvider implements BindingAwareProvider, ~~AutoCloseable~~ {
+
+    private static final Logger LOG = LoggerFactory.getLogger(Tsdn_demoProvider.class);
+
+    @Override
+    public void onSessionInitiated(ProviderContext session) {
+        LOG.info("Tsdn_demoProvider Session Initiated");
+    }
+
+    ~~@Override
+    public void close() throws Exception {
+        LOG.info("Tsdn_demoProvider Closed");
+    }~~
+
+}
+
+```
+```
 package tsdn.demo.impl;
 
 import org.opendaylight.controller.sal.binding.api.AbstractBrokerAwareActivator;
