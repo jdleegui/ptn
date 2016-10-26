@@ -1,6 +1,5 @@
 
 # Setup environment
-
 ## 1. Install JDK
 ```
 sudo apt-get update
@@ -26,7 +25,16 @@ wget -q -O - https://raw.githubusercontent.com/opendaylight/odlparent/stable/bor
 ls ~/.m2
 ls ~/.m2/settings.xml
 ```
-## 1. Create project.
+## 4. Remove existing repository if exist
+```
+mv ~/.m2/repository/ ~/BAK/
+```
+# Create project
+## 1. Make project based on '1.1.3-Beryllium-SR3'
+```
+mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller -DarchetypeArtifactId=opendaylight-startup-archetype -DarchetypeRepository=http://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/ -DarchetypeCatalog=http://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/archetype-catalog.xml -DarchetypeVersion=1.1.3-Beryllium-SR3
+```
+
 - [APP CREATING GUIDE] ( https://github.com/opendaylight/docs/blob/master/manuals/developer-guide/src/main/asciidoc/developing-app.adoc )
 - [YANG GUIDE] ( https://wiki.onosproject.org/display/ONOS/YANG+utils#YANGutils-Namespace )
 ``` 
@@ -37,22 +45,6 @@ mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller -Darchetyp
 - [ Create New Project in eclipse GUI mode ]
 ```   
    
-   77  mkdir ~/BAK
-   78  mv ~/.m2/repository/ ~/BAK/
-   79  mvn 
-   80  ls
-   81  mvn clean
-   82  ls
-   83  mkdir workspace
-   84  cat ~/.bashrc
-   85  sudo mkdir /usr/lib/eclipse/
-   86  ls =al
-   87  ls -al
-   88  cd Downloads/
-   89  ls
-   90  cd
-   91  cd workspace/
-   92  ls
    93  mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller -DarchetypeArtifactId=opendaylight-startup-archetype -DarchetypeRepository=https://nexus.opendaylight.org/content/repositories/public/ -DarchetypeCatalog=https://nexus.opendaylight.org/content/repositories/public/archetype-catalog.xml
    94  ls
    95  ls -al
@@ -205,7 +197,7 @@ mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller -Darchetyp
   242  mv tsdn ~/BAK/
   243  mv tsdn_demo/ ~/BAK/
   244  mv ttt/ ~/BAK/
-  245  mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller -DarchetypeArtifactId=opendaylight-startup-archetype -DarchetypeRepository=http://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/ -DarchetypeCatalog=http://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/archetype-catalog.xml -DarchetypeVersion=1.1.3-Beryllium-SR3
+  245  
   246  ~/eclipse/java-neon/eclipse/eclipse &
   247  cat ~/BAK/ttt/impl/src/main/java/ttt/demo/impl/TttProvider.java 
   248  cd tsdn_demo/api/
