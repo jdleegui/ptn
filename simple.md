@@ -47,11 +47,11 @@ mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller \
 -DarchetypeVersion=1.1.3-Beryllium-SR3
 ```
 ```
-Define value for property 'groupId': : com.lgu
-Define value for property 'artifactId': : ptn
-Define value for property 'package':  com.lgu: : 
-Define value for property 'classPrefix':  Ptn: : 
-Define value for property 'copyright': : LGUplus.
+Define value for property 'groupId': : ptn.lgu
+Define value for property 'artifactId': : ptn_lgu
+Define value for property 'package':  ptn.lgu: : 
+Define value for property 'classPrefix':  Ptn_lgu: : 
+Define value for property 'copyright': : LGUplus, Inc.
 ```
 ## Remove test XML category from impl/pom.xml
 ```
@@ -82,8 +82,8 @@ Define value for property 'copyright': : LGUplus.
         <extensions>true</extensions>
           <configuration>
             <instructions>
-              <Bundle-Name>ptn_manager</Bundle-Name>
-              <Bundle-Activator>com.lgu.impl.PtnProvider</Bundle-Activator>
+              <Bundle-Name>ptn_lgu_manager</Bundle-Name>
+              <Bundle-Activator>ptn.lgu.impl.PtnProvider</Bundle-Activator>
               <!-- Export-Package>!*</Export-Package -->            
             </instructions>
           </configuration>
@@ -119,10 +119,13 @@ workspace/distribution-karaf-0.4.4-Beryllium-SR4/bin/karaf
 tail -F distribution-karaf-0.4.4-Beryllium-SR4/data/log/karaf.log 
 ```
 ## 6. Install basic features which required to run our project.
+- opendaylight-user@root>feature:install odl-dlux-all
+- opendaylight-user@root>feature:install odl-restconf-all 
+- opendaylight-user@root>feature:install odl-mdsal-all 
  ```
-opendaylight-user@root>feature:install odl-dlux-all
-opendaylight-user@root>feature:install odl-restconf-all 
-opendaylight-user@root>feature:install odl-mdsal-all 
+feature:install odl-dlux-all
+feature:install odl-restconf-all 
+feature:install odl-mdsal-all 
 ```
 ## 7. Compile API folder first and copy the created jar into the deploy folder.
 ```
