@@ -76,18 +76,18 @@ Define value for property 'copyright': : LGUplus.
   </dependencies>
   <build>
     <plugins>
-  	   <plugin>
-        <groupId>org.apache.felix</groupId>
-        <artifactId>maven-bundle-plugin</artifactId>
-			     <extensions>true</extensions>
-			     <configuration>
-			       <instructions>
-			         <Bundle-Name>ptn_manager</Bundle-Name>
-			         <Bundle-Activator>com.lgu.impl.PtnProvider</Bundle-Activator>
-						      <!-- Export-Package>!*</Export-Package -->            
+     <plugin>
+       <groupId>org.apache.felix</groupId>
+         <artifactId>maven-bundle-plugin</artifactId>
+	   <extensions>true</extensions>
+	   <configuration>
+           <instructions>
+              <Bundle-Name>ptn_manager</Bundle-Name>
+              <Bundle-Activator>com.lgu.impl.PtnProvider</Bundle-Activator>
+            <!-- Export-Package>!*</Export-Package -->            
           </instructions>
         </configuration>
-	     </plugin>
+      </plugin>
     </plugins>
   </build>
 </project>
