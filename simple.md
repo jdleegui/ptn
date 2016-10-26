@@ -102,11 +102,16 @@ Define value for property 'copyright': : LGUplus.
 5. Remove impl/main/yang
 6. Remove impl/src/main/java/org.opendaylight.yang.gen.v1.urn.opendaylight
 ```
-## 4. Download Pre-built zip ODL
+## Download Pre-built zip ODL
+
 ```
 Download Pre-built zip file "https://nexus.opendaylight.org/content/repositories/opendaylight.release/org/opendaylight/integration/distribution-karaf/0.4.4-Beryllium-SR4/distribution-karaf-0.4.4-Beryllium-SR4.zip"
+
+rm -R distribution-karaf-0.4.4-Beryllium-SR4/
+unzip ~/Downloads/distribution-karaf-0.4.4-Beryllium-SR4.zip ./
+./distribution-karaf-0.4.4-Beryllium-SR4/bin/karaf 
 ```
-## 5. Run OpendayLight PreBuild distribution and trace log.
+## Run OpendayLight PreBuild distribution and trace log.
 ```
 unzip distribution-karaf-0.4.4-Beryllium-SR4.zip 
 distribution-karaf-0.4.4-Beryllium-SR4 ~/workspace/
@@ -136,39 +141,8 @@ cp impl/target/ptn-impl-1.0.0-SNAPSHOT.jar ~/workspace/distribution-karaf-0.4.4-
 ```
 - [ Create New Project in eclipse GUI mode ]
 ```
-  212  cd ..
-  213  ls
-  214  cd workspace/
-  215  ls
-  216  cd t
-  217  ls
-  218  cd ttt
-  219  ls
-  220  cd impl/
-  221  cd ..
-  222  cd api/
-  223  
-  224  cd ..
-  225  cd impl
-  226  mvn clean install -DskipTests -Dcheckstyle.skip=true
-  227  cd ..
-  228  find . -name '*.jar'
   229  cp api/target/ttt-api-1.0.0-SNAPSHOT.jar ~/Downloads/distribution-karaf-0.4.3-Beryllium-SR3/deploy/
   230  cp impl/target/ttt-impl-1.0.0-SNAPSHOT.jar ~/Downloads/distribution-karaf-0.4.3-Beryllium-SR3/deploy/
-  231  cd api
-  232  mvn clean install -DskipTests -Dcheckstyle.skip=true
-  233  cd ..
-  234  cd impl
-  235  mvn clean install -DskipTests -Dcheckstyle.skip=true
-  236  cd ..
-  237  cp api/target/ttt-api-1.0.0-SNAPSHOT.jar ~/Downloads/distribution-karaf-0.4.3-Beryllium-SR3/deploy/
-  238  cp impl/target/ttt-impl-1.0.0-SNAPSHOT.jar ~/Downloads/distribution-karaf-0.4.3-Beryllium-SR3/deploy/
-  239  cd ..
-  240  ls -al
-  241  ls
-  242  mv tsdn ~/BAK/
-  243  mv tsdn_demo/ ~/BAK/
-  244  mv ttt/ ~/BAK/
   245  
   246  ~/eclipse/java-neon/eclipse/eclipse &
   247  cat ~/BAK/ttt/impl/src/main/java/ttt/demo/impl/TttProvider.java 
