@@ -1,6 +1,6 @@
 
 # Setup environment
-## 1. Install JDK
+## Install JDK
 ```
 sudo apt-get update
 sudo apt-get dist-upgrade
@@ -11,13 +11,13 @@ sudo apt-get install maven
 javac -version
 export JAVA_HOME='/usr/lib/jvm/java-8-openjdk-amd64'
 ```
-## 2. Install maven and eclipse
+## Install maven and eclipse
 ```
 sudo apt-cache search eclipse
 sudo apt-cache search maven
 sudo apt-get install maven
 ```   
-## 3. Copy maven environment for ODL
+## Copy maven environment for ODL
 - [Boron] : ( http://docs.opendaylight.org/en/stable-boron/developer-guide/developing-apps-on-the-opendaylight-controller.html )
 ```
 cp -n ~/.m2/settings.xml{,.orig};
@@ -25,25 +25,25 @@ wget -q -O - https://raw.githubusercontent.com/opendaylight/odlparent/stable/bor
 ls ~/.m2
 ls ~/.m2/settings.xml
 ```
-## 4. Remove existing repository if exist
+## Remove existing repository if exist
 ```
 mv ~/.m2/repository/ ~/BAK/
 ```
 # Create project
-## 1. Make project based on '1.1.3-Beryllium-SR3' using the public general architype (*recomend)
-```
-mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller \
--DarchetypeArtifactId=opendaylight-startup-archetype \
--DarchetypeRepository=https://nexus.opendaylight.org/content/repositories/public/ \
--DarchetypeCatalog=https://nexus.opendaylight.org/content/repositories/public/archetype-catalog.xml \
--DarchetypeVersion=1.1.3-Beryllium-SR3
-```
-## 2. Another way : Make project based on '1.1.3-Beryllium-SR3' using the snapshot architype
+## Make project based on '1.1.3-Beryllium-SR3' using the snapshot architype (*recomend*)
 ```
 mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller \
 -DarchetypeArtifactId=opendaylight-startup-archetype \
 -DarchetypeRepository=http://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/ \
 -DarchetypeCatalog=http://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/archetype-catalog.xml \
+-DarchetypeVersion=1.1.3-Beryllium-SR3
+```
+## Make project based on '1.1.3-Beryllium-SR3' using the public general architype 
+```
+mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller \
+-DarchetypeArtifactId=opendaylight-startup-archetype \
+-DarchetypeRepository=https://nexus.opendaylight.org/content/repositories/public/ \
+-DarchetypeCatalog=https://nexus.opendaylight.org/content/repositories/public/archetype-catalog.xml \
 -DarchetypeVersion=1.1.3-Beryllium-SR3
 ```
 ```
@@ -53,6 +53,45 @@ Define value for property 'package':  com.lgu: :
 Define value for property 'classPrefix':  Ptn: : 
 Define value for property 'copyright': : LGUplus.
 ```
+## Remove test XML category from impl/pom.xml
+```
+    <!-- Testing Dependencies -->
+    <!--
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    -->
+    <!--
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-all</artifactId>
+      <scope>test</scope>
+    </dependency>
+    -->
+```
+## Insert apache.felix plugins when build the project
+```
+  </dependencies>
+  <build>
+    <plugins>
+  	   <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+			     <extensions>true</extensions>
+			     <configuration>
+			       <instructions>
+			         <Bundle-Name>ptn_manager</Bundle-Name>
+			         <Bundle-Activator>com.lgu.impl.PtnProvider</Bundle-Activator>
+						      <!-- Export-Package>!*</Export-Package -->            
+          </instructions>
+        </configuration>
+	     </plugin>
+    </plugins>
+  </build>
+</project>
+```
 ## 3. Import created maven project from eclipse 
 - Import only ap and impl
 ```
@@ -61,6 +100,7 @@ Define value for property 'copyright': : LGUplus.
 3. Remove impl/src/test
 4. Remove impl/main/config
 5. Remove impl/main/yang
+6. Remove impl/src/main/java/org.opendaylight.yang.gen.v1.urn.opendaylight
 ```
 ## 4. Download Pre-built zip ODL
 ```
@@ -79,18 +119,20 @@ opendaylight-user@root>feature:install odl-dlux-all
 opendaylight-user@root>feature:install odl-restconf-all 
 opendaylight-user@root>feature:install odl-mdsal-all 
 ```
-## 7. Compile API folder first and copy the created jar into the deply folder.
+## 7. Compile API folder first and copy the created jar into the deploy folder.
 ```
-ptn/api/mvn clean install -DskipTests -Dcheckstyle.skip=true
+~/workspace/ptn/api/mvn clean install -DskipTests -Dcheckstyle.skip=true
 cp ptn/api/target/ptn-api-1.0.0-SNAPSHOT.jar ~/workspace/distribution-karaf-0.4.4-Beryllium-SR4/deploy/
 ```
 ## 8. Look carefully if there's any error in the distributed jar file.
 ```
 opendaylight-user@root>log:tail
-```
-or
-```
 tail -F distribution-karaf-0.4.4-Beryllium-SR4/data/log/karaf.log 
+```
+## 9. Compile impl folder next and copy the created jar into the same deploy folder.
+``` 
+~/workspace/ptn/impl$ mvn clean install -DskipTests -Dcheckstyle.skip=true
+cp impl/target/ptn-impl-1.0.0-SNAPSHOT.jar ~/workspace/distribution-karaf-0.4.4-Beryllium-SR4/deploy/
 ```
 - [ Create New Project in eclipse GUI mode ]
 ```
