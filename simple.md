@@ -19,7 +19,8 @@ sudo apt-cache search maven
 sudo apt-get install maven
 ```   
 ## 3. Copy maven environment for ODL
-- [Boron] ( https://raw.githubusercontent.com/opendaylight/odlparent/stable/boron/settings.xml > ~/.m2/settings.xml )
+- [Boron] : http://docs.opendaylight.org/en/stable-boron/developer-guide/developing-apps-on-the-opendaylight-controller.html
+( http://docs.opendaylight.org/en/stable-boron/developer-guide/developing-apps-on-the-opendaylight-controller.html )
 ```
 cp -n ~/.m2/settings.xml{,.orig};
 wget -q -O - https://raw.githubusercontent.com/opendaylight/odlparent/stable/boron/settings.xml > ~/.m2/settings.xml
