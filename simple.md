@@ -92,15 +92,53 @@ Define value for property 'copyright': : LGUplus, Inc.
   </build>
 </project>
 ```
-## 3. Import created maven project from eclipse 
+## Import created maven project from eclipse 
 - Import only ap and impl
 ```
 1. Import maven project into workspace > Select PTN
 2. Select api and ptn
-3. Remove impl/src/test
+3. Remove impl/src/test/java
+4. Remove impl/src/yang
+4. Remove Ptn_lguModule.java
+5. Remove Ptn_lguModuleFactory.java
 4. Remove impl/main/config
 5. Remove impl/main/yang
 6. Remove impl/src/main/java/org.opendaylight.yang.gen.v1.urn.opendaylight
+```
+## Change existing java code like the same as following.
+```
+/*
+ * Copyright © 2015 LGUplus. and others.  All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v1.0 which accompanies this distribution,
+ * and is available at http://www.eclipse.org/legal/epl-v10.html
+ */
+package tsdn.demo.impl;
+
+import org.opendaylight.controller.sal.binding.api.AbstractBrokerAwareActivator;
+import org.opendaylight.controller.sal.binding.api.BindingAwareBroker;
+import org.opendaylight.controller.sal.binding.api.BindingAwareBroker.ProviderContext;
+import org.opendaylight.controller.sal.binding.api.BindingAwareProvider;
+import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class Tsdn_demoProvider extends AbstractBrokerAwareActivator implements BindingAwareProvider {
+
+    private static final Logger LOG = LoggerFactory.getLogger(Tsdn_demoProvider.class);
+
+    @Override
+    public void onSessionInitiated(ProviderContext session) {
+        LOG.info("Tsdn_demoProvider Session Initiated");
+    }
+
+	@Override
+	protected void onBrokerAvailable(BindingAwareBroker broker, BundleContext arg1) {
+		LOG.info("Tsdn_demoProvider onBrokerAvailable");
+		broker.registerProvider(this);
+	}
+}
 ```
 ## Download Pre-built zip ODL
 
@@ -118,7 +156,7 @@ distribution-karaf-0.4.4-Beryllium-SR4 ~/workspace/
 workspace/distribution-karaf-0.4.4-Beryllium-SR4/bin/karaf
 tail -F distribution-karaf-0.4.4-Beryllium-SR4/data/log/karaf.log 
 ```
-## 6. Install basic features which required to run our project.
+## Install basic features which required to run our project.
 - [Install DLUX] opendaylight-user@root>feature:install odl-dlux-all
 - [Install RESTCONF] opendaylight-user@root>feature:install odl-restconf-all 
 - [Install MDSAL] opendaylight-user@root>feature:install odl-mdsal-all 
@@ -126,6 +164,9 @@ tail -F distribution-karaf-0.4.4-Beryllium-SR4/data/log/karaf.log
 feature:install odl-dlux-all
 feature:install odl-restconf-all 
 feature:install odl-mdsal-all 
+```
+## 
+```
 ```
 ## 7. Compile API folder first and copy the created jar into the deploy folder.
 ```
