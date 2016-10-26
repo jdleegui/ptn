@@ -84,6 +84,14 @@ opendaylight-user@root>feature:install odl-mdsal-all
 ptn/api/mvn clean install -DskipTests -Dcheckstyle.skip=true
 cp ptn/api/target/ptn-api-1.0.0-SNAPSHOT.jar ~/workspace/distribution-karaf-0.4.4-Beryllium-SR4/deploy/
 ```
+## 8. Look carefully if there's any error in the distributed jar file.
+```
+opendaylight-user@root>log:tail
+```
+or
+```
+tail -F distribution-karaf-0.4.4-Beryllium-SR4/data/log/karaf.log 
+```
 - [ Create New Project in eclipse GUI mode ]
 ```
   100  ./karaf/target/assembly/bin/karaf 
