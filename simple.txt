@@ -1,50 +1,41 @@
-   30  sudo apt-get update
-   31  sudo apt-get dist-upgrade
-   32  sudo apt-get install openjdk-8-jre-headless
-   33  sudo apt-get install openjdk-8-jre
-   34  sudo apt-get install openjdk-8-jdk
-   35  java
-   36  javac
-   37  javac -version
-   38  ls -al
-   39  sudo apt-cache search eclipse
-   40  sudo apt-cache search maven
-   41  mvn
-   42  sudo apt-get install maven
-   43  mvn
-   44  maven
-   45  ls /usr/lib/jvm/
-   46  evn
-   47  echo $JAVA_HOME
-   48  vim .bashrc
-   49  vim
-   50  sudo apt-get install vim
-   51  vim .bashrc
-   52  ls /usr/lib/jvm/
-   53  java-1.8.0-openjdk-amd64
-   54  ls java-1.8.0-openjdk-amd64
-   55  ls /usr/lib/jvm/java-1.8.0-openjdk-amd64
-   56  vim .bashrc
-   57  . ~/.bashrc
-   58  vim .bashrc
-   59  . ~/.bashrc
-   60  ls
-   61  pwd
-   62  vim .bashrc
-   63  clear
-   64  ls -al
-   65  xt
-   66  ls
-   67  clear
-   68  java
-   69  mvn
-   70  ls ~
-   71  ls ~/.m2
-   72  cp -n ~/.m2/settings.xml{,.orig};
-   73  wget -q -O - https://raw.githubusercontent.com/opendaylight/odlparent/stable/boron/settings.xml > ~/.m2/settings.xml
-   74  ls ~/.m2
-   75  ls ~/.m2/settings.xml 
-   76  vi ~/.m2/settings.xml 
+# Setup environment
+
+## 1. Install JDK
+```
+sudo apt-get update
+sudo apt-get dist-upgrade
+sudo apt-get install openjdk-8-jre-headless
+sudo apt-get install openjdk-8-jre
+sudo apt-get install openjdk-8-jdk
+sudo apt-get install maven
+javac -version
+export JAVA_HOME='/usr/lib/jvm/java-8-openjdk-amd64'
+```
+## 2. Install maven and eclipse
+```
+sudo apt-cache search eclipse
+sudo apt-cache search maven
+sudo apt-get install maven
+```   
+## 3. Copy maven environment for ODL
+- [Boron] ( https://raw.githubusercontent.com/opendaylight/odlparent/stable/boron/settings.xml > ~/.m2/settings.xml )
+```
+cp -n ~/.m2/settings.xml{,.orig};
+wget -q -O - https://raw.githubusercontent.com/opendaylight/odlparent/stable/boron/settings.xml > ~/.m2/settings.xml
+ls ~/.m2
+ls ~/.m2/settings.xml
+```
+## 1. Create project.
+- [APP CREATING GUIDE] ( https://github.com/opendaylight/docs/blob/master/manuals/developer-guide/src/main/asciidoc/developing-app.adoc )
+- [YANG GUIDE] ( https://wiki.onosproject.org/display/ONOS/YANG+utils#YANGutils-Namespace )
+``` 
+mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller -DarchetypeArtifactId=opendaylight-startup-archetype \
+-DarchetypeRepository=https://nexus.opendaylight.org/content/repositories/public/ \
+-DarchetypeCatalog=https://nexus.opendaylight.org/content/repositories/public/archetype-catalog.xml
+```
+- [ Create New Project in eclipse GUI mode ]
+```   
+   
    77  mkdir ~/BAK
    78  mv ~/.m2/repository/ ~/BAK/
    79  mvn 
