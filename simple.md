@@ -53,6 +53,19 @@ Define value for property 'package':  com.lgu: :
 Define value for property 'classPrefix':  Ptn: : 
 Define value for property 'copyright': : LGUplus.
 ```
+## 3. Import created maven project from eclipse 
+- Import only ap and impl
+```
+1. Import maven project into workspace > Select PTN
+2. Select api and ptn
+3. Remove impl/src/test
+4. Remove impl/main/config
+5. Remove impl/main/yang
+```
+## 4. Download Pre-built zip ODL
+```
+Download Pre-built zip file "https://nexus.opendaylight.org/content/repositories/opendaylight.release/org/opendaylight/integration/distribution-karaf/0.4.4-Beryllium-SR4/distribution-karaf-0.4.4-Beryllium-SR4.zip"
+```
 ## 3. Compile 
 ```
 mvn clean install -DskipTests -Dcheckstyle.skip=true
