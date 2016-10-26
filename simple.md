@@ -79,8 +79,8 @@ Define value for property 'copyright': : LGUplus.
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
-	<extensions>true</extensions>
-	  <configuration>
+        <extensions>true</extensions>
+          <configuration>
             <instructions>
               <Bundle-Name>ptn_manager</Bundle-Name>
               <Bundle-Activator>com.lgu.impl.PtnProvider</Bundle-Activator>
@@ -136,118 +136,6 @@ cp impl/target/ptn-impl-1.0.0-SNAPSHOT.jar ~/workspace/distribution-karaf-0.4.4-
 ```
 - [ Create New Project in eclipse GUI mode ]
 ```
-  100  ./karaf/target/assembly/bin/karaf 
-  101  xt
-  102  ps -ef
-  103  ps -ef | grep karaf
-  104  kill -9 2125
-  105  ps -ef | grep karaf
-  106  kill -9 31446
-  107  ps -ef | grep karaf
-  108  kill 09 31053
-  109  kill -9 31053
-  110  kill 09 31053
-  111  ps -ef | grep karaf
-  112  ls -al
-  113  clear
-  114  sl -al
-  115  ls -al
-  116  java
-  117  javac
-  118  clear
-  119  java
-  120  sudo apt-get update
-  121  clear
-  122  xt
-  123  clecl
-  124  clear
-  125  for ((i=0;i<6;i++))do xt done
-  126  df
-  127  ls -al
-  128  ls -al /tmp/
-  129  ls
-  130  ls -al
-  131  clear
-  132  df
-  133  cd doc
-  134  cd workspace/
-  135  ls
-  136  cd hello/
-  137  ls
-  138  mvn clean install -DskipTests
-  139  ii
-  140  id
-  141  sudo reboot
-  142  sudo shutdown -h now
-  143  xt
-  144  for ((i=0;i<6;i++))do xt done
-  145  cd
-  146  cd Downloads/
-  147  tail -F distribution-karaf-0.4.3-Beryllium-SR3/data/log/karaf.log 
-  148  ls -al
-  149  cd Downloads/
-  150  ls
-  151  evince opendaylight.pdf 
-  152  evince opendaylight.pdf &
-  153  ssh -p 29418 jdleegui@git.opendaylight.org
-  154  df
-  155  df -k
-  156  ls /boot/efi
-  157  sudo ls /boot/efi
-  158  sudo ls /boot/efi -al
-  159  sudo ls /boot/efi/EFI/ -al
-  160  ls
-  161  ls -al
-  162  unizp distribution-karaf-0.4.3-Beryllium-SR3.zip 
-  163  unzip distribution-karaf-0.4.3-Beryllium-SR3.zip 
-  164  ls
-  165  unzip distribution-karaf-0.5.0-Boron.zip 
-  166  ls -al
-  167  cd distribution-karaf-0.4.3-Beryllium-SR3/
-  168  ls
-  169  ls -al
-  170  cd bin
-  171  ls
-  172  ls -al
-  173  mvn --version
-  174  javac -verison
-  175  cd
-  176  cd workspace/
-  177  ls
-  178  ls -al
-  179  mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller -DarchetypeArtifactId=opendaylight-startup-archetype -DarchetypeRepository=http://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/ -DarchetypeCatalog=http://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/archetype-catalog.xml -DarchetypeVersion=<Archetype-Version>
-  180  mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller -DarchetypeArtifactId=opendaylight-startup-archetype -DarchetypeRepository=http://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/ -DarchetypeCatalog=http://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/archetype-catalog.xml -DarchetypeVersion=1.1.3-Beryllium-SR3
-  181  ls -al
-  182  tree
-  183  sudo apt-get install tree
-  184  tree
-  185  tree | more
-  186  ls
-  187  ls -al
-  188  cd tsdn_demo
-  189  ls
-  190  ls -al
-  191  mvn clean install
-  192  ps -ef|grep elipse
-  193  ps -ef | grep eclipse
-  194  kill -9  6589
-  195  kill -9  6593 
-  196  cd ..
-  197  mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller -DarchetypeArtifactId=opendaylight-startup-archetype -DarchetypeRepository=http://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/ -DarchetypeCatalog=http://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/archetype-catalog.xml -DarchetypeVersion=1.1.3-Beryllium-SR3
-  198  ~/eclipse/java-neon/eclipse/eclipse &
-  199  ls
-  200  cd tsdn
-  201  ls
-  202  cd impl/
-  203  mvn clean install -DskipTests
-  204  cd ..
-  205  cd api
-  206  mvn clean install -DskipTests -Dcheckstyle.skip=true
-  207  cd ..
-  208  cd impl
-  209  mvn clean install -DskipTests -Dcheckstyle.skip=true
-  210  cd ..
-  211  mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller -DarchetypeArtifactId=opendaylight-startup-archetype -DarchetypeRepository=http://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/ -DarchetypeCatalog=http://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/archetype-catalog.xml -DarchetypeVersion=1.1.3-Beryllium-SR3
   212  cd ..
   213  ls
   214  cd workspace/
