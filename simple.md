@@ -182,22 +182,24 @@ feature:install odl-dlux-all
 feature:install odl-restconf-all 
 feature:install odl-mdsal-all 
 ```
-## 
-```
-```
-## 7. Compile API folder first and copy the created jar into the deploy folder.
+## Compile API folder first and copy the created jar into the deploy folder.
 ```
 ~/workspace/ptn/api/mvn clean install -DskipTests -Dcheckstyle.skip=true
 cp ptn/api/target/ptn-api-1.0.0-SNAPSHOT.jar ~/workspace/distribution-karaf-0.4.4-Beryllium-SR4/deploy/
 ```
-## 8. Look carefully if there's any error in the distributed jar file.
+## Look carefully if there's any error in the distributed jar file.
 ```
 opendaylight-user@root>log:tail
 tail -F distribution-karaf-0.4.4-Beryllium-SR4/data/log/karaf.log 
 ```
-## 9. Compile impl folder next and copy the created jar into the same deploy folder.
-``` 
-~/workspace/ptn/impl$ mvn clean install -DskipTests -Dcheckstyle.skip=true
-cp impl/target/ptn-impl-1.0.0-SNAPSHOT.jar ~/workspace/distribution-karaf-0.4.4-Beryllium-SR4/deploy/
+## Compile impl folder next and copy the created jar into the same deploy folder.
 ```
-- [ Create New Project in eclipse GUI mode ]
+~/workspace/ptn/impl$ mvn clean install -DskipTests -Dcheckstyle.skip=true
+cp ptn/impl/target/ptn-impl-1.0.0-SNAPSHOT.jar ~/workspace/distribution-karaf-0.4.4-Beryllium-SR4/deploy/
+```
+## Confirm the expected log message
+```
+$ tail -F distribution-karaf-0.4.4-Beryllium-SR4/data/log/karaf.log
+ | 265 - com.lgu.ptn-impl - 1.0.0.SNAPSHOT | PtnProvider onBrokerAvailable
+ | 265 - com.lgu.ptn-impl - 1.0.0.SNAPSHOT | PtnProvider Session Initiated
+```
