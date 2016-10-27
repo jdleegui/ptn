@@ -367,13 +367,13 @@ public class HelloWorldServiceImpl implements PtnService {
 
 	@Override
 	public Future<RpcResult<HelloWorldOutput>> helloWorld(HelloWorldInput input) {
-	
-            LOG.info("Input "+input.toString());
-            String result = "Hello " + input.getName();
-            return RpcResultBuilder.success(
-                    new HelloWorldOutputBuilder()
-                        .setResult(result)
-                        .build()).buildFuture();
+
+		LOG.info("Input "+input.getName().toString());
+        String result = "Hello " + input.getName();
+        return RpcResultBuilder.success(
+                new HelloWorldOutputBuilder()
+                    .setResult(result)
+                    .build()).buildFuture();
 	}
 }
 ```
@@ -395,5 +395,6 @@ opendaylight-user@root>feature:install odl-mdsal-all
 
 | 263 - com.lgu.ptn-impl - 1.0.0.SNAPSHOT | PtnProvider onBrokerAvailable
 | 263 - com.lgu.ptn-impl - 1.0.0.SNAPSHOT | PtnProvider Session Initiated
-| 263 - com.lgu.ptn-impl - 1.0.0.SNAPSHOT | Input HelloWorldInput{getName=aaa, augmentations={}}
+| 263 - com.lgu.ptn-impl - 1.0.0.SNAPSHOT | Input aaa
+
 ```
