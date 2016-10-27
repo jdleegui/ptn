@@ -398,3 +398,22 @@ opendaylight-user@root>feature:install odl-mdsal-all
 | 263 - com.lgu.ptn-impl - 1.0.0.SNAPSHOT | Input aaa
 
 ```
+## Withoud DLUX, you can check the result in 'http://localhost:8181/apidoc/explorer/index.html#!/ptn(2015-01-05)'
+### input : 
+```
+http://localhost:8181/apidoc/explorer/index.html#!/ptn(2015-01-05)
+
+{
+  "input" : {
+    "ptn:name" : "PTN"
+  }
+}
+```
+### result :
+```
+{
+  "output": {
+    "result": "Hello PTN"
+  }
+}
+```
