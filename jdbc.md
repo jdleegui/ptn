@@ -37,3 +37,8 @@ cp ptn/api/target/ptn-api-1.0.0-SNAPSHOT.jar ~/workspace/distribution-karaf-0.4.
 rm ~/workspace/distribution-karaf-0.4.4-Beryllium-SR4/deploy/ptn-impl-1.0.0-SNAPSHOT.jar
 cp ptn/impl/target/ptn-impl-1.0.0-SNAPSHOT.jar ~/workspace/distribution-karaf-0.4.4-Beryllium-SR4/deploy/
 ```
+
+## Check LOG
+```
+tail -F distribution-karaf-0.4.4-Beryllium-SR4/data/log/karaf.log 
+```
