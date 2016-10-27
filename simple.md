@@ -106,6 +106,7 @@ Remove ptn-impl/src/main/java/PtnModuleFactory.java
   </build>
 </project>
 ```
+# Basic modification to meet with the basic purpose of TSDN project.
 ## Change existing java code like the same as following.
 ```
 package com.lgu.impl;
@@ -130,7 +131,7 @@ public class PtnProvider implements BindingAwareProvider /*, AutoCloseable*/ {
 //  }
 }
 ```
-## Add Registering provider. (34:58)
+## Add Registering provider.
 ```
 package tsdn.demo.impl;
 
@@ -182,6 +183,7 @@ feature:install odl-dlux-all
 feature:install odl-restconf-all 
 feature:install odl-mdsal-all 
 ```
+# Deploy package
 ## Compile API folder first and copy the created jar into the deploy folder.
 ```
 ~/workspace/ptn/api/mvn clean install -DskipTests -Dcheckstyle.skip=true
@@ -197,7 +199,7 @@ tail -F distribution-karaf-0.4.4-Beryllium-SR4/data/log/karaf.log
 ~/workspace/ptn/impl$ mvn clean install -DskipTests -Dcheckstyle.skip=true
 cp ptn/impl/target/ptn-impl-1.0.0-SNAPSHOT.jar ~/workspace/distribution-karaf-0.4.4-Beryllium-SR4/deploy/
 ```
-## Confirm the expected log message (47:39)
+## Confirm the expected log message.
 ```
 $ tail -F distribution-karaf-0.4.4-Beryllium-SR4/data/log/karaf.log
  | 265 - com.lgu.ptn-impl - 1.0.0.SNAPSHOT | PtnProvider onBrokerAvailable
