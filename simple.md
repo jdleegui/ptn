@@ -205,3 +205,179 @@ $ tail -F distribution-karaf-0.4.4-Beryllium-SR4/data/log/karaf.log
  | 265 - com.lgu.ptn-impl - 1.0.0.SNAPSHOT | PtnProvider onBrokerAvailable
  | 265 - com.lgu.ptn-impl - 1.0.0.SNAPSHOT | PtnProvider Session Initiated
 ```
+# Add RPC
+## Edit ptn-api/src/main/yang/ptn.yang
+```
+module ptn {
+    yang-version 1;
+    namespace "urn:opendaylight:params:xml:ns:yang:ptn";
+    prefix "ptn";
+
+    revision "2015-01-05" {
+        description "Initial revision of ptn model";
+    }
+    
+    rpc hello-world {
+        input {
+            leaf name{
+                type string;
+            }
+        }
+        output {
+            leaf result {
+                type string;
+            }
+        }
+    }
+}
+```
+## Remove previously distributed deploy JAR with the KARAF still running.
+```
+rm ~/workspace/distribution-karaf-0.4.4-Beryllium-SR4/deploy/ptn-api-1.0.0-SNAPSHOT.jar 
+rm ~/workspace/distribution-karaf-0.4.4-Beryllium-SR4/deploy/ptn-impl-1.0.0-SNAPSHOT.jar 
+```
+## Shutdown the karaf and return. Do not kill the karaf.
+```
+opendaylight-user@root> system:shutdown
+#./distribution-karaf-0.4.4-Beryllium-SR4/bin/karaf 
+```
+# Connect generated RPC call from java service.
+## Add override method and RpcRegister
+```
+Right click in the class PtnProvider > Source > Override/Implemented mehtods
+Select stopImpl
+```
+[ ] OnBroker removed (BindingAwareBroker, BundleContext)
+[ ] startImpl(BundleContext)
+[x] stopImpl(BundleContext)
+```
+/*
+ * Copyright © 2015 LGU. and others.  All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v1.0 which accompanies this distribution,
+ * and is available at http://www.eclipse.org/legal/epl-v10.html
+ */
+package com.lgu.impl;
+
+import org.opendaylight.controller.sal.binding.api.AbstractBrokerAwareActivator;
+import org.opendaylight.controller.sal.binding.api.BindingAwareBroker;
+import org.opendaylight.controller.sal.binding.api.BindingAwareBroker.ProviderContext;
+import org.opendaylight.controller.sal.binding.api.BindingAwareBroker.RpcRegistration;
+import org.opendaylight.controller.sal.binding.api.BindingAwareProvider;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.ptn.rev150105.PtnService;
+import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class PtnProvider extends AbstractBrokerAwareActivator implements BindingAwareProvider {
+
+	private static final Logger LOG = LoggerFactory.getLogger(PtnProvider.class);
+    RpcRegistration<PtnService> ptnRegister;
+
+    @Override
+    public void onSessionInitiated(ProviderContext session) {
+        LOG.info("PtnProvider Session Initiated");
+    }
+    
+	@Override
+	protected void onBrokerAvailable(BindingAwareBroker broker, BundleContext arg1) {
+		LOG.info("PtnProvider onBrokerAvailable");
+		broker.registerProvider(this);
+	}
+    
+	@Override
+	protected void stopImpl(BundleContext context) {
+		LOG.info("stopImpl");
+		super.stopImpl(context);
+		ptnRegister.close();
+	}
+}
+```
+## Add RPC implementation
+```
+/*
+ * Copyright © 2015 LGU. and others.  All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v1.0 which accompanies this distribution,
+ * and is available at http://www.eclipse.org/legal/epl-v10.html
+ */
+package com.lgu.impl;
+
+import org.opendaylight.controller.sal.binding.api.AbstractBrokerAwareActivator;
+import org.opendaylight.controller.sal.binding.api.BindingAwareBroker;
+import org.opendaylight.controller.sal.binding.api.BindingAwareBroker.ProviderContext;
+import org.opendaylight.controller.sal.binding.api.BindingAwareBroker.RpcRegistration;
+import org.opendaylight.controller.sal.binding.api.BindingAwareProvider;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.ptn.rev150105.PtnService;
+import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class PtnProvider extends AbstractBrokerAwareActivator implements BindingAwareProvider {
+
+	private static final Logger LOG = LoggerFactory.getLogger(PtnProvider.class);
+    RpcRegistration<PtnService> ptnRegister;
+
+    @Override
+    public void onSessionInitiated(ProviderContext session) {
+        LOG.info("PtnProvider Session Initiated");
+        session.addRpcImplementation(PtnService.class, new HelloWorldServiceImpl());
+    }
+
+	@Override
+	protected void onBrokerAvailable(BindingAwareBroker broker, BundleContext arg1) {
+		LOG.info("PtnProvider onBrokerAvailable");
+		broker.registerProvider(this);
+	}
+	@Override
+	protected void stopImpl(BundleContext context) {
+		// TODO Auto-generated method stub
+		super.stopImpl(context);
+		ptnRegister.close();
+	}	
+}
+```
+## Add HelloWorldServiceImpl class (Use eclipse code assister)
+```
+/*
+ * Copyright © 2015 LGU. and others.  All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v1.0 which accompanies this distribution,
+ * and is available at http://www.eclipse.org/legal/epl-v10.html
+ */
+package com.lgu.impl;
+
+import java.util.concurrent.Future;
+
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.ptn.rev150105.HelloWorldInput;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.ptn.rev150105.HelloWorldOutput;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.ptn.rev150105.HelloWorldOutputBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.ptn.rev150105.PtnService;
+import org.opendaylight.yangtools.yang.common.RpcResult;
+import org.opendaylight.yangtools.yang.common.RpcResultBuilder;
+
+public class HelloWorldServiceImpl implements PtnService {
+
+	@Override
+	public Future<RpcResult<HelloWorldOutput>> helloWorld(HelloWorldInput input) {
+
+        String result = "Hello " + input.getName();
+        return RpcResultBuilder.success(
+                new HelloWorldOutputBuilder()
+                    .setResult(result)
+                    .build()).buildFuture();
+	}
+}
+```
+## Compile the impl and deploy it on to the running karaf.
+```
+$ mvn clean install -DskipTests -Dcheckstyle.skip=true
+$ cp ptn/api/target/ptn-api-1.0.0-SNAPSHOT.jar ~/workspace/distribution-karaf-0.4.4-Beryllium-SR4/deploy/
+$ cp ptn/impl/target/ptn-impl-1.0.0-SNAPSHOT.jar ~/workspace/distribution-karaf-0.4.4-Beryllium-SR4/deploy/
+```
+## Confirm the result log and test if the desired out string is displayed in the DLUX web page 
+```
+```
