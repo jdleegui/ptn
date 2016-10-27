@@ -358,17 +358,22 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.ptn.rev1
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.ptn.rev150105.PtnService;
 import org.opendaylight.yangtools.yang.common.RpcResult;
 import org.opendaylight.yangtools.yang.common.RpcResultBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HelloWorldServiceImpl implements PtnService {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(HelloWorldServiceImpl.class);
 
 	@Override
 	public Future<RpcResult<HelloWorldOutput>> helloWorld(HelloWorldInput input) {
-
-        String result = "Hello " + input.getName();
-        return RpcResultBuilder.success(
-                new HelloWorldOutputBuilder()
-                    .setResult(result)
-                    .build()).buildFuture();
+	
+            LOG.info("Input "+input.toString());
+            String result = "Hello " + input.getName();
+            return RpcResultBuilder.success(
+                    new HelloWorldOutputBuilder()
+                        .setResult(result)
+                        .build()).buildFuture();
 	}
 }
 ```
@@ -380,4 +385,15 @@ $ cp ptn/impl/target/ptn-impl-1.0.0-SNAPSHOT.jar ~/workspace/distribution-karaf-
 ```
 ## Confirm the result log and test if the desired out string is displayed in the DLUX web page 
 ```
+$ rm -R distribution-karaf-0.4.4-Beryllium-SR4/
+$ unzip ~/Downloads/distribution-karaf-0.4.4-Beryllium-SR4.zip 
+$ ./distribution-karaf-0.4.4-Beryllium-SR4/bin/karaf 
+
+opendaylight-user@root>feature:install odl-dlux-all
+opendaylight-user@root>feature:install odl-restconf-all 
+opendaylight-user@root>feature:install odl-mdsal-all 
+
+| 263 - com.lgu.ptn-impl - 1.0.0.SNAPSHOT | PtnProvider onBrokerAvailable
+| 263 - com.lgu.ptn-impl - 1.0.0.SNAPSHOT | PtnProvider Session Initiated
+| 263 - com.lgu.ptn-impl - 1.0.0.SNAPSHOT | Input HelloWorldInput{getName=aaa, augmentations={}}
 ```
