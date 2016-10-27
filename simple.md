@@ -47,11 +47,25 @@ mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller \
 -DarchetypeVersion=1.1.3-Beryllium-SR3
 ```
 ```
-Define value for property 'groupId': : ptn.lgu
-Define value for property 'artifactId': : ptn_lgu
-Define value for property 'package':  ptn.lgu: : 
-Define value for property 'classPrefix':  Ptn_lgu: : 
-Define value for property 'copyright': : LGUplus, Inc.
+Define value for property 'groupId': : com.lgu
+Define value for property 'artifactId': : ptn
+Define value for property 'package':  com.lgu: : 
+Define value for property 'classPrefix':  Ptn: : 
+Define value for property 'copyright': : LGU.   
+```
+## Import created maven project from eclipse 
+- Import only ap and impl
+```
+Import maven project into workspace > Select ptn
+Select api and ptn (i.e. exclude karaf,features,artifacts,it)
+```
+## Remove unnecessaried files related with config and yang from impl
+```
+Remove ptn-impl/src/test/java (PtnModuleFactoryTest.java, PtnModuleTest.java) (22:25)
+Remove ptn-impl/src/main/yang (ptn-impl.yang) (23:35)
+Remove ptn-impl/src/main/yang-gen-config (AbstractPtnModuleFactory.java, AbstractPtnModuleFactory.java, PtnModuleMXBean.java)
+Remove ptn-impl/src/main/java/PtnModule.java
+Remove ptn-impl/src/main/java/PtnModuleFactory.java
 ```
 ## Remove test XML category from impl/pom.xml
 ```
@@ -82,8 +96,8 @@ Define value for property 'copyright': : LGUplus, Inc.
         <extensions>true</extensions>
           <configuration>
             <instructions>
-              <Bundle-Name>ptn_lgu_manager</Bundle-Name>
-              <Bundle-Activator>ptn.lgu.impl.PtnProvider</Bundle-Activator>
+              <Bundle-Name>ptn_manager</Bundle-Name>
+              <Bundle-Activator>com.lgu.impl.PtnProvider</Bundle-Activator>
               <!-- Export-Package>!*</Export-Package -->            
             </instructions>
           </configuration>
@@ -92,44 +106,31 @@ Define value for property 'copyright': : LGUplus, Inc.
   </build>
 </project>
 ```
-## Import created maven project from eclipse 
-- Import only ap and impl
-```
-1. Import maven project into workspace > Select PTN
-2. Select api and ptn
-3. Remove impl/src/test/java
-4. Remove impl/src/yang
-4. Remove Ptn_lguModule.java
-5. Remove Ptn_lguModuleFactory.java
-4. Remove impl/main/config
-5. Remove impl/main/yang
-6. Remove impl/src/main/java/org.opendaylight.yang.gen.v1.urn.opendaylight
-```
 ## Change existing java code like the same as following.
 ```
-package tsdn.demo.impl;
+package com.lgu.impl;
 
 import org.opendaylight.controller.sal.binding.api.BindingAwareBroker.ProviderContext;
 import org.opendaylight.controller.sal.binding.api.BindingAwareProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Tsdn_demoProvider implements BindingAwareProvider /* , AutoCloseable */
-{
-    private static final Logger LOG = LoggerFactory.getLogger(Tsdn_demoProvider.class);
+public class PtnProvider implements BindingAwareProvider /*, AutoCloseable*/ {
+
+    private static final Logger LOG = LoggerFactory.getLogger(PtnProvider.class);
 
     @Override
     public void onSessionInitiated(ProviderContext session) {
-        LOG.info("Tsdn_demoProvider Session Initiated");
+        LOG.info("PtnProvider Session Initiated");
     }
 
 //  @Override
 //  public void close() throws Exception {
-//      LOG.info("Tsdn_demoProvider Closed");
+//      LOG.info("PtnProvider Closed");
 //  }
 }
-
 ```
+## Add Registering provider. (34:58)
 ```
 package tsdn.demo.impl;
 
@@ -158,7 +159,6 @@ public class Tsdn_demoProvider extends AbstractBrokerAwareActivator implements B
 }
 ```
 ## Download Pre-built zip ODL
-
 ```
 Download Pre-built zip file "https://nexus.opendaylight.org/content/repositories/opendaylight.release/org/opendaylight/integration/distribution-karaf/0.4.4-Beryllium-SR4/distribution-karaf-0.4.4-Beryllium-SR4.zip"
 
