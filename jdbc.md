@@ -10,8 +10,7 @@ unzip ~/Downloads/distribution-karaf-0.4.4-Beryllium-SR4.zip
 feature:install odl-dlux-all
 feature:install odl-restconf-all 
 feature:install odl-mdsal-all 
-feature:install pax-jdbc-mysql
-feature:install pax-jdbc-config
+feature:install pax-jdbc-mariadb pax-jdbc-config
 feature:repo-add mvn:org.ops4j.pax.jdbc/pax-jdbc-features/0.8.0/xml/features
 ```
 ## mysql config
