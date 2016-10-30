@@ -13,7 +13,7 @@ feature:install odl-mdsal-all
 feature:repo-add mvn:org.ops4j.pax.jdbc/pax-jdbc-features/0.8.0/xml/features
 feature:install pax-jdbc-mariadb pax-jdbc-config
 ```
-## coding like this, for example
+## Coding like this, for example
 ```
 /*
  * Copyright © 2015 LGU. and others.  All rights reserved.
