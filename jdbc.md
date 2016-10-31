@@ -186,3 +186,32 @@ cp ptn/impl/target/ptn-impl-1.0.0-SNAPSHOT.jar ~/workspace/distribution-karaf-0.
 ```
 tail -F distribution-karaf-0.4.4-Beryllium-SR4/data/log/karaf.log 
 ```
+## Add POM to access local library
+```
+    <dependency>
+      <groupId>com.ptn</groupId>
+      <artifactId>cfg</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+```
+## Add extra code to access external library
+```
+import org.opendaylight.sdn.ptn.impl.CsuCfg;
+
+CsuCfg c = new CsuCfg();
+if (c != null) {
+	LOG.info(c.toString());
+	LOG.info(c.TstMySql());
+}
+```
+## Add library and deploy on the running KARAF machine
+```
+mvn install:install-file -Dfile=/lib/cfg.jar -DgroupId=com.ptn -DartifactId=cfg -Dversion=1.0.0 -Dpackaging=jar
+cp /ib/cfg.jar ~/workspace/distribution-karaf-0.4.4-Beryllium-SR4/deploy/
+```
+## Deploy
+```
+mvn clean install -DskipTests -Dcheckstyle.skip=true > /tmp/error.txt
+rm ~/workspace/distribution-karaf-0.4.4-Beryllium-SR4/deploy/ptn-impl-1.0.0-SNAPSHOT.jar
+cp target/ptn-impl-1.0.0-SNAPSHOT.jar ~/workspace/distribution-karaf-0.4.4-Beryllium-SR4/deploy/
+```
