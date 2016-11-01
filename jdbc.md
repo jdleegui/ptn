@@ -15,6 +15,7 @@ feature:install pax-jdbc-mariadb pax-jdbc-config
 ```
 ## Coding like this, for example
 ```
+./eclipse/java-latest-released/eclipse/eclipse -Data /home/jdlee/workspace/SDN/
 /*
  * Copyright © 2015 LGU. and others.  All rights reserved.
  *
