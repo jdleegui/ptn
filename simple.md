@@ -59,13 +59,35 @@ Define value for property 'copyright': : LGU.
 Import maven project into workspace > Select ptn
 Select api and ptn (i.e. exclude karaf,features,artifacts,it)
 ```
-## Remove unnecessaried files related with config and yang from impl
+## Remove useless files related with config and yang from impl
 ```
-Remove ptn-impl/src/test/java (PtnModuleFactoryTest.java, PtnModuleTest.java) (22:25)
-Remove ptn-impl/src/main/yang (ptn-impl.yang) (23:35)
-Remove ptn-impl/src/main/yang-gen-config (AbstractPtnModuleFactory.java, AbstractPtnModuleFactory.java, PtnModuleMXBean.java)
-Remove ptn-impl/src/main/java/PtnModule.java
-Remove ptn-impl/src/main/java/PtnModuleFactory.java
+rm pom.xml
+rm -R ptn/artifacts/
+rm -R ptn/features/
+rm -R karaf/
+rm -R it
+rm -R impl/src/test/
+rm -R impl/src/main/config/
+rm -R impl/src/main/yang/
+rm -R impl/src/main/java/org/
+$ tree
+.
+├── api
+│   ├── pom.xml
+│   └── src
+│       └── main
+│           └── yang
+│               └── ptn.yang
+└── impl
+    ├── pom.xml
+    └── src
+        └── main
+            └── java
+                └── com
+                    └── lgu
+                        └── impl
+                            └── PtnProvider.java
+11 directories, 4 files
 ```
 ## Remove test XML category from impl/pom.xml
 ```
