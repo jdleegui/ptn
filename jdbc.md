@@ -206,8 +206,9 @@ if (c != null) {
 ```
 ## Add library and deploy on the running KARAF machine
 ```
-mvn install:install-file -Dfile=/lib/cfg.jar -DgroupId=com.ptn -DartifactId=cfg -Dversion=1.0.0 -Dpackaging=jar
-cp /ib/cfg.jar ~/workspace/distribution-karaf-0.4.4-Beryllium-SR4/deploy/
+mvn install:install-file -Dfile=/lib/cfg.jar -DgroupId=com.ptn -DartifactId=cfg -Dversion=1.0.3 -Dpackaging=jar
+rm ~/workspace/distribution-karaf-0.4.4-Beryllium-SR4/deploy/cfg.jar
+cp /lib/cfg.jar ~/workspace/distribution-karaf-0.4.4-Beryllium-SR4/deploy/
 ```
 ## Deploy
 ```
