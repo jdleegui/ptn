@@ -13,6 +13,14 @@ feature:install odl-mdsal-all
 feature:repo-add mvn:org.ops4j.pax.jdbc/pax-jdbc-features/0.8.0/xml/features
 feature:install pax-jdbc-mariadb pax-jdbc-config
 ```
+## Add dependency
+```
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.compendium</artifactId>
+      <version>4.3.1</version>
+    </dependency>
+```
 ## Coding like this, for example
 ```
 ./eclipse/java-latest-released/eclipse/eclipse -Data /home/jdlee/workspace/SDN/
