@@ -225,3 +225,8 @@ mvn clean install -DskipTests -Dcheckstyle.skip=true > /tmp/error.txt
 rm ~/workspace/distribution-karaf-0.4.4-Beryllium-SR4/deploy/ptn-impl-1.0.0-SNAPSHOT.jar
 cp target/ptn-impl-1.0.0-SNAPSHOT.jar ~/workspace/distribution-karaf-0.4.4-Beryllium-SR4/deploy/
 ```
+## ETC
+```
+mvn install:install-file -Dfile=/lib/NetMngr.jar -DgroupId=com.lgu -DartifactId=NetMngr -Dversion=1.0.0 -Dpackaging=jar
+
+```
