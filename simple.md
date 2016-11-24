@@ -37,6 +37,9 @@ mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller \
 -DarchetypeRepository=http://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/ \
 -DarchetypeCatalog=http://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/archetype-catalog.xml \
 -DarchetypeVersion=1.1.3-Beryllium-SR3
+
+Check version name in the
+https://nexus.opendaylight.org/content/repositories/public/org/opendaylight/controller/opendaylight-startup-archetype/
 ```
 ## Make project based on '1.1.3-Beryllium-SR3' using the public general architype 
 ```
