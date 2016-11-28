@@ -246,6 +246,8 @@ module ptn {
     }
 }
 ```
+- Defined Yang : ( https://github.com/YangModels/yang/tree/master/standard/ietf/RFC )
+- Defined Yang : ( https://github.com/YangModels/yang/blob/master/experimental/odp/opendaylight-inventory.yang )
 ## Remove previously distributed deploy JAR with the KARAF still running.
 ```
 rm ~/workspace/distribution-karaf-0.4.4-Beryllium-SR4/deploy/ptn-api-1.0.0-SNAPSHOT.jar 
