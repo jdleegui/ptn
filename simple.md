@@ -30,7 +30,7 @@ ls ~/.m2/settings.xml
 mv ~/.m2/repository/ ~/BAK/
 ```
 # Create project
-## Make project based on '1.1.3-Beryllium-SR3' using the snapshot architype (*recomend*)
+## Make project based on '1.1.4-Beryllium-SR4' using the snapshot architype (*recomend*)
 ```
 mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller \
 -DarchetypeArtifactId=opendaylight-startup-archetype \
@@ -41,7 +41,7 @@ mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller \
 Check version name in the
 https://nexus.opendaylight.org/content/repositories/public/org/opendaylight/controller/opendaylight-startup-archetype/
 ```
-## Make project based on '1.1.3-Beryllium-SR3' using the public general architype 
+## Make project based on '1.1.4-Beryllium-SR4' using the public general architype 
 ```
 mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller \
 -DarchetypeArtifactId=opendaylight-startup-archetype \
