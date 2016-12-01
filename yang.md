@@ -450,6 +450,29 @@ feature:install odl-restconf-all
 feature:install odl-mdsal-all 
 feature:repo-add mvn:org.ops4j.pax.jdbc/pax-jdbc-features/0.8.0/xml/features
 feature:install pax-jdbc-mariadb pax-jdbc-config
+bun
+bundle:install mvn:commons-net/commons-net/3.3
+                mvn:commons-net/commons-net/3.3.9
+Netty.
+Unable to install bundle 
+opendaylight-user@root>bundle:
+Bundle ID: 280
+bundle:install mvn:commons-net/commons-net/3.3
+exports | grep netty
+akka.remote.transport.netty
+
+exports | grep netty
+
+new Thread() {
+
+Karaf console sample
+}
+
+bin/start, bin/client(to access karaf)
+client -u karaf
+
+
+
 ```
 ## Add dependency
 ```
