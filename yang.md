@@ -450,6 +450,10 @@ feature:install odl-restconf-all
 feature:install odl-mdsal-all 
 feature:repo-add mvn:org.ops4j.pax.jdbc/pax-jdbc-features/0.8.0/xml/features
 feature:install pax-jdbc-mariadb pax-jdbc-config
+bundle:install mvn:commons-net/commons-net/3.3
+
+
+
 bun
 bundle:install mvn:commons-net/commons-net/3.3
                 mvn:commons-net/commons-net/3.3.9
