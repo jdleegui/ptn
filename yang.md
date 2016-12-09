@@ -454,6 +454,12 @@ bundle:install mvn:commons-net/commons-net/3.3
 exports | grep commons.net
 exports | grep netty
 ```
+## Install extra feature for SDK
+```
+feature:install odl-mdsal-binding
+feature:install odl-of-config-all
+feature:install webconsole
+```
 ### another reference
 ```
 netty
