@@ -24,7 +24,7 @@ cp -n ~/.m2/settings.xml{,.orig};
 wget -q -O - https://raw.githubusercontent.com/opendaylight/odlparent/stable/boron/settings.xml > ~/.m2/settings.xml
 ls ~/.m2
 ls ~/.m2/settings.xml
-jdlee@LeeJD:~/Documents/SDK$ diff 01.opendaylight/settings.xml ~/.m2/settings.xml'''
+jdlee@LeeJD:~/Documents/SDK$ diff 01.opendaylight/settings.xml ~/.m2/settings.xml
 https://github.com/jdleegui/ptn/blob/master/sdk.md
 ```
 ## Remove existing repository if exist
