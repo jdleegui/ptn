@@ -43,6 +43,10 @@ jdlee@LeeJD:~/Documents/SDK$ diff 01.opendaylight/distribution-karaf-0.4.4-Beryl
 jdlee@LeeJD:~/workspace$ rm -R distribution-karaf-0.4.4-Beryllium-SR4/
 jdlee@LeeJD:~/workspace$ unzip ~/Downloads/distribution-karaf-0.4.4-Beryllium-SR4
 opendaylight-user@root>feature:install odl-mdsal-all odl-mdsal-binding odl-restconf-all odl-of-config-all odl-dlux-all webconsole
+opendaylight-user@root>feature:install odl-mdsal-all odl-mdsal-binding odl-restconf-all odl-of-config-all odl-dlux-all webconsole
+Refreshing bundles org.eclipse.persistence.core (121), org.jboss.netty (159), com.google.guava (64), org.eclipse.persistence.moxy (122)
+Refreshing bundles org.jboss.netty (159), io.netty.handler (128)
+opendaylight-user@root>
 ```
 ```
 feature:repo-add mvn:org.ops4j.pax.jdbc/pax-jdbc-features/0.8.0/xml/features
