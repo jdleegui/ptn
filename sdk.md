@@ -19,32 +19,24 @@ sudo apt-get install maven
 ## Copy maven environment for ODL
 - [Boron] : ( http://docs.opendaylight.org/en/stable-boron/developer-guide/developing-apps-on-the-opendaylight-controller.html )
 ```
+
 cp -n ~/.m2/settings.xml{,.orig};
 wget -q -O - https://raw.githubusercontent.com/opendaylight/odlparent/stable/boron/settings.xml > ~/.m2/settings.xml
 ls ~/.m2
 ls ~/.m2/settings.xml
+jdlee@LeeJD:~/Documents/SDK$ diff 01.opendaylight/settings.xml ~/.m2/settings.xml'''
+https://github.com/jdleegui/ptn/blob/master/sdk.md
 ```
 ## Remove existing repository if exist
 ```
 mv ~/.m2/repository/ ~/BAK/
 ```
+## Copy ODL distribution
+```
+jdlee@LeeJD:~/Documents/SDK$ diff 01.opendaylight/distribution-karaf-0.4.4-Beryllium-SR4.zip \
+~/Downloads/distribution-karaf-0.4.4-Beryllium-SR4.zip
+```
 # Create project
-## Make project based on '1.1.4-Beryllium-SR4' using the snapshot architype (*recomend*)
-```
-mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller \
--DarchetypeArtifactId=opendaylight-startup-archetype \
--DarchetypeRepository=http://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/ \
--DarchetypeCatalog=http://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/archetype-catalog.xml \
--DarchetypeVersion=1.1.4-Beryllium-SR4
-```
-- Check version : ( https://nexus.opendaylight.org/content/repositories/public/org/opendaylight/controller/opendaylight-startup-archetype/ )
-
-```
-Define value for property 'groupId': : com.lgu
-Define value for property 'artifactId': : ptn
-Define value for property 'package':  com.lgu: : 
-Define value for property 'classPrefix':  Ptn: : 
-Define value for property 'copyright': : LGU.   
 ```
 ## Import created maven project from eclipse 
 - Import only ap and impl
