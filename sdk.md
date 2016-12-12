@@ -31,10 +31,32 @@ https://github.com/jdleegui/ptn/blob/master/sdk.md
 ```
 mv ~/.m2/repository/ ~/BAK/
 ```
+```
+jdlee@LeeJD:~/workspace$ rm -R distribution-karaf-0.4.4-Beryllium-SR4/
+jdlee@LeeJD:~/workspace$ unzip ~/Downloads/distribution-karaf-0.4.4-Beryllium-SR4
 ## Copy ODL distribution
+```
 ```
 jdlee@LeeJD:~/Documents/SDK$ diff 01.opendaylight/distribution-karaf-0.4.4-Beryllium-SR4.zip \
 ~/Downloads/distribution-karaf-0.4.4-Beryllium-SR4.zip
+
+jdlee@LeeJD:~/workspace$ rm -R distribution-karaf-0.4.4-Beryllium-SR4/
+jdlee@LeeJD:~/workspace$ unzip ~/Downloads/distribution-karaf-0.4.4-Beryllium-SR4
+opendaylight-user@root>feature:install odl-mdsal-all odl-mdsal-binding odl-restconf-all odl-of-config-all odl-dlux-all
+webconsole
+```
+```
+feature:repo-add mvn:org.ops4j.pax.jdbc/pax-jdbc-features/0.8.0/xml/features
+feature:install pax-jdbc-mariadb pax-jdbc-config
+bundle:install mvn:commons-net/commons-net/3.3
+exports | grep commons.net
+exports | grep netty
+```
+## Install extra feature for SDK
+```
+
+```
+
 ```
 # Create project
 ```
