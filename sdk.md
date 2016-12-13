@@ -59,6 +59,13 @@ exports | grep netty
 jdlee@LeeJD:~/Documents/SDK$rm -R tsdn_plugin_sample/
 jdlee@LeeJD:~/Documents/SDK$unzip tsdn-plugin-api-0.5.0.zip 
 jdlee@LeeJD:~/Documents/SDK$ ~/eclipse/java-latest-released/eclipse/eclipse -Data . &
+jdlee@LeeJD:~/Documents/SDK/02.maven_projects/tsdn_plugin_api$ mvn clean install -DskipTests -Dcheckstyle.skip=true > /tmp/error.txt
+jdlee@LeeJD:~/Documents/SDK/02.maven_projects/tsdn_plugin_api$ cp target/tsdn-plugin-api-0.5.0.jar ~/workspace/distribution-karaf-0.4.4-Beryllium-SR4/deploy/
+jdlee@LeeJD:~/Documents/SDK/02.maven_projects/tsdn_plugin_api$ 
+```
+```
+opendaylight-user@root>list
+311 | Active   |  80 | 0.5.0 | tsdn_plugin_api                                                          
 ```
 # Create project
 ```
