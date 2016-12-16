@@ -39,6 +39,7 @@ jdlee@LeeJD:~/workspace$ unzip ~/Downloads/distribution-karaf-0.4.4-Beryllium-SR
 ```
 ## 2. RUN ODL and install related features
 ```
+jdlee@LeeJD:~/workspace$ ./distribution-karaf-0.4.4-Beryllium-SR4/bin/karaf 
 opendaylight-user@root>feature:install odl-mdsal-all odl-mdsal-binding odl-restconf-all odl-of-config-all odl-dlux-all webconsole
 Refreshing bundles org.eclipse.persistence.core (121), org.jboss.netty (159), com.google.guava (64), org.eclipse.persistence.moxy (122)
 Refreshing bundles org.jboss.netty (159), io.netty.handler (128)
@@ -54,18 +55,95 @@ exports | grep netty
 ```
 ## 4. Build API and deploy it
 ```
+$ ~/eclipse/java-latest-released/eclipse/eclipse -Data jdlee@LeeJD:~/Documents/SDK/ &
+- File >> Import ... >> Select >> Existing Maven Projects >> Root Directory ~/tsdn_plugin_api
 jdlee@LeeJD:~/Documents/SDK$rm -R tsdn_plugin_sample/
 jdlee@LeeJD:~/Documents/SDK$unzip tsdn-plugin-api-0.5.0.zip 
-jdlee@LeeJD:~/Documents/SDK$ ~/eclipse/java-latest-released/eclipse/eclipse -Data . &
-jdlee@LeeJD:~/Documents/SDK/02.maven_projects/tsdn_plugin_api$ mvn clean install -DskipTests -Dcheckstyle.skip=true > /tmp/error.txt
-jdlee@LeeJD:~/Documents/SDK/02.maven_projects/tsdn_plugin_api$ cp target/tsdn-plugin-api-0.5.0.jar ~/workspace/distribution-karaf-0.4.4-Beryllium-SR4/deploy/
+tsdn_plugin_api$ mvn clean install -DskipTests -Dcheckstyle.skip=true > /tmp/error.txt
+tsdn_plugin_api$ cp target/tsdn-plugin-api-0.5.0.jar ~/workspace/distribution-karaf-0.4.4-Beryllium-SR4/deploy/
 jdlee@LeeJD:~/Documents/SDK/02.maven_projects/tsdn_plugin_api$ 
 ```
 ```
 opendaylight-user@root>list
 311 | Active   |  80 | 0.5.0 | tsdn_plugin_api                                                          
 ```
-# Create project
+## 5. Check API
+```
+firefox ~/tsdn_plugin_api/target/apidocs/index.html
+```
+## 6. Copy another bundle to compose API plugin
+```
+~/03.plugin-manager-components$ cp tsdn-plugin-manager-base-0.5.0.jar ~/workspace/distribution-karaf-0.4.4-Beryllium-SR4/deploy/
+~/03.plugin-manager-components$ cp tsdn-plugin-manager4vendor-0.5.0.jar ~/workspace/distribution-karaf-0.4.4-Beryllium-SR4/deploy/
+~/03.plugin-manager-components$ cp lgup.plugin.manager.cfg ~/workspace/distribution-karaf-0.4.4-Beryllium-SR4/etc/
+
+```
+## 7. Check any error 
+```
+opendaylight-user@root>list
+311 | Active   |  80 | 0.5.0  | tsdn_plugin_api                                                          
+312 | Active   |  80 | 0.5.0  | tsdn_plugin_manager_base                                                 
+313 | Active   |  80 | 0.5.0  | tsdn_plugin_manager4vendor                                               
+opendaylight-user@root>config:property-list -p lgup.plugin.manager
+   plugin.3.provider.1.id = 401
+   service.pid = lgup.plugin.manager
+   plugin.1.provider.2.id = 202
+   plugin.1.provider.1.password = root
+   plugin.1.provider.1.id = 201
+   felix.fileinstall.filename = file:/home/jdlee/workspace/distribution-karaf-0.4.4-Beryllium-SR4/etc/lgup.plugin.manager.cfg
+   plugin.count = 1
+   plugin.2.provider.2.url = 192.161.1.21:5050
+   plugin.3.id = 2
+   plugin.3.provider.count = 2
+   plugin.2.provider.1.url = 192.161.1.20:5050
+   plugin.2.id = 1
+   plugin.1.provider.count = 2
+   plugin.2.provider.2.id = 302
+   plugin.1.id = 0
+   plugin.2.provider.1.id = 301
+   plugin.1.provider.1.userName = root
+   plugin.3.provider.2.url = 192.161.1.21:5050
+   plugin.1.provider.2.url = 192.168.1.21:5050
+   plugin.3.provider.1.url = 192.161.1.20:5050
+   plugin.3.provider.2.id = 402
+   plugin.2.provider.count = 2
+   plugin.1.provider.1.url = 192.168.123.117:3408
+```
+## 8. Import plugin sample 
+```
+~/tsdn_plugin_coweaver$ mvn clean install -DskipTests -Dcheckstyle.skip=true > /tmp/error.txt
+~/tsdn_plugin_coweaver$ cp target/tsdn-plugin-coweaver-0.5.0.jar ~/workspace/distribution-karaf-0.4.4-Beryllium-SR4/deploy/
+```
+## 9. Check deployed status
+```
+opendaylight-user@root>list
+311 | Active   |  80 | 0.5.0  | tsdn_plugin_api                                                          
+312 | Active   |  80 | 0.5.0  | tsdn_plugin_manager_base                                                 
+313 | Active   |  80 | 0.5.0  | tsdn_plugin_manager4vendor                                               
+314 | Active   |  80 | 0.5.0  | tsdn_plugin_coweaver                                                     
+opendaylight-user@root>
+opendaylight-user@root>lgup:discovery 201 devices
+opendaylight-user@root>
+```
+## 10. Check LOG
+```
+jdlee@LeeJD:~/workspace$ tail -F ~/workspace/distribution-karaf-0.4.4-Beryllium-SR4/data/log/karaf.log
+| 313 - lgup.tsdn.plugin.tsdn-plugin-manager4vendor - 0.5.0 | deviceConnected ProviderID[id=201], triggerType:Discovery, ElementId[[ni-0]201]
+| 313 - lgup.tsdn.plugin.tsdn-plugin-manager4vendor - 0.5.0 | deviceConnected ProviderID[id=201], triggerType:Discovery, ElementId[[ni-1]201]
+| 313 - lgup.tsdn.plugin.tsdn-plugin-manager4vendor - 0.5.0 | deviceConnected ProviderID[id=201], triggerType:Discovery, ElementId[[ni-2]201]
+```
+## 11. STOP plugin manager to replace
+```
+opendaylight-user@root>stop 314 313 312 311
+```
+## 12. COPY and RESTART previsouly stopped plugin.
+```
+tsdn_plugin_coweaver$ rm ~/workspace/distribution-karaf-0.4.4-Beryllium-SR4/deploy/tsdn-plugin-coweaver-0.5.0.jar 
+tsdn_plugin_coweaver$ cp target/tsdn-plugin-coweaver-0.5.0.jar ~/workspace/distribution-karaf-0.4.4-Beryllium-SR4/deploy/
+opendaylight-user@root>start 311 312 313
+opendaylight-user@root>start 315
+opendaylight-user@root>lgup:discovery 201 devices
+```
 ```
 ## Import created maven project from eclipse 
 - Import only ap and impl
