@@ -159,37 +159,23 @@ svn list svn://192.168.123.118/EMS/SDK/
 svn list svn://192.168.123.118/EMS/SDK/tsdn_plugin_api/
 svn list svn://192.168.123.118/EMS/SDK/tsdn_plugin_coweaver
 ```
-## Remove useless files related with config and yang from impl
+## 14. Check sample project files
 ```
-rm pom.xml
-rm -R ptn/artifacts/
-rm -R ptn/features/
-rm -R karaf/
-rm -R it
-rm -R impl/src/test/
-rm -R impl/src/main/config/
-rm -R impl/src/main/yang/
-rm -R impl/src/main/java/org/
 $ tree
+.jdlee@LeeJD:~/workspace/CSU/SDK/tsdn_plugin_coweaver$ tree
 .
-├── api
-│   ├── pom.xml
-│   └── src
-│       └── main
-│           └── yang
-│               └── ptn.yang
-└── impl
-    ├── pom.xml
-    └── src
-        └── main
-            └── java
-                └── com
-                    └── lgu
-                        └── impl
-                            └── PtnProvider.java
-11 directories, 4 files
+├── pom.xml
+└── src
+    └── main
+        └── java
+            └── lgup
+                └── tsdn
+                    └── plugin
+                        └── coweaver
+                            ├── PluginActivator.java                            
+                            └── TsdnRPCImpl.java
 ```
-## 14. Modify pom.xml
+## 15. Modify pom.xml
 ### Insert apache.felix plugins when build the project
 ### Mark goal prepare agent as ignored in eclipse prefer
 ```
@@ -237,59 +223,6 @@ $ tree
     </plugins>
   </build>
 </project>
-```
-# Basic modification to meet with the basic purpose of TSDN project.
-## Change existing java code like the same as following.
-```
-package com.lgu.impl;
-
-import org.opendaylight.controller.sal.binding.api.BindingAwareBroker.ProviderContext;
-import org.opendaylight.controller.sal.binding.api.BindingAwareProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-public class PtnProvider implements BindingAwareProvider /*, AutoCloseable*/ {
-
-    private static final Logger LOG = LoggerFactory.getLogger(PtnProvider.class);
-
-    @Override
-    public void onSessionInitiated(ProviderContext session) {
-        LOG.info("PtnProvider Session Initiated");
-    }
-
-//  @Override
-//  public void close() throws Exception {
-//      LOG.info("PtnProvider Closed");
-//  }
-}
-```
-## Add Registering provider.
-```
-package tsdn.demo.impl;
-
-import org.opendaylight.controller.sal.binding.api.AbstractBrokerAwareActivator;
-import org.opendaylight.controller.sal.binding.api.BindingAwareBroker;
-import org.opendaylight.controller.sal.binding.api.BindingAwareBroker.ProviderContext;
-import org.opendaylight.controller.sal.binding.api.BindingAwareProvider;
-import org.osgi.framework.BundleContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-public class Tsdn_demoProvider extends AbstractBrokerAwareActivator implements BindingAwareProvider {
-
-    private static final Logger LOG = LoggerFactory.getLogger(Tsdn_demoProvider.class);
-
-    @Override
-    public void onSessionInitiated(ProviderContext session) {
-        LOG.info("Tsdn_demoProvider Session Initiated");
-    }
-
-    @Override
-    protected void onBrokerAvailable(BindingAwareBroker broker, BundleContext arg1) {
-        LOG.info("Tsdn_demoProvider onBrokerAvailable");
-        broker.registerProvider(this);
-    }
-}
 ```
 ## Download Pre-built zip ODL
 ```
