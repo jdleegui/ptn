@@ -144,12 +144,20 @@ opendaylight-user@root>start 311 312 313
 opendaylight-user@root>start 315
 opendaylight-user@root>lgup:discovery 201 devices
 ```
-```
 ## Import created maven project from eclipse 
-- Import only ap and impl
 ```
-Import maven project into workspace > Select ptn
-Select api and ptn (i.e. exclude karaf,features,artifacts,it)
+svn import tsdn_plugin_api/ svn://192.168.123.118/EMS/SDK/tsdn_plugin_api/
+svn import tsdn_plugin_coweaver/ svn://192.168.123.118/EMS/SDK/tsdn_plugin_coweaver/
+svn remove svn://192.168.123.118/EMS/SDK/tsdn_plugin_api/.classpath
+svn remove svn://192.168.123.118/EMS/SDK/tsdn_plugin_api/.project
+svn remove svn://192.168.123.118/EMS/SDK/tsdn_plugin_api/.settings/
+svn remove svn://192.168.123.118/EMS/SDK/tsdn_plugin_api/.settings/
+svn remove svn://192.168.123.118/EMS/SDK/tsdn_plugin_coweaver/.classpath
+svn remove svn://192.168.123.118/EMS/SDK/tsdn_plugin_coweaver/.project
+svn remove svn://192.168.123.118/EMS/SDK/tsdn_plugin_coweaver/.settings/
+svn list svn://192.168.123.118/EMS/SDK/
+svn list svn://192.168.123.118/EMS/SDK/tsdn_plugin_api/
+svn list svn://192.168.123.118/EMS/SDK/tsdn_plugin_coweaver
 ```
 ## Remove useless files related with config and yang from impl
 ```
