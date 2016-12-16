@@ -189,40 +189,50 @@ $ tree
                             └── PtnProvider.java
 11 directories, 4 files
 ```
-## Remove test XML category from impl/pom.xml
-```
-    <!-- Testing Dependencies -->
-    <!--
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>
-    -->
-    <!--
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-all</artifactId>
-      <scope>test</scope>
-    </dependency>
-    -->
-```
-## Insert apache.felix plugins when build the project
+## 14. Modify pom.xml
+### Insert apache.felix plugins when build the project
+### Mark goal prepare agent as ignored in eclipse prefer
 ```
   </dependencies>
+    <dependency>
+      <groupId>lgup.tsdn.plugin</groupId>
+      <artifactId>tsdn-plugin-api</artifactId>
+      <version>0.5.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.compendium</artifactId>
+      <version>4.3.1</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-net</groupId>
+      <artifactId>commons-net</artifactId>
+      <version>3.3</version>
+    </dependency>
+  </dependencies>
+
   <build>
     <plugins>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <source>${java.version.target}</source>
+          <target>${java.version.target}</target>
+        </configuration>
+      </plugin>
+      <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
+        <version>${bundle.plugin.version}</version>
         <extensions>true</extensions>
-          <configuration>
-            <instructions>
-              <Bundle-Name>ptn_manager</Bundle-Name>
-              <Bundle-Activator>com.lgu.impl.PtnProvider</Bundle-Activator>
-              <!-- Export-Package>!*</Export-Package -->            
-            </instructions>
-          </configuration>
+        <configuration>
+          <instructions>
+            <Bundle-Name>tsdn_plugin_coweaver</Bundle-Name>
+            <Bundle-Activator>lgup.tsdn.plugin.coweaver.PluginActivator</Bundle-Activator>
+          </instructions>
+        </configuration>
       </plugin>
     </plugins>
   </build>
