@@ -144,7 +144,7 @@ opendaylight-user@root>start 311 312 313
 opendaylight-user@root>start 315
 opendaylight-user@root>lgup:discovery 201 devices
 ```
-## Import created maven project from eclipse 
+## 13. IMPORT project and deploy
 ```
 svn import tsdn_plugin_api/ svn://192.168.123.118/EMS/SDK/tsdn_plugin_api/
 svn import tsdn_plugin_coweaver/ svn://192.168.123.118/EMS/SDK/tsdn_plugin_coweaver/
