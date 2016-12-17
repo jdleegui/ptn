@@ -37,21 +37,21 @@ jdlee@LeeJD:~/Documents/SDK$ diff 01.opendaylight/distribution-karaf-0.4.4-Beryl
 ~/Downloads/distribution-karaf-0.4.4-Beryllium-SR4.zip
 jdlee@LeeJD:~/workspace$ unzip ~/Downloads/distribution-karaf-0.4.4-Beryllium-SR4
 ```
-## 2. RUN ODL and install related features
-```
-jdlee@LeeJD:~/workspace$ ./distribution-karaf-0.4.4-Beryllium-SR4/bin/karaf 
-opendaylight-user@root>feature:install odl-mdsal-all odl-mdsal-binding odl-restconf-all odl-of-config-all odl-dlux-all webconsole
-Refreshing bundles org.eclipse.persistence.core (121), org.jboss.netty (159), com.google.guava (64), org.eclipse.persistence.moxy (122)
-Refreshing bundles org.jboss.netty (159), io.netty.handler (128)
-opendaylight-user@root>
-```
-## 3. Install another feature to access mysql and netty.
+## 2. Install another feature to access mysql and netty.
 ```
 feature:repo-add mvn:org.ops4j.pax.jdbc/pax-jdbc-features/0.8.0/xml/features
 feature:install pax-jdbc-mariadb pax-jdbc-config
 bundle:install mvn:commons-net/commons-net/3.3
 exports | grep commons.net
 exports | grep netty
+```
+## 3. RUN ODL and install related features
+```
+jdlee@LeeJD:~/workspace$ ./distribution-karaf-0.4.4-Beryllium-SR4/bin/karaf 
+opendaylight-user@root>feature:install odl-mdsal-all odl-mdsal-binding odl-restconf-all odl-of-config-all odl-dlux-all webconsole
+Refreshing bundles org.eclipse.persistence.core (121), org.jboss.netty (159), com.google.guava (64), org.eclipse.persistence.moxy (122)
+Refreshing bundles org.jboss.netty (159), io.netty.handler (128)
+opendaylight-user@root>
 ```
 ## 4. Build API and deploy it
 ```
