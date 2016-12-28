@@ -53,6 +53,19 @@ Refreshing bundles org.eclipse.persistence.core (121), org.jboss.netty (159), co
 Refreshing bundles org.jboss.netty (159), io.netty.handler (128)
 opendaylight-user@root>
 ```
+## 4. Modify POM.XML to insert maria DB
+```
+<dependency>
+	<groupId>org.osgi</groupId>
+	<artifactId>org.osgi.compendium</artifactId>
+	<version>4.3.1</version>
+</dependency>
+<dependency>
+	<groupId>commons-net</groupId>
+	<artifactId>commons-net</artifactId>
+	<version>3.3</version>
+</dependency>
+```
 ## 4. Build API and deploy it
 ```
 $ ~/eclipse/java-latest-released/eclipse/eclipse -Data jdlee@LeeJD:~/Documents/SDK/ &
@@ -63,6 +76,7 @@ tsdn_plugin_api$ mvn clean install -DskipTests -Dcheckstyle.skip=true > /tmp/err
 tsdn_plugin_api$ cp target/tsdn-plugin-api-0.5.0.jar ~/workspace/distribution-karaf-0.4.4-Beryllium-SR4/deploy/
 jdlee@LeeJD:~/Documents/SDK/02.maven_projects/tsdn_plugin_api$ 
 ```
+
 ```
 opendaylight-user@root>list
 311 | Active   |  80 | 0.5.0 | tsdn_plugin_api                                                          
