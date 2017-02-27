@@ -95,3 +95,108 @@ public class EmsVersionImpl implements PtnService {
     }
 }
 
+# default bundle
+```
+bundle:install mvn:commons-net/commons-net/3.3
+feature:repo-add mvn:org.ops4j.pax.jdbc/pax-jdbc-features/0.8.0/xml/features
+feature:install pax-jdbc-mariadb pax-jdbc-config
+feature:install odl-mdsal-all odl-mdsal-binding odl-restconf-all odl-of-config-all odl-dlux-all webconsole
+```
+# basic deploy
+```
+cp /home/jdlee/workspace/CSU/SDK8/tsdn_plugin_api/target/tsdn-plugin-api-0.7.3.jar /home/jdlee/workspace/distribution-karaf-0.4.4-Beryllium-SR4/deploy/
+cp /home/jdlee/workspace/SDK.SVN/tsdn.pluginsdk/tsdn_plugin_sample/manger4ventor/tsdn-plugin-manager-base-0.7.3.jar /home/jdlee/workspace/distribution-karaf-0.4.4-Beryllium-SR4/deploy/
+cp /home/jdlee/workspace/SDK.SVN/tsdn.pluginsdk/tsdn_plugin_sample/manger4ventor/tsdn-plugin-manager4vendor-0.7.3.jar /home/jdlee/workspace/distribution-karaf-0.4.4-Beryllium-SR4/deploy/
+cp /home/jdlee/workspace/SDK.SVN/tsdn.pluginsdk/tsdn_plugin_sample/manger4ventor/lgup.plugin.manager.cfg /home/jdlee/workspace/distribution-karaf-0.4.4-Beryllium-SR4/etc/
+cp /home/jdlee/workspace/CSU/SDK8/tsdn_plugin_coweaver/target/tsdn-plugin-coweaver-0.7.3.jar /home/jdlee/workspace/distribution-karaf-0.4.4-Beryllium-SR4/deploy/
+
+scp /home/jdlee/workspace/CSU/SDK8/tsdn_plugin_coweaver/target/tsdn-plugin-coweaver-0.7.3.jar lguplus@tsdn:/home/lguplus/Applications/distribution-karaf-0.4.4-Beryllium-SR4/deploy/
+```
+# check routine
+```
+
+lgup:discovery 7412_1 devices
+
+lgup:request-info 7412_1 device 1.1.70.111
+lgup:request-info 7412_1 device 1.1.70.112
+lgup:request-info 7412_1 device 1.1.70.113
+lgup:request-info 7412_1 device 1.1.70.114
+lgup:request-info 7412_1 device 1.1.70.121
+lgup:request-info 7412_1 device 1.1.70.122
+lgup:request-info 7412_1 device 1.1.70.123
+lgup:request-info 7412_1 device 1.1.70.124
+lgup:request-info 7412_1 device 1.1.70.125
+lgup:request-info 7412_1 device 1.1.70.126
+lgup:request-info 7412_1 device 1.1.70.132
+lgup:request-info 7412_1 device 1.1.70.133
+lgup:request-info 7412_1 device 1.1.70.134
+lgup:request-info 7412_1 device 1.1.70.135
+lgup:request-info 7412_1 device 1.1.70.136
+lgup:request-info 7412_1 device 1.1.70.137
+lgup:request-info 7412_1 device 1.1.70.138
+lgup:request-info 7412_1 device 1.1.70.151
+lgup:request-info 7412_1 device 1.1.70.152
+lgup:request-info 7412_1 device 1.1.70.153
+lgup:request-info 7412_1 device 1.1.70.171
+
+lgup:request-info 7412_1 device 5.1.1.1
+lgup:request-info 7412_1 device 5.2.1.1
+lgup:request-info 7412_1 device 5.3.1.1
+lgup:request-info 7412_1 device 1.1.65.121
+lgup:request-info 7412_1 device 1.1.65.111
+lgup:request-info 7412_1 device 1.1.65.112
+lgup:request-info 7412_1 device 1.1.65.113
+lgup:request-info 7412_1 device 1.1.65.114
+lgup:request-info 7412_1 device 1.1.65.114
+lgup:request-info 7412_1 device 1.1.65.115
+lgup:request-info 7412_1 device 1.1.65.122
+lgup:request-info 7412_1 device 1.1.65.123
+lgup:request-info 7412_1 device 1.1.65.124
+lgup:request-info 7412_1 device 1.1.65.131
+lgup:request-info 7412_1 device 1.1.65.132
+lgup:request-info 7412_1 device 1.1.65.118
+lgup:request-info 7412_1 device 1.1.65.119
+
+lgup:discovery 7412_1 tunnels
+
+lgup:discovery 7412_1 pws
+
+lgup:request-info 7412_1 pw 1.tp_95JJJJHFR1_94GGGGMA01_7871
+lgup:request-info 7412_1 pw 5012.tp_95PPPPCWV1_95PPPPCWV2_3079
+lgup:request-info 7412_1 pw 3011.tp_95HHHHCWV3_94GGGGMA01_0010
+lgup:request-info 7412_1 pw 1023.tp_95HHHHCWV3_94GGGGMA01_0010
+
+lgup:request-info 7412_1 service 3011.3011.tp_95HHHHCWV3_94GGGGMA01_0010
+lgup:request-info 7412_1 service 2011.1023.tp_92OOOOBA01_95PPPPCWV2_0020
+
+lgup:request-info 7412_1 pw 5041.tp_95QQQQCWV2_92NNNNBA01_0031
+lgup:request-info 7412_1 tunnel tp_95QQQQCWV2_94NNNNMA01_0030
+lgup:request-info 7412_1 tunnel tp_92DDDDBA01_92KKKKBA01_0020 
+
+lgup:request-info 7412_1 tunnel 1.1.70.152_tp_95QQQQCWV2_94NNNNMA01_0030
+lgup:request-info 7412_1 pw 5041.tp_95QQQQCWV2_92NNNNBA01_0031
+lgup:request-info 7412_1 service 5011.5041.tp_92KKKKBA01_95LLLLCWV01_0019
+
+lgup:create 7412_1 tunnels /home/jdlee/tsdn_plugins/PluginID\[id\=7412\]/tunnel.json
+lgup:create 7412_2 tunnels /tmp/tunnel_txt.json
+lgup:create --pwn ghjhg  7412_1 pws /tmp/dbg_pw_local.json
+
+lgup:request-info 7412_1 tunnel tp_95HHHHCWV3_95HHHHCWV1_0005
+lgup:delete --help
+lgup:delete 7412_1 tunnels tp_95HHHHCWV3_95HHHHCWV1_0005
+lgup:delete 7412_1 pws 1111
+lgup:delete 7412_1 pws 1111.tp_95HHHHCWV3_95GGGGMA01_0010
+
+lgup:request-info 7412_1 pw 5041.tp_95QQQQCWV2_92NNNNBA01_0031
+lgup:request-info 7412_1 pw 5061.tp_95QQQQCWV2_92NNNNBA01_0031
+lgup:request-info 7412_1 pw 3011.tp_95HHHHCWV3_94GGGGMA01_0010
+lgup:request-info 7412_1 pw 1023.tp_95HHHHCWV3_94GGGGMA01_0010
+
+lgup:request-info 7412_1 service 5041.5041.tp_95QQQQCWV2_92NNNNBA01_0031
+lgup:request-info 7412_1 service 5041.5061.tp_95QQQQCWV2_92NNNNBA01_0031
+lgup:request-info 7412_1 service 3011.3011.tp_95HHHHCWV3_94GGGGMA01_0010
+lgup:request-info 7412_1 service 1023.1023.tp_95HHHHCWV3_94GGGGMA01_0010
+
+
+
+```
