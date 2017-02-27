@@ -210,5 +210,10 @@ plugin.1.provider.1.url=192.168.123.168
 plugin.1.provider.1.userName=root
 plugin.1.provider.1.password=root
 jdlee@LeeJD:~$ 
-
+```
+# gadget
+```
+for f in log*; do xterm -fg white -bg black +sb -T $f -e tail -F $f & done
+for f in log*; do xterm -fg white -bg darkblue -geometry 64X24 +sb -T $f -e tail -F $f & done
+jdlee@LeeJD:~$ 
 ```
