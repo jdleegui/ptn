@@ -197,7 +197,18 @@ lgup:request-info 7412_1 service 5041.5041.tp_95QQQQCWV2_92NNNNBA01_0031
 lgup:request-info 7412_1 service 5041.5061.tp_95QQQQCWV2_92NNNNBA01_0031
 lgup:request-info 7412_1 service 3011.3011.tp_95HHHHCWV3_94GGGGMA01_0010
 lgup:request-info 7412_1 service 1023.1023.tp_95HHHHCWV3_94GGGGMA01_0010
-
-
+```
+# config
+```
+jdlee@LeeJD:~$ cat ~/workspace/distribution-karaf-0.4.4-Beryllium-SR4/etc/lgup.plugin.manager.cfg 
+plugins.rootDir=/home/jdlee/tsdn_plugins
+plugin.count=1
+plugin.1.id=7412
+plugin.1.provider.count=1
+plugin.1.provider.1.id=7412_1
+plugin.1.provider.1.url=192.168.123.168
+plugin.1.provider.1.userName=root
+plugin.1.provider.1.password=root
+jdlee@LeeJD:~$ 
 
 ```
