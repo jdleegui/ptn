@@ -185,44 +185,46 @@ function mongodb_protocol.dissector(buffer, pinfo, tree)
 	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_get_stm_port_t->sfThres")
   elseif fid_name == "CE_7200_FID_GET_MPLS_INTERFACE" or fid_name == "SMI_7400_FID_GET_MPLS_INTERFACE" then
     if (length <= i) then return end
-    subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_interface_t::smi_pid->pid_type(i="..i..")")
-	i = i+4
-	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_interface_t::smi_pid->ne_type")
-	i = i+4
-	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_interface_t::smi_pid->card_id")
-	i = i+4
-	subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_mpls_interface_t::smi_pid->slot_id")
-	i = i+2
-	subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_mpls_interface_t::smi_pid->port_id")
-	i = i+2
-	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_interface_t->ifindex")
-	i = i+4
-	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_interface_t->flag")
-	i = i+4
-	subtree:add(msg_dst_add, buffer(i,4)):append_text(":smi_mpls_interface_t->result_addr")
-	i = i+4
-	subtree:add(msg_dst_add, buffer(i,4)):append_text(":smi_mpls_interface_t->peer_nodeId")
-	i = i+4
-	subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_mpls_interface_t->vid")
-	i = i+2
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_interface_t->peer_slotId")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_interface_t->peer_portId")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_interface_t->is_tagged")
-	i = i+1
-    subtree:add(msg_mac, buffer(i,6)):append_text(":smi_mpls_interface_t->nhMac")
-	i = i+6
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_interface_t->adminStatus")
-	i = i+1
-	subtree:add(buffer(i,50):string()):append_text(":smi_mpls_interface_t->names")
-	i = i+50
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_interface_t->peer_shelfId")
-	i = i+1
-	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_interface_t->all_bw")
-	i = i+4
-	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_interface_t->use_bw")
-	i = i+4
+	while (i < length) do
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_interface_t::smi_pid->pid_type(i="..i..")len="..length..")")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_interface_t::smi_pid->ne_type")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_interface_t::smi_pid->card_id")
+		i = i+4
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_mpls_interface_t::smi_pid->slot_id")
+		i = i+2
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_mpls_interface_t::smi_pid->port_id")
+		i = i+2
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_interface_t->ifindex")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_interface_t->flag")
+		i = i+4
+		subtree:add(msg_dst_add, buffer(i,4)):append_text(":smi_mpls_interface_t->result_addr")
+		i = i+4
+		subtree:add(msg_dst_add, buffer(i,4)):append_text(":smi_mpls_interface_t->peer_nodeId")
+		i = i+4
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_mpls_interface_t->vid")
+		i = i+2
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_interface_t->peer_slotId")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_interface_t->peer_portId")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_interface_t->is_tagged")
+		i = i+1
+		subtree:add(msg_mac, buffer(i,6)):append_text(":smi_mpls_interface_t->nhMac")
+		i = i+6
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_interface_t->adminStatus")
+		i = i+1
+		subtree:add(buffer(i,49):string()):append_text(":smi_mpls_interface_t->names")
+		i = i+49
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_interface_t->peer_shelfId")
+		i = i+1
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_interface_t->all_bw")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_interface_t->use_bw")
+		i = i+4
+	end
   elseif fid_name == "SET_SVC_REMARK_PROFILE" or fid_name == "GET_SVC_REMARK_PROFILE" then
     if (length <= i) then return end
     subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pid->pid_type(i="..i..")")
