@@ -154,6 +154,76 @@ function mongodb_protocol.dissector(buffer, pinfo, tree)
 --		subtree:add(buffer(i,21):string()):append_text(":smi_slot_msg_status_info_t->names")
 --		i = i+21
 	end
+  elseif fid_name == "UT_7400_FID_GET_LINK_PORT" or fid_name == "GET_LINK_PORT" then
+    if (length <= i) then return end
+	while (i < length) do
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_get_link_port_t::smi_pid->pid_type(i="..i..")len="..length..")")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_get_link_port_t::smi_pid->ne_type")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_get_link_port_t::smi_pid->card_id")
+		i = i+4
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_get_link_port_t::smi_pid->slot_id")
+		i = i+2
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_get_link_port_t::smi_pid->port_id")
+		i = i+2
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_get_link_port_t->ifindex")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_get_link_port_t->iftype")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_get_link_port_t->actype")
+		i = i+4
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_get_link_port_t->prov_speed")
+		i = i+2
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_get_link_port_t->status_speed")
+		i = i+2
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->prov_duplex")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->status_duplex")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->prov_shutdown")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->status_shutdown")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->prov_auto_nego")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->prov_flow_control")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->prov_loopback")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->advertise")
+		i = i+1
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_get_link_port_t->prov_media_ch")
+		i = i+2
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_get_link_port_t->prov_jumbo")
+		i = i+2
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->status_pause_tx")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->status_pause_rx")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->status_linkup")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->status_act")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->prov_llcf")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->fec_mode")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->combo_utp")
+		i = i+1
+		subtree:add(buffer(i,64):string()):append_text(":smi_get_link_port_t->desc")
+		i = i+64
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->auto_nni")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->lag_id")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->module_type")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->dummy5")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->reserve6")
+		i = i+1
+	end
   elseif fid_name == "SET_STM_INTERFACE" or fid_name == "GET_STM_INTERFACE" then
     if (length <= i) then return end
     subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_get_stm_port_t::smi_pid->pid_type(i="..i..")")
