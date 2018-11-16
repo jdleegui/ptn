@@ -1,4 +1,7 @@
-mongodb_protocol = Proto("PTN",  "PTN EMS Protocol")
+-- Coweaver PTN EMS TCP/RS232 common protocol
+-- Lee Jeong Dong : jdeegui@gamil.com
+
+ptnems_protocol = Proto("PTN",  "PTN EMS Protocol")
 
 -- Header fields
 msg_hdr         = ProtoField.uint16("ptn_wdm.hdr"     , "HEADER" , base.HEX)
@@ -29,15 +32,13 @@ number_to_skip  = ProtoField.int32 ("ptn_wdm.number_to_skip"  , "numberToSkip"  
 number_to_return= ProtoField.int32 ("ptn_wdm.number_to_return", "numberToReturn"    , base.DEC)
 query           = ProtoField.string("ptn_wdm.query"           , "query"             , base.ASCII)
 
-
-
 response_flags  = ProtoField.int32 ("ptn_wdm.response_flags"  , "responseFlags"     , base.DEC)
 cursor_id       = ProtoField.int64 ("ptn_wdm.cursor_id"       , "cursorId"          , base.DEC)
 starting_from   = ProtoField.int32 ("ptn_wdm.starting_from"   , "startingFrom"      , base.DEC)
 number_returned = ProtoField.int32 ("ptn_wdm.number_returned" , "numberReturned"    , base.DEC)
 documents       = ProtoField.string("ptn_wdm.documents"       , "documents"         , base.ASCII)
 
-mongodb_protocol.fields = {
+ptnems_protocol.fields = {
   msg_hdr, msg_len, msg_fid, msg_ser, msg_seq, msg_sys, msg_ret, msg_key, msg_src_add, msg_src_idx, msg_dst_add, msg_dst_idx, msg_crc, -- Header
   msg_cfg_type, msg_tid_name, msg_mac, -- CONFIG
   msg_uint32, msg_uint16, msg_uint08,
@@ -45,13 +46,13 @@ mongodb_protocol.fields = {
   response_flags, cursor_id, starting_from, number_returned, documents -- OP_REPLY
 }
 
-function mongodb_protocol.dissector(buffer, pinfo, tree)
+function ptnems_protocol.dissector(buffer, pinfo, tree)
   length = buffer:len()
   if length == 0 then return end
 
-  pinfo.cols.protocol = mongodb_protocol.name
+  pinfo.cols.protocol = ptnems_protocol.name
 
-  local subtree = tree:add(mongodb_protocol, buffer(), "PTN WDM EMS Protocol Data")
+  local subtree = tree:add(ptnems_protocol, buffer(), "PTN WDM EMS Protocol Data")
 
   -- Header
   local i = 0
@@ -1330,92 +1331,4 @@ function get_response_flag_description(flags)
 end
 
 local tcp_port = DissectorTable.get("tcp.port")
-tcp_port:add(3408, mongodb_protocol)
-
-
--- local f = cow_PTN.fields
--- 
--- -- Field 정의
--- --   HEADER 공통
--- --     STARTCODE Field 정의
--- 
--- f.head = ProtoField.uint16("cow_PTN.head", "HEAD", base.HEX)
--- f.legth = ProtoField.uint16("cow_PTN.length", "LENGTH", base.HEX)
--- f.fid = ProtoField.uint16("cow_PTN.fid", "FID", base.HEX)
--- f.hash = ProtoField.uint16("cow_PTN.hash", "HASH", base.HEX)
--- f.segment = ProtoField.uint16("cow_PTN.segment", "SEGMENT")
--- f.device = ProtoField.int8("cow_PTN.device", "DEVICE")
--- f.ret = ProtoField.int8("cow_PTN.ret", "RETURN")
--- f.hash4 = ProtoField.uint32("cow_PTN.hash4", "HASH4", base.HEX)
--- f.src = ProtoField.ipv4("cow_PTN.src", "SRC_IP")
--- f.src_sf = ProtoField.uint8("cow_PTN.src_sf", "SRC_SF")
--- f.dst = ProtoField.ipv4("cow_PTN.dst", "DST_IP")
--- f.dst_sf = ProtoField.uint8("cow_PTN.dst_sf", "DST_SF")
--- 
--- 
--- --     FLAGS Field 정의
--- --     bit data를 다루기 위해서는, unit8() 함수의 마지막에 bits mask 값을 기재합니다.
--- --f.ver = ProtoField.uint8("tpcstream.ver", "VERSION", base.DEC, nil, 0xC0)
--- --f.reserved = ProtoField.uint8("tpcstream.reserved", "RESERVED", base.HEX, nil, 0x30)
--- --f.encrypted = ProtoField.uint8("tpcstream.encrypted", "ENCRYPTED", base.DEC, nil, 0x08)
--- --f.iframe = ProtoField.uint8("tpcstream.iframe", "I-FRAME", base.DEC, nil, 0x04)
--- --f.startframe = ProtoField.uint8("tpcstream.start", "START", base.DEC, nil, 0x02)
--- --f.endframe = ProtoField.uint8("tpcstream.end", "END", base.DEC, nil, 0x01)
--- 
--- --   HEADER Fields for START BIT == 1 
--- --        Frame Size Field 정의
--- --f.frame_size = ProtoField.uint32("tpcstream.frame_size", "FRAME_SIZE", base.DEC)
--- 
--- --     Frame Count Field 정의
--- --f.frame_count = ProtoField.uint32("tpcstream.frame_count", "FRAME_COUNT", base.DEC)
--- 
--- --   HEADER Fields for START BIT == 0
--- --       Packet Count Field 정의
--- --f.packet_count = ProtoField.uint16("tpcstream.packet_count", "PACKET_COUNT", base.DEC)
--- 
--- --   BODY : Frame Data
--- --f.frame_data = ProtoField.bytes("tpcstream.frame_data", "FRAME_DATA")
--- --p_tpcstream 객체의 dissector() 함수를 정의합니다.
--- --Wireshark에서 해당 Dissector를 사용할 조건(Layer4 Protocol, Port번호 등)에 맞는 패킷을 찾았을 때 호출되는 함수입니다.
--- --Parameter로 다음 세 값이 전달됩니다.
--- --buffer : Packet raw bytes
--- --pinfo : Packet Information
--- --tree : Packet Detail tree
--- --Wireshark 창으로 보자면 각각 다음 부분을 나타낸다고 볼 수 있습니다.
--- -- create a function to dissect it
--- function cow_PTN.dissector(buf, pinfo, tree)
--- 
--- 	pinfo.cols.protocol = "cow_PTN"
--- 	i=0
--- 	local st = tree:add(cow_PTN)
--- 	
--- -- Message Header
--- 	st = st:add(buf(0,12),"PTN EMS Header")
--- 	st:add(f.head, buf(i,2))
--- 	i = i+2
--- 	st:add(f.legth,buf(i,2))
--- 	i = i+2
--- 	st:add(f.fid,buf(i,2))
--- 	i = i+2
--- 	st:add(f.hash,buf(i,2))
--- 	i = i+2
--- 	st:add(f.segment,buf(i,2))
--- 	i = i+2
--- 	st:add(f.device,buf(i,1))
--- 	i = i+1
--- 	st:add(f.ret,buf(i,1))
--- 	i = i+1
--- 	st:add(f.hash4,buf(i,4))
--- 	i = i+4
--- 	-- src
--- 	local srctree = st:add(buf(i,5),"src IP")
--- 	srctree:add(f.src,buf(i,4))
--- 	i = i+4
--- 	srctree:add(f.src_sf, buf(i,1))
--- 	i = i+1
--- 	local dsttree = st:add(buf(i,5),"dst IP")
--- 	dsttree:add(f.dst,buf(i,4))
--- 	i = i+4
--- 	dsttree:add(f.dst_sf,buf(i,1))
--- 	i = i+1
--- end
+tcp_port:add(3408, ptnems_protocol)
