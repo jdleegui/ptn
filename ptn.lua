@@ -226,33 +226,48 @@ function mongodb_protocol.dissector(buffer, pinfo, tree)
 	end
   elseif fid_name == "SET_STM_INTERFACE" or fid_name == "GET_STM_INTERFACE" then
     if (length <= i) then return end
-    subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_get_stm_port_t::smi_pid->pid_type(i="..i..")")
-	i = i+4
-	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_get_stm_port_t::smi_pid->ne_type")
-	i = i+4
-	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_get_stm_port_t::smi_pid->card_id")
-	i = i+4
-	subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_get_stm_port_t::smi_pid->slot_id")
-	i = i+2
-	subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_get_stm_port_t::smi_pid->port_id")
-	i = i+2
-	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_get_stm_port_t->ifindex")
-	i = i+4
-	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_get_stm_port_t->flag")
-	i = i+4
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_stm_port_t->spif_type")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_stm_port_t->loopback")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_stm_port_t->shutdown")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_stm_port_t->adminAct")
-	i = i+1
-	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_get_stm_port_t->sdThres")
-	i = i+1
-	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_get_stm_port_t->sfThres")
-	i = i+1
-	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_get_stm_port_t->sfThres")
+	while (i < length) do
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_get_stm_port_t::smi_pid->pid_type(i="..i..")len="..length..")")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_get_stm_port_t::smi_pid->ne_type")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_get_stm_port_t::smi_pid->card_id")
+		i = i+4
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_get_stm_port_t::smi_pid->slot_id")
+		i = i+2
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_get_stm_port_t::smi_pid->port_id")
+		i = i+2
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_get_stm_port_t->ifindex")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_get_stm_port_t->flag")
+		i = i+4
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_stm_port_t->spif_type")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_stm_port_t->loopback")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_stm_port_t->shutdown")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_stm_port_t->adminAct")
+		i = i+1
+		subtree:add(msg_uint32, buffer(i,1)):append_text(":smi_get_stm_port_t->sdThres")
+		i = i+1
+		subtree:add(msg_uint32, buffer(i,1)):append_text(":smi_get_stm_port_t->sfThres")
+		i = i+1
+		subtree:add(buffer(i,16):string()):append_text(":smi_get_stm_port_t->j0MsgBuf")
+		i = i+16
+		subtree:add(msg_uint32, buffer(i,1)):append_text(":smi_get_stm_port_t->network")
+		i = i+1
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_get_stm_port_t->sw_dir")
+		i = i+4
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_stm_port_t->is_active")
+		i = i+1
+		subtree:add(buffer(i,64):string()):append_text(":smi_get_stm_port_t->desc")
+		i = i+64
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_stm_port_t->llcf_delay")
+		i = i+1
+		subtree:add(buffer(i,11):string()):append_text(":smi_get_stm_port_t->dummy")
+		i = i+11
+	end
   elseif fid_name == "CE_7200_FID_GET_MPLS_INTERFACE" or fid_name == "SMI_7400_FID_GET_MPLS_INTERFACE" then
     if (length <= i) then return end
 	while (i < length) do
@@ -294,6 +309,117 @@ function mongodb_protocol.dissector(buffer, pinfo, tree)
 		i = i+4
 		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_interface_t->use_bw")
 		i = i+4
+	end
+
+	elseif fid_name == "SMI_U7400_FID_GET_PW_INTERFACE" or fid_name == "CE_7200_FID_GET_PW_INTERFACE" then
+    if (length <= i) then return end
+	while (i < length) do
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pw_interface_t::smi_pid->pid_type(i="..i..")len="..length..")")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pw_interface_t::smi_pid->ne_type")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pw_interface_t::smi_pid->card_id")
+		i = i+4
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_pw_interface_t::smi_pid->slot_id")
+		i = i+2
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_pw_interface_t::smi_pid->port_id")
+		i = i+2
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pw_interface_t->pwidx")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pw_interface_t->flags")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pw_interface_t->result")
+		i = i+4
+		subtree:add(msg_dst_add, buffer(i,4)):append_text(":smi_pw_interface_t->peer_node_id")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pw_interface_t->peer_ac_id")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pw_interface_t->ac_id")
+		i = i+4
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_pw_interface_t->vpn_id")
+		i = i+2
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_pw_interface_t->flow_mode")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_pw_interface_t->control_word")
+		i = i+1		
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pw_interface_t->qos_info.type")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pw_interface_t->qos_info.band")
+		i = i+4
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_pw_interface_t->qos_info.tc")
+		i = i+1
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pw_interface_t->qos_info.cos1.cir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pw_interface_t->qos_info.cos1.eir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pw_interface_t->qos_info.cos2.cir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pw_interface_t->qos_info.cos2.eir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pw_interface_t->qos_info.cos3.cir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pw_interface_t->qos_info.cos3.eir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pw_interface_t->qos_info.cos4.cir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pw_interface_t->qos_info.cos4.eir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pw_interface_t->qos_info.cos5.cir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pw_interface_t->qos_info.cos5.eir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pw_interface_t->qos_info.cos6.cir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pw_interface_t->qos_info.cos6.eir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pw_interface_t->qos_info.cos7.cir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pw_interface_t->qos_info.cos7.eir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pw_interface_t->qos_info.cos8.cir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pw_interface_t->qos_info.cos8.eir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pw_interface_t->edge_type")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pw_interface_t->service_type")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pw_interface_t->hop.inlabel")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pw_interface_t->hop.out_label")
+		i = i+4
+		subtree:add(buffer(i,50):string()):append_text(":smi_pw_interface_t->hop.name")
+		i = i+50
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pw_interface_t->xcon_index")
+		i = i+4
+		subtree:add(buffer(i,14):string()):append_text(":smi_pw_interface_t->pwoam.megname")
+		i = i+14
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_pw_interface_t::pwoam.mepid")
+		i = i+2
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_pw_interface_t::pwoam.rmepid")
+		i = i+2
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_pw_interface_t->pwoam.ccm")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_pw_interface_t->pwoam.enable")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_pw_interface_t->pwoam.meg_level")
+		i = i+1
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pw_interface_t->pwoam.cc_exp")
+		i = i+4
+		subtree:add(msg_dst_add, buffer(i,4)):append_text(":smi_pw_interface_t->pwoam.peer_addr")
+		i = i+4
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_pw_interface_t->pwoam.ais_relay")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_pw_interface_t->pwoam.csf_relay")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_pw_interface_t->pwoam.oam_active")
+		i = i+1
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_pw_interface_t::pwoam.cvid")
+		i = i+2
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_pw_interface_t::pwoam.svid")
+		i = i+2
+		subtree:add(buffer(i,127):string()):append_text(":smi_pw_interface_t->desc")
+		i = i+127
 	end
   elseif fid_name == "SET_SVC_REMARK_PROFILE" or fid_name == "GET_SVC_REMARK_PROFILE" then
     if (length <= i) then return end
