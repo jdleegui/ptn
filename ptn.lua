@@ -488,169 +488,269 @@ function ptnems_protocol.dissector(buffer, pinfo, tree)
 	i = i+1
 	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_qos_remark_profile_t->profile.dscp_map[7]")
 	i = i+1
+  elseif fid_name == "SMI_MSG_SYS_GET_TUNNEL_NOTE" or fid_name == "SMI_MSG_SYS_SET_TUNNEL_NOTE" then
+  if (length <= i) then return end
+	while (i < length) do
+	    subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_note_t::smi_pid->pid_type(i="..i..")")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_note_t::smi_pid->ne_type")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_note_t::smi_pid->card_id")
+		i = i+4
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_mpls_tunnel_note_t::smi_pid->slot_id")
+		i = i+2
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_mpls_tunnel_note_t::smi_pid->port_id")
+		i = i+2
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_note_t::smi_mpls_tunnel_idInfo_t->role")
+		i = i+4
+		subtree:add(msg_dst_add, buffer(i,4)):append_text(":smi_mpls_tunnel_note_t::smi_mpls_tunnel_idInfo_t->igr_node_id")
+		i = i+4
+		subtree:add(msg_dst_add, buffer(i,4)):append_text(":smi_mpls_tunnel_note_t::smi_mpls_tunnel_idInfo_t->egr_node_id")
+		i = i+4
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_mpls_tunnel_note_t::smi_mpls_tunnel_idInfo_t->igr_tunnel_id")
+		i = i+2
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_mpls_tunnel_note_t::smi_mpls_tunnel_idInfo_t->egr_tunnel_id")
+		i = i+2
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_mpls_tunnel_note_t::smi_mpls_tunnel_idInfo_t->assoticated_tunnel_id")
+		i = i+2
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_note_t::smi_mpls_tunnel_idInfo_t->direction")
+		i = i+1
+		subtree:add(buffer(i,50):string()):append_text(":smi_mpls_tunnel_note_t::smi_mpls_tunnel_idInfo_t->names")
+		i = i+50
+		subtree:add(buffer(i,64):string()):append_text(":smi_mpls_tunnel_note_t::desc")
+		i = i+64
+	end
   elseif fid_name == "SMI_7400_FID_SET_MPLS_TUNNEL" or fid_name == "SMI_7400_FID_GET_MPLS_TUNNEL" or fid_name == "SMI_7400_FID_DEL_MPLS_TUNNEL" or
          fid_name == "CE_7200_FID_SET_MPLS_TUNNEL" or fid_name == "CE_7200_FID_GET_MPLS_TUNNEL" or fid_name == "CE_7200_FID_DEL_MPLS_TUNNEL" then
   if (length <= i) then return end
-    subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t::smi_pid->pid_type(i="..i..")")
-	i = i+4
-	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t::smi_pid->ne_type")
-	i = i+4
-	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pid->card_id")
-	i = i+4
-	subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_pid->slot_id")
-	i = i+2
-	subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_pid->port_id")
-	i = i+2
-	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t->flag")
-	i = i+4
-	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t->direction")
-	i = i+4
-	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t->profile_id")
-	i = i+4
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_t->profile.cos_ingress_map[0]")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_t->profile.cos_ingress_map[1]")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_t->profile.cos_ingress_map[2]")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_t->profile.cos_ingress_map[3]")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_t->profile.cos_ingress_map[4]")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_t->profile.cos_ingress_map[5]")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_t->profile.cos_ingress_map[6]")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_t->profile.cos_ingress_map[7]")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_t->profile.cos_egress_map[0]")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_t->profile.cos_egress_map[1]")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_t->profile.cos_egress_map[2]")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_t->profile.cos_egress_map[3]")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_t->profile.cos_egress_map[4]")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_t->profile.cos_egress_map[5]")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_t->profile.cos_egress_map[6]")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_t->profile.cos_egress_map[7]")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_t->profile.dscp_map[0]")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_t->profile.dscp_map[1]")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_t->profile.dscp_map[2]")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_t->profile.dscp_map[3]")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_t->profile.dscp_map[4]")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_t->profile.dscp_map[5]")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_t->profile.dscp_map[6]")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_t->profile.dscp_map[7]")
-	i = i+1
+	while (i < length) do
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t::smi_pid->pid_type(i="..i..")len="..length..")")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t::smi_pid->ne_type")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t::smi_pid->card_id")
+		i = i+4
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_mpls_tunnel_t::smi_pid->slot_id")
+		i = i+2
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_mpls_tunnel_t::smi_pid->port_id")
+		i = i+2
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t::smi_mpls_tunnel_idInfo_t->role")
+		i = i+4
+		subtree:add(msg_dst_add, buffer(i,4)):append_text(":smi_mpls_tunnel_t::smi_mpls_tunnel_idInfo_t->igr_node_id")
+		i = i+4
+		subtree:add(msg_dst_add, buffer(i,4)):append_text(":smi_mpls_tunnel_t::smi_mpls_tunnel_idInfo_t->egr_node_id")
+		i = i+4
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_mpls_tunnel_t::smi_mpls_tunnel_idInfo_t->igr_tunnel_id")
+		i = i+2
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_mpls_tunnel_t::smi_mpls_tunnel_idInfo_t->egr_tunnel_id")
+		i = i+2
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_mpls_tunnel_t::smi_mpls_tunnel_idInfo_t->assoticated_tunnel_id")
+		i = i+2
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_t::smi_mpls_tunnel_idInfo_t->direction")
+		i = i+1
+		subtree:add(buffer(i,50):string()):append_text(":smi_mpls_tunnel_t::smi_mpls_tunnel_idInfo_t->names")
+		i = i+50
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t->qos_info.type")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t->qos_info.band")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t->qos_info.cos1.cir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t->qos_info.cos1.eir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t->qos_info.cos2.cir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t->qos_info.cos2.eir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t->qos_info.cos3.cir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t->qos_info.cos3.eir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t->qos_info.cos4.cir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t->qos_info.cos4.eir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t->qos_info.cos5.cir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t->qos_info.cos5.eir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t->qos_info.cos6.cir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t->qos_info.cos6.eir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t->qos_info.cos7.cir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t->qos_info.cos7.eir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t->qos_info.cos8.cir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t->qos_info.cos8.eir")
+		i = i+4
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_t->qos_info.tc")
+		i = i+1
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t->use_bw.cos1.cir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t->use_bw.cos1.eir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t->use_bw.cos2.cir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t->use_bw.cos2.eir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t->use_bw.cos3.cir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t->use_bw.cos3.eir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t->use_bw.cos4.cir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t->use_bw.cos4.eir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t->use_bw.cos5.cir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t->use_bw.cos5.eir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t->use_bw.cos6.cir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t->use_bw.cos6.eir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t->use_bw.cos7.cir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t->use_bw.cos7.eir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t->use_bw.cos8.cir")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t->use_bw.cos8.eir")
+		i = i+4
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_t->mpls_prot.mode")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_t->mpls_prot.revertive")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_t->mpls_prot.is_use_aps")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_t->mpls_prot.dir_is_bi")
+		i = i+1
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_mpls_tunnel_t->mpls_prot.wtr_time")
+		i = i+2
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_mpls_tunnel_t->mpls_prot.wtr_left")
+		i = i+2
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_mpls_tunnel_t->mpls_prot.hold_off")
+		i = i+2
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_t->active_path")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_t->sw_state")
+		i = i+1
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t::flags")
+		i = i+4
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_t->outer")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_t->cir_only")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_t->copper")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_t->result")
+		i = i+1
+	end
   elseif 
     fid_name == "CE_7200_FID_SET_MPLS_TUNNEL_LSP" or fid_name == "CE_7200_FID_GET_MPLS_TUNNEL_LSP" or fid_name == "CE_7200_FID_DEL_MPLS_TUNNEL_LSP" or
 	fid_name == "SMI_7400_FID_SET_MPLS_TUNNEL_LSP" or fid_name == "SMI_7400_FID_GET_MPLS_TUNNEL_LSP" or  fid_name == "SMI_7400_FID_DEL_MPLS_TUNNEL_LSP" then
   if (length <= i) then return end
-    subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_lsp_t::smi_pid->pid_type(i="..i..")")
-	i = i+4
-	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_lsp_t::smi_pid->ne_type")
-	i = i+4
-	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_lsp_t::smi_pid->card_id")
-	i = i+4
-	subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_mpls_tunnel_lsp_t::smi_pid->slot_id")
-	i = i+2
-	subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_mpls_tunnel_lsp_t::smi_pid->port_id")
-	i = i+2
-	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_lsp_t::smi_mpls_tunnel_idInfo_t->role")
-	i = i+4
-	subtree:add(msg_dst_add, buffer(i,4)):append_text(":smi_mpls_tunnel_lsp_t::smi_mpls_tunnel_idInfo_t->igr_node_id")
-	i = i+4
-	subtree:add(msg_dst_add, buffer(i,4)):append_text(":smi_mpls_tunnel_lsp_t::smi_mpls_tunnel_idInfo_t->egr_node_id")
-	i = i+4
-	subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_mpls_tunnel_lsp_t::smi_mpls_tunnel_idInfo_t->igr_tunnel_id")
-	i = i+2
-	subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_mpls_tunnel_lsp_t::smi_mpls_tunnel_idInfo_t->egr_tunnel_id")
-	i = i+2
-	subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_mpls_tunnel_lsp_t::smi_mpls_tunnel_idInfo_t->assoticated_tunnel_id")
-	i = i+2
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_lsp_t::smi_mpls_tunnel_idInfo_t->direction")
-	i = i+1
-	subtree:add(buffer(i,50):string()):append_text(":smi_mpls_tunnel_lsp_t::smi_mpls_tunnel_idInfo_t->names")
-	i = i+50
-	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_lsp_t::tunnel_w_lspInfo->in_label")
-	i = i+4
-	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_lsp_t::tunnel_w_lspInfo->out_label")
-	i = i+4
-	subtree:add(buffer(i,50):string()):append_text(":smi_mpls_tunnel_lsp_t::tunnel_w_lspInfo->->link")
-	i = i+50
-	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_lsp_t::tunnel_p_lspInfo->in_label")
-	i = i+4
-	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_lsp_t::tunnel_p_lspInfo->out_label")
-	i = i+4
-	subtree:add(buffer(i,50):string()):append_text(":smi_mpls_tunnel_lsp_t::tunnel_p_lspInfo->link")
-	i = i+50
-	subtree:add(buffer(i,50):string()):append_text(":smi_mpls_tunnel_lsp_t::w_lsp_oam_info::->meg_name")
-	i = i+13
-	subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_mpls_tunnel_lsp_t::w_lsp_oam_info::->mep_id")
-	i = i+2
-	subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_mpls_tunnel_lsp_t::w_lsp_oam_info::smi_mep_info_t->remp_id")
-	i = i+2
-	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_lsp_t::w_lsp_oam_info->smi_ccm_type_t::ccm_interval")
-	i = i+4
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_lsp_t::w_lsp_oam_info->smi_ccm_type_t::enable")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_lsp_t::w_lsp_oam_info->smi_ccm_type_t::lm_enable")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_lsp_t::w_lsp_oam_info->cc_status")
-	i = i+1
-	subtree:add(buffer(i,13):string()):append_text(":smi_mpls_tunnel_lsp_t::p_lsp_oam_info::->meg_name")
-	i = i+13
-	subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_mpls_tunnel_lsp_t::p_lsp_oam_info::->mep_id")
-	i = i+2
-	subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_mpls_tunnel_lsp_t::p_lsp_oam_info::smi_mep_info_t->remp_id")
-	i = i+2
-	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_lsp_t::p_lsp_oam_info->smi_ccm_type_t::ccm_interval")
-	i = i+4
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_lsp_t::p_lsp_oam_info->smi_ccm_type_t::enable")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_lsp_t::p_lsp_oam_info->smi_ccm_type_t::lm_enable")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_lsp_t::p_lsp_oam_info->cc_status")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_lsp_t->smi_oam_lck_ais_tx_t::lock_tx_enable")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_lsp_t->smi_oam_lck_ais_tx_t::ais_tx_enable")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_lsp_t->smi_oam_lck_ais_tx_t::lck_ais_interval")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_lsp_t->smi_oam_lck_ais_rx_t::lck_ais_rx_enable")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_lsp_t->smi_oam_lck_ais_rx_t::lck_ais_rx_interval")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_lsp_t->smi_oam_csf_t::csf_enable")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_lsp_t->smi_oam_csf_t::csf_interval")
-	i = i+1
-	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_lsp_t->flags")
-	i = i+4
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_lsp_t->outer")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_lsp_t->bfd_type")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_lsp_t->bfd_ping")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_lsp_t->result")
-	i = i+1
-	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_lsp_t->is_wp")
-
+	while (i < length) do
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_lsp_t::smi_pid->pid_type(i="..i..")len="..length..")")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_lsp_t::smi_pid->ne_type")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_lsp_t::smi_pid->card_id")
+		i = i+4
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_mpls_tunnel_lsp_t::smi_pid->slot_id")
+		i = i+2
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_mpls_tunnel_lsp_t::smi_pid->port_id")
+		i = i+2
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_lsp_t::smi_mpls_tunnel_idInfo_t->role")
+		i = i+4
+		subtree:add(msg_dst_add, buffer(i,4)):append_text(":smi_mpls_tunnel_lsp_t::smi_mpls_tunnel_idInfo_t->igr_node_id")
+		i = i+4
+		subtree:add(msg_dst_add, buffer(i,4)):append_text(":smi_mpls_tunnel_lsp_t::smi_mpls_tunnel_idInfo_t->egr_node_id")
+		i = i+4
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_mpls_tunnel_lsp_t::smi_mpls_tunnel_idInfo_t->igr_tunnel_id")
+		i = i+2
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_mpls_tunnel_lsp_t::smi_mpls_tunnel_idInfo_t->egr_tunnel_id")
+		i = i+2
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_mpls_tunnel_lsp_t::smi_mpls_tunnel_idInfo_t->assoticated_tunnel_id")
+		i = i+2
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_lsp_t::smi_mpls_tunnel_idInfo_t->direction")
+		i = i+1
+		subtree:add(buffer(i,50):string()):append_text(":smi_mpls_tunnel_lsp_t::smi_mpls_tunnel_idInfo_t->names")
+		i = i+50
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_lsp_t::tunnel_w_lspInfo->in_label")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_lsp_t::tunnel_w_lspInfo->out_label")
+		i = i+4
+		subtree:add(buffer(i,50):string()):append_text(":smi_mpls_tunnel_lsp_t::tunnel_w_lspInfo->->link")
+		i = i+50
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_lsp_t::tunnel_p_lspInfo->in_label")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_lsp_t::tunnel_p_lspInfo->out_label")
+		i = i+4
+		subtree:add(buffer(i,50):string()):append_text(":smi_mpls_tunnel_lsp_t::tunnel_p_lspInfo->link")
+		i = i+50
+		subtree:add(buffer(i,13):string()):append_text(":smi_mpls_tunnel_lsp_t::w_lsp_oam_info::->meg_name")
+		i = i+13
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_mpls_tunnel_lsp_t::w_lsp_oam_info::->mep_id")
+		i = i+2
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_mpls_tunnel_lsp_t::w_lsp_oam_info::smi_mep_info_t->remp_id")
+		i = i+2
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_lsp_t::w_lsp_oam_info->smi_ccm_type_t::ccm_interval")
+		i = i+4
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_lsp_t::w_lsp_oam_info->smi_ccm_type_t::enable")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_lsp_t::w_lsp_oam_info->smi_ccm_type_t::lm_enable")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_lsp_t::w_lsp_oam_info->cc_status")
+		i = i+1
+		subtree:add(buffer(i,13):string()):append_text(":smi_mpls_tunnel_lsp_t::p_lsp_oam_info::->meg_name")
+		i = i+13
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_mpls_tunnel_lsp_t::p_lsp_oam_info::->mep_id")
+		i = i+2
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_mpls_tunnel_lsp_t::p_lsp_oam_info::smi_mep_info_t->remp_id")
+		i = i+2
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_lsp_t::p_lsp_oam_info->smi_ccm_type_t::ccm_interval")
+		i = i+4
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_lsp_t::p_lsp_oam_info->smi_ccm_type_t::enable")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_lsp_t::p_lsp_oam_info->smi_ccm_type_t::lm_enable")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_lsp_t::p_lsp_oam_info->cc_status")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_lsp_t->smi_oam_lck_ais_tx_t::lock_tx_enable")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_lsp_t->smi_oam_lck_ais_tx_t::ais_tx_enable")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_lsp_t->smi_oam_lck_ais_tx_t::lck_ais_interval")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_lsp_t->smi_oam_lck_ais_rx_t::lck_ais_w_rx_enable")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_lsp_t->smi_oam_lck_ais_rx_t::lck_ais_w_rx_interval")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_lsp_t->smi_oam_lck_ais_rx_t::lck_ais_p_rx_enable")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_lsp_t->smi_oam_lck_ais_rx_t::lck_ais_p_rx_interval")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_lsp_t->smi_oam_csf_t::csf_enable")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_lsp_t->smi_oam_csf_t::csf_interval")
+		i = i+1
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_lsp_t->flags")
+		i = i+4
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_lsp_t->outer")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_lsp_t->bfd_type")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_lsp_t->bfd_ping")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_lsp_t->result")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_lsp_t->is_wp")
+		i = i+1
+	end
   elseif fid_name == "EVENT_SYS_MSG_SWITCH" then
     if (length <= i) then return end
 	while (i < length) do
@@ -974,6 +1074,8 @@ function get_cod_name(sys_code,fid_code)
 	elseif fid_code == 0x0341 then code_name = "SYS_SET_SYSTEM_MTTF"
 	elseif fid_code == 0x0342 then code_name = "SYS_GET_SLOT_TYPE_MTTF"
 	elseif fid_code == 0x0343 then code_name = "SYS_SET_SLOT_TYPE_MTTF"
+	elseif fid_code == 0x0350 then code_name = "SMI_MSG_SYS_GET_TUNNEL_NOTE"
+	elseif fid_code == 0x0351 then code_name = "SMI_MSG_SYS_SET_TUNNEL_NOTE"
 	elseif fid_code == 0x0900 then code_name = "SYS_CMD_CHK_CLIENT"
 	elseif fid_code == 0x100A then code_name = "SET_LINK_PORT"
 	elseif fid_code == 0x100B then code_name = "GET_LINK_PORT"
