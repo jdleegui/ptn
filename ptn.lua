@@ -18,6 +18,7 @@ msg_dst_add     = ProtoField.ipv4  ("ptn_wdm.dst_ip"  , "DST_IP")
 msg_dst_idx     = ProtoField.uint8 ("ptn_wdm.dst_id"  , "DST_ID")
 msg_crc         = ProtoField.uint16("ptn_wdm.crc16"   , "CRC16" , base.HEX)
 msg_mac			= ProtoField.ether("ptn_wdm.macaddr"  , "MAC")
+msg_uint64      = ProtoField.uint64("ptn_wdm.uint64"  , "uint64")
 msg_uint32      = ProtoField.uint32("ptn_wdm.uint32"  , "uint32")
 msg_uint16      = ProtoField.uint16("ptn_wdm.uint16"  , "uint16")
 msg_uint08      = ProtoField.uint8 ("ptn_wdm.uint08"  , "uint08")
@@ -41,7 +42,7 @@ documents       = ProtoField.string("ptn_wdm.documents"       , "documents"     
 ptnems_protocol.fields = {
   msg_hdr, msg_len, msg_fid, msg_ser, msg_seq, msg_sys, msg_ret, msg_key, msg_src_add, msg_src_idx, msg_dst_add, msg_dst_idx, msg_crc, -- Header
   msg_cfg_type, msg_tid_name, msg_mac, -- CONFIG
-  msg_uint32, msg_uint16, msg_uint08,
+  msg_uint64, msg_uint32, msg_uint16, msg_uint08,
   flags, full_coll_name, number_to_skip, number_to_return, query,      -- OP_QUERY
   response_flags, cursor_id, starting_from, number_returned, documents -- OP_REPLY
 }
@@ -751,7 +752,151 @@ function ptnems_protocol.dissector(buffer, pinfo, tree)
 		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_lsp_t->is_wp")
 		i = i+1
 	end
-  elseif fid_name == "EVENT_SYS_MSG_SWITCH" then
+  elseif fid_name == "CMD_ON_DEMAND_OAM" or fid_name == "RESULT_ON_DEMAND_OAM" then
+  if (length <= i) then return end
+	while (i < length) do
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_on_demand_oam_cmd_t::smi_pid->pid_type(i="..i..")len="..length..")")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_on_demand_oam_cmd_t::smi_pid->ne_type")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_on_demand_oam_cmd_t::smi_pid->card_id")
+		i = i+4
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_on_demand_oam_cmd_t::smi_pid->slot_id")
+		i = i+2
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_on_demand_oam_cmd_t::smi_pid->port_id")
+		i = i+2
+		subtree:add(buffer(i,13):string()):append_text(":smi_on_demand_oam_cmd_t::smi_mep_info_t->meg_name")
+		i = i+13
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_on_demand_oam_cmd_t::smi_mep_info_t->mep_id")
+		i = i+2
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_on_demand_oam_cmd_t::smi_mep_info_t->rmep_id")
+		i = i+2
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_on_demand_oam_cmd_t::command")
+		i = i+4
+
+		subtree:add(msg_uint32,  buffer(i    ,4)):append_text(":smi_on_demand_oam_cmd_t::union_param1::smi_oam_lb_result_t->transaction_id")
+		subtree:add(msg_uint32,  buffer(i+4  ,4)):append_text(":smi_on_demand_oam_cmd_t::union_param1::smi_oam_lb_result_t->result")
+		subtree:add(msg_uint32,  buffer(i+8  ,4)):append_text(":smi_on_demand_oam_cmd_t::union_param1::smi_oam_lb_result_t->tx_cnt")
+		subtree:add(msg_uint32,  buffer(i+12 ,4)):append_text(":smi_on_demand_oam_cmd_t::union_param1::smi_oam_lb_result_t->rx_cnt")
+		subtree:add(msg_dst_add, buffer(i+16 ,4)):append_text(":smi_on_demand_oam_cmd_t::union_param1::smi_oam_lb_result_t->rmip_ip")
+		
+		subtree:add(msg_uint32,  buffer(i    ,4)):append_text(":smi_on_demand_oam_cmd_t::union_param2::smi_oam_pw_lb_result_t->transaction_id")
+		subtree:add(msg_uint32,  buffer(i+4  ,4)):append_text(":smi_on_demand_oam_cmd_t::union_param2::smi_oam_pw_lb_result_t->result")
+		subtree:add(msg_uint32,  buffer(i+8  ,4)):append_text(":smi_on_demand_oam_cmd_t::union_param2::smi_oam_pw_lb_result_t->tx_cnt")
+		subtree:add(msg_uint32,  buffer(i+12 ,4)):append_text(":smi_on_demand_oam_cmd_t::union_param2::smi_oam_pw_lb_result_t->rx_cnt")
+		subtree:add(msg_dst_add, buffer(i+16 ,4)):append_text(":smi_on_demand_oam_cmd_t::union_param2::smi_oam_pw_lb_result_t->rmip_ip")
+		subtree:add(msg_uint32,  buffer(i+20 ,4)):append_text(":smi_on_demand_oam_cmd_t::union_param2::smi_oam_pw_lb_result_t->recv_edge")
+		
+		subtree:add(msg_uint32,  buffer(i    ,4)):append_text(":smi_on_demand_oam_cmd_t::union_param3::smi_oam_lm_result_t->transaction_id")
+		subtree:add(msg_uint32,  buffer(i+4  ,4)):append_text(":smi_on_demand_oam_cmd_t::union_param3::smi_oam_lm_result_t->result")
+		subtree:add(msg_uint32,  buffer(i+8  ,4)):append_text(":smi_on_demand_oam_cmd_t::union_param3::smi_oam_lm_result_t->tx_cnt")
+		subtree:add(msg_uint32,  buffer(i+12 ,4)):append_text(":smi_on_demand_oam_cmd_t::union_param3::smi_oam_lm_result_t->rx_cnt")
+		subtree:add(msg_dst_add, buffer(i+16 ,4)):append_text(":smi_on_demand_oam_cmd_t::union_param3::smi_oam_lm_result_t->rmip_ip")
+		subtree:add(msg_uint32,  buffer(i+20 ,4)):append_text(":smi_on_demand_oam_cmd_t::union_param3::smi_oam_lm_result_t->recv_edge")
+		
+		subtree:add(msg_uint32,  buffer(i    ,4)):append_text(":smi_on_demand_oam_cmd_t::union_param4::smi_oam_dm_result_t->transaction_id")
+		subtree:add(msg_uint32,  buffer(i+4  ,4)):append_text(":smi_on_demand_oam_cmd_t::union_param4::smi_oam_dm_result_t->result")
+		subtree:add(msg_uint32,  buffer(i+8  ,4)):append_text(":smi_on_demand_oam_cmd_t::union_param4::smi_oam_dm_result_t->dmm_delay")
+		subtree:add(msg_uint32,  buffer(i+12 ,4)):append_text(":smi_on_demand_oam_cmd_t::union_param4::smi_oam_dm_result_t->tx_cnt")
+		subtree:add(msg_uint32,  buffer(i+16 ,4)):append_text(":smi_on_demand_oam_cmd_t::union_param4::smi_oam_dm_result_t->rx_cnt")
+		subtree:add(msg_uint32,  buffer(i+20 ,4)):append_text(":smi_on_demand_oam_cmd_t::union_param4::smi_oam_dm_result_t->delay_variation")
+
+		subtree:add(msg_uint32,  buffer(i    ,4)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->transaction_id")
+		subtree:add(msg_uint32,  buffer(i+4  ,4)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->result")
+		subtree:add(msg_uint32,  buffer(i+8  ,4)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->seq_no_err")
+		subtree:add(msg_uint32,  buffer(i+12 ,4)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->crc_err")
+		subtree:add(msg_uint32,  buffer(i+16 ,4)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->rx_length")
+		subtree:add(msg_uint32,  buffer(i+20 ,4)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->rx_bit_error")
+		subtree:add(msg_uint08,  buffer(i+21 ,1)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->seq_no_err")
+		subtree:add(msg_uint08,  buffer(i+22 ,1)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->crc_err")
+		subtree:add(msg_uint08,  buffer(i+23 ,1)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->rx_length")
+		subtree:add(msg_uint08,  buffer(i+24 ,1)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->rx_bit_error")
+		subtree:add(msg_uint32,  buffer(i+25 ,4)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->frame_rx_count")
+		subtree:add(msg_uint16,  buffer(i+29 ,2)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->receive_type01")
+		subtree:add(msg_uint16,  buffer(i+31 ,2)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->receive_type02")
+		subtree:add(msg_uint16,  buffer(i+33 ,2)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->receive_type03")
+		subtree:add(msg_uint16,  buffer(i+35 ,2)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->receive_type04")
+		subtree:add(msg_uint16,  buffer(i+37 ,2)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->receive_type05")
+		subtree:add(msg_uint16,  buffer(i+39 ,2)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->receive_type06")
+		subtree:add(msg_uint16,  buffer(i+41 ,2)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->receive_type07")
+		subtree:add(msg_uint16,  buffer(i+43 ,2)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->receive_type08")
+		subtree:add(msg_uint16,  buffer(i+45 ,2)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->receive_type09")
+		subtree:add(msg_uint16,  buffer(i+47 ,2)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->receive_type10")
+		subtree:add(msg_uint16,  buffer(i+49 ,2)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->receive_type11")
+		subtree:add(msg_uint16,  buffer(i+51 ,2)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->receive_type12")
+		subtree:add(msg_uint16,  buffer(i+53 ,2)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->receive_type13")
+		subtree:add(msg_uint16,  buffer(i+55 ,2)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->receive_type14")
+		subtree:add(msg_uint16,  buffer(i+57 ,2)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->receive_type15")
+		subtree:add(msg_uint16,  buffer(i+59 ,2)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->receive_type16")
+		subtree:add(msg_uint16,  buffer(i+61 ,2)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->receive_type17")
+		subtree:add(msg_uint16,  buffer(i+63 ,2)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->receive_type18")
+		subtree:add(msg_uint16,  buffer(i+65 ,2)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->receive_type19")
+		subtree:add(msg_uint16,  buffer(i+67 ,2)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->receive_type20")
+		subtree:add(msg_uint16,  buffer(i+69 ,2)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->receive_type21")
+		subtree:add(msg_uint16,  buffer(i+71 ,2)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->receive_type22")
+		subtree:add(msg_uint16,  buffer(i+73 ,2)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->receive_type23")
+		subtree:add(msg_uint16,  buffer(i+75 ,2)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->receive_type24")
+		subtree:add(msg_uint16,  buffer(i+77 ,2)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->receive_type25")
+		subtree:add(msg_uint16,  buffer(i+79 ,2)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->receive_type26")
+		subtree:add(msg_uint16,  buffer(i+81 ,2)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->receive_type27")
+		subtree:add(msg_uint16,  buffer(i+83 ,2)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->receive_type28")
+		subtree:add(msg_uint16,  buffer(i+85 ,2)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->receive_type29")
+		subtree:add(msg_uint16,  buffer(i+87 ,2)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->receive_type30")
+		subtree:add(msg_uint16,  buffer(i+89 ,2)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->receive_type31")
+		subtree:add(msg_uint16,  buffer(i+91 ,2)):append_text(":smi_on_demand_oam_cmd_t::union_param5::smi_oam_tst_rx_result_t->receive_type32")
+		
+		i = i+4
+		i = i+4
+
+		i = i+4
+		i = i+4
+		i = i+4
+		i = i+4
+
+		i = i+1
+		i = i+1
+		i = i+1
+		i = i+1
+
+		i = i+4
+		
+		i = i+2
+		i = i+2
+		i = i+2
+		i = i+2
+		i = i+2
+		i = i+2
+		i = i+2
+		i = i+2
+
+		i = i+2
+		i = i+2
+		i = i+2
+		i = i+2
+		i = i+2
+		i = i+2
+		i = i+2
+		i = i+2
+
+		i = i+2
+		i = i+2
+		i = i+2
+		i = i+2
+		i = i+2
+		i = i+2
+		i = i+2
+		i = i+2
+
+		i = i+2
+		i = i+2
+		i = i+2
+		i = i+2
+		i = i+2
+		i = i+2
+		i = i+2
+		i = i+2
+	end	
+  elseif fid_name == "SMI_EVENT_SYS_MSG_SWITCH" then
     if (length <= i) then return end
 	while (i < length) do
 		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_sw_msg_t::smi_pid->pid_type(i="..i..")len="..length..")")
@@ -840,6 +985,246 @@ function ptnems_protocol.dissector(buffer, pinfo, tree)
 		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_sw_msg_t->e_time")
 		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_sw_msg_t::e_time(i="..i..")len="..length..")")
 		i = i+4
+	end
+  elseif fid_name == "SMI_EVENT_SYS_MSG_EVENT" then
+    if (length <= i) then return end
+	while (i < length) do
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_evt_msg_t::smi_pid->pid_type(i="..i..")len="..length..")")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_evt_msg_t::smi_pid->ne_type")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_evt_msg_t::smi_pid->card_id")
+		i = i+4
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_evt_msg_t::smi_pid->slot_id")
+		i = i+2
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_evt_msg_t::smi_pid->port_id")
+		i = i+2
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_evt_msg_t->sw_cmd")
+		i = i+4
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_evt_msg_t->msg_type")
+		i = i+1
+
+		if (buffer(i,1):uchar() == 11) then
+			subtree:add(msg_uint08, buffer(i+ 0,1)):append_text(":smi_evt_msg_t->evt_data.smi_bw_overbooked_t.if_type")
+			subtree:add(msg_uint32, buffer(i+ 1,4)):append_text(":smi_evt_msg_t->evt_data.smi_bw_overbooked_t.u.smi_mif_info_t.if_index")
+			subtree:add(buffer(5+0,52):string()):   append_text(":smi_evt_msg_t->evt_data.smi_bw_overbooked_t.u.smi_mif_info_t.name")
+			subtree:add(msg_uint16, buffer(i+57,2)):append_text(":smi_evt_msg_t->evt_data.smi_bw_overbooked_t.u.smi_mif_info_t.slot_id")
+			subtree:add(msg_uint16, buffer(i+59,2)):append_text(":smi_evt_msg_t->evt_data.smi_bw_overbooked_t.u.smi_mif_info_t.port_id")
+
+			
+			subtree:add(msg_uint32, buffer(i+ 1,4)):append_text(":smi_evt_msg_t->evt_data.smi_bw_overbooked_t.u.smi_alarm_pid_eth_t.tunnel_addr.index")
+			subtree:add(msg_uint32, buffer(i+ 5,4)):append_text(":smi_evt_msg_t->evt_data.smi_bw_overbooked_t.u.smi_alarm_pid_eth_t.tunnel_addr.instance")
+
+			subtree:add(msg_uint32, buffer(i+ 9,4)):append_text(":smi_evt_msg_t->evt_data.smi_bw_overbooked_t.u.smi_alarm_pid_eth_t.lsr_id")
+			subtree:add(msg_uint32, buffer(i+13,4)):append_text(":smi_evt_msg_t->evt_data.smi_bw_overbooked_t.u.smi_alarm_pid_eth_t.s_index")
+			subtree:add(msg_uint32, buffer(i+17,4)):append_text(":smi_evt_msg_t->evt_data.smi_bw_overbooked_t.u.smi_alarm_pid_eth_t.s_instance")
+			subtree:add(msg_uint32, buffer(i+21,4)):append_text(":smi_evt_msg_t->evt_data.smi_bw_overbooked_t.u.smi_alarm_pid_eth_t.si_lsrid")
+			subtree:add(buffer(25+0,50):string()):   append_text(":smi_evt_msg_t->evt_data.smi_bw_overbooked_t.u.smi_alarm_pid_eth_t.tname")
+			
+			subtree:add(msg_uint08, buffer(i+75,1)):append_text(":smi_evt_msg_t->evt_data.smi_bw_overbooked_t.bw_type")
+			subtree:add(msg_uint32, buffer(i+76,4)):append_text(":smi_evt_msg_t->evt_data.smi_bw_overbooked_t.cir_use_bw")
+			subtree:add(msg_uint32, buffer(i+80,4)):append_text(":smi_evt_msg_t->evt_data.smi_bw_overbooked_t.cir_all_bw")
+			subtree:add(msg_uint32, buffer(i+84,4)):append_text(":smi_evt_msg_t->evt_data.smi_bw_overbooked_t.use_pir_bw")
+			subtree:add(msg_uint32, buffer(i+88,4)):append_text(":smi_evt_msg_t->evt_data.smi_bw_overbooked_t.all_pir_bw")
+		end
+	-- 	subtree:add(msg_uint08, buffer(i+0,1)):append_text(":smi_evt_msg_t->union1.papa.from")
+	-- 	subtree:add(msg_uint08, buffer(i+1,1)):append_text(":smi_evt_msg_t->union1.papa.to")
+	-- 
+	-- 	subtree:add(msg_uint08, buffer(i+0,1)):append_text(":smi_evt_msg_t->union2.slot_port.type")
+	-- 	subtree:add(msg_uint08, buffer(i+1,1)):append_text(":smi_evt_msg_t->union2.slot_port.from_slot")
+	-- 	subtree:add(msg_uint08, buffer(i+2,1)):append_text(":smi_evt_msg_t->union2.slot_port.from_slot_type")
+	-- 	subtree:add(msg_uint08, buffer(i+3,1)):append_text(":smi_evt_msg_t->union2.slot_port.from_port")
+	-- 	subtree:add(msg_uint08, buffer(i+4,1)):append_text(":smi_evt_msg_t->union2.slot_port.to_slot")
+	-- 	subtree:add(msg_uint08, buffer(i+5,1)):append_text(":smi_evt_msg_t->union2.slot_port.to_port")
+	-- 	
+	-- 	subtree:add(msg_uint32, buffer(i+0,4)):append_text(":smi_evt_msg_t->union3.tunnel.role")
+	-- 	subtree:add(msg_dst_add, buffer(i+4,4)):append_text(":smi_evt_msg_t->union3.tunnel.igr_node_id")
+	-- 	subtree:add(msg_dst_add, buffer(i+8,4)):append_text(":smi_evt_msg_t->union3.tunnel.egr_node_id")
+	-- 	subtree:add(msg_uint16, buffer(i+12,2)):append_text(":smi_evt_msg_t->union3.tunnel.igr_tunnel_id")
+	-- 	subtree:add(msg_uint16, buffer(i+14,2)):append_text(":smi_evt_msg_t->union3.tunnel.egr_tunnel_id")
+	-- 	subtree:add(msg_uint16, buffer(i+16,2)):append_text(":smi_evt_msg_t->union3.tunnel.assciate_id")
+	-- 	subtree:add(msg_uint08, buffer(i+18,1)):append_text(":smi_evt_msg_t->union3.tunnel.is_uni")
+	-- 	subtree:add(buffer(i+19,50):string()):append_text(":smi_evt_msg_t->union3.tunnel.name")
+	-- 	subtree:add(msg_uint08, buffer(i+69,1)):append_text(":smi_evt_msg_t->union3.is_remote")
+	-- 	subtree:add(msg_uint08, buffer(i+70,1)):append_text(":smi_evt_msg_t->union3.from_lsp")
+	-- 	subtree:add(msg_uint08, buffer(i+71,1)):append_text(":smi_evt_msg_t->union3.to_lsp")
+	-- 	subtree:add(msg_uint08, buffer(i+72,1)):append_text(":smi_evt_msg_t->union3.from_lsp_type")
+	-- 	subtree:add(msg_uint08, buffer(i+73,1)):append_text(":smi_evt_msg_t->union3.to_lsp_type")
+	-- 	subtree:add(msg_uint32, buffer(i+74,4)):append_text(":smi_evt_msg_t->union3.from_index")
+	-- 	subtree:add(msg_uint32, buffer(i+78,4)):append_text(":smi_evt_msg_t->union3.to_index")
+	-- 	subtree:add(buffer(i+82,50):string()):append_text(":smi_evt_msg_t->union3.from_name")
+	-- 	subtree:add(buffer(i+132,50):string()):append_text(":smi_evt_msg_t->union3.to_name")
+	-- 
+	-- 	subtree:add(msg_uint08, buffer(i+0,1)):append_text(":smi_evt_msg_t->union4.clock_mode")
+	-- 	subtree:add(msg_uint08, buffer(i+1,1)):append_text(":smi_evt_msg_t->union4.clock_mode.from_src")
+	-- 	subtree:add(msg_uint08, buffer(i+2,1)):append_text(":smi_evt_msg_t->union4.clock_mode.to_src")
+	-- 	subtree:add(msg_uint32, buffer(i+3,4)):append_text(":smi_evt_msg_t->union4.clock_mode.from_index")
+	-- 	subtree:add(msg_uint32, buffer(i+7,4)):append_text(":smi_evt_msg_t->union4.clock_mode.to_index")
+	-- 	
+	-- 	subtree:add(msg_uint08, buffer(i+0,1)):append_text(":smi_evt_msg_t->union5.clk_module.from_module")
+	-- 	subtree:add(msg_uint08, buffer(i+1,1)):append_text(":smi_evt_msg_t->union5.clk_module.to_module")
+	-- 
+	-- 	subtree:add(msg_uint08, buffer(i+0,1)):append_text(":smi_evt_msg_t->union6.clk_module.from_mode")
+	-- 	subtree:add(msg_uint08, buffer(i+1,1)):append_text(":smi_evt_msg_t->union6.clk_module.to_mode")
+	-- 	
+	-- 	subtree:add(msg_uint32, buffer(i+0,4)):append_text(":smi_evt_msg_t->union7.ar_prg.prg_id")
+	-- 	subtree:add(buffer(i+4,33):string()):append_text(":smi_evt_msg_t->union7.prg.name")
+	-- 	subtree:add(msg_uint32, buffer(i+37,4)):append_text(":smi_evt_msg_t->union7.prg.state")		
+	-- 	subtree:add(msg_uint08, buffer(i+41,1)):append_text(":smi_evt_msg_t->union7.prg.from_slot")
+	-- 	subtree:add(msg_uint08, buffer(i+42,1)):append_text(":smi_evt_msg_t->union7.prg.from_port")
+	-- 	subtree:add(msg_uint08, buffer(i+43,1)):append_text(":smi_evt_msg_t->union7.prg.to_slot")
+	-- 	subtree:add(msg_uint08, buffer(i+44,1)):append_text(":smi_evt_msg_t->union7.prg.to_port")
+	-- 
+	-- 	subtree:add(buffer(i+0,31):string()):append_text(":smi_evt_msg_t->union8.svc.name")
+	-- 	subtree:add(msg_uint08, buffer(i+32,1)):append_text(":smi_evt_msg_t->union8.svc.remote")
+	-- 	subtree:add(msg_uint32, buffer(i+33,4)):append_text(":smi_evt_msg_t->union8.svc.reason")
+	-- 	subtree:add(msg_uint08, buffer(i+34,1)):append_text(":smi_evt_msg_t->union8.svc.from")
+	-- 	subtree:add(msg_uint08, buffer(i+35,1)):append_text(":smi_evt_msg_t->union8.svc.to")
+	-- 	subtree:add(msg_uint16, buffer(i+36,2)):append_text(":smi_evt_msg_t->union8.svc.ac_id")
+	-- 
+	-- 	subtree:add(msg_uint32, buffer(i+0 ,4)):append_text(":smi_evt_msg_t->union9.odu.smi_pid->pid_type")
+	-- 	subtree:add(msg_uint32, buffer(i+4 ,4)):append_text(":smi_evt_msg_t->union9.odu.smi_pid->ne_type")
+	-- 	subtree:add(msg_uint32, buffer(i+8 ,4)):append_text(":smi_evt_msg_t->union9.odu.smi_pid->card_id")
+	-- 	subtree:add(msg_uint16, buffer(i+12,2)):append_text(":smi_evt_msg_t->union9.odu.smi_pid->slot_id")
+	-- 	subtree:add(msg_uint16, buffer(i+14,2)):append_text(":smi_evt_msg_t->union9.odu.smi_pid->port_id")
+	-- 	subtree:add(msg_uint16, buffer(i+16,2)):append_text(":smi_evt_msg_t->union9.odu.trail_id")
+	-- 	subtree:add(msg_dst_add, buffer(i+20,4)):append_text(":smi_evt_msg_t->union9.odu.lsr_id")
+	-- 	subtree:add(buffer(i+24,20):string()):append_text(":smi_evt_msg_t->union9.odu.name")
+	-- 	subtree:add(buffer(i+44,12):string()):append_text(":smi_evt_msg_t->union9.odu.desc")
+	-- 
+	 	i = i+91
+	-- 	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_evt_msg_t->reason")
+	-- 	i = i+4
+	-- 	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_evt_msg_t->e_time")
+	-- 	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_evt_msg_t::e_time(i="..i..")len="..length..")")
+	-- 	i = i+4
+	end
+	
+  elseif fid_name == "GET_LED_STATUS" then
+  if (length <= i) then return end
+	while (i < length) do
+	    subtree:add(msg_uint32, buffer(i,4)):append_text(":slot_led_8300_t::smi_pid->pid_type(i="..i..")")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":slot_led_8300_t::smi_pid->ne_type")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":slot_led_8300_t::smi_pid->card_id")
+		i = i+4
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":slot_led_8300_t::smi_pid->slot_id")
+		i = i+2
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":slot_led_8300_t::smi_pid->port_id")
+		i = i+2
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":slot_led_8300_t::dmmmy_main_sts")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":slot_led_8300_t::dmmmy_clk_sts")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":slot_led_8300_t::dmmmy_ces_sts")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":slot_led_8300_t::dmmmy_ptp_sts")
+		i = i+4
+		subtree:add(msg_uint64, buffer(i,8)):append_text(":slot_led_8300_t::link_sts[0]")
+		i = i+8
+		subtree:add(msg_uint64, buffer(i,8)):append_text(":slot_led_8300_t::link_sts[1]")
+		i = i+8
+		subtree:add(msg_uint64, buffer(i,8)):append_text(":slot_led_8300_t::link_sts[2]")
+		i = i+8
+		subtree:add(msg_uint64, buffer(i,8)):append_text(":slot_led_8300_t::link_sts[3]")
+		i = i+8
+		subtree:add(msg_uint64, buffer(i,8)):append_text(":slot_led_8300_t::link_sts[4]")
+		i = i+8
+		subtree:add(msg_uint64, buffer(i,8)):append_text(":slot_led_8300_t::link_sts[5]")
+		i = i+8
+		subtree:add(msg_uint64, buffer(i,8)):append_text(":slot_led_8300_t::link_sts[6]")
+		i = i+8
+		subtree:add(msg_uint64, buffer(i,8)):append_text(":slot_led_8300_t::link_sts[7]")
+		i = i+8
+		subtree:add(msg_uint64, buffer(i,8)):append_text(":slot_led_8300_t::link_sts[8]")
+		i = i+8
+		subtree:add(msg_uint64, buffer(i,8)):append_text(":slot_led_8300_t::link_sts[9]")
+		i = i+8
+		subtree:add(msg_uint64, buffer(i,8)):append_text(":slot_led_8300_t::link_sts[10]")
+		i = i+8
+		subtree:add(msg_uint64, buffer(i,8)):append_text(":slot_led_8300_t::link_sts[11]")
+		i = i+8
+		subtree:add(msg_uint64, buffer(i,8)):append_text(":slot_led_8300_t::link_sts[12]")
+		i = i+8
+		subtree:add(msg_uint64, buffer(i,8)):append_text(":slot_led_8300_t::link_sts[13]")
+		i = i+8
+		subtree:add(msg_uint64, buffer(i,8)):append_text(":slot_led_8300_t::link_sts[14]")
+		i = i+8
+		subtree:add(msg_uint64, buffer(i,8)):append_text(":slot_led_8300_t::link_sts[15]")
+		i = i+8
+		subtree:add(msg_uint64, buffer(i,8)):append_text(":slot_led_8300_t::link_sts[16]")
+		i = i+8
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":slot_led_8300_t::card_sts[0]")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":slot_led_8300_t::card_sts[1]")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":slot_led_8300_t::card_sts[2]")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":slot_led_8300_t::card_sts[3]")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":slot_led_8300_t::card_sts[4]")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":slot_led_8300_t::card_sts[5]")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":slot_led_8300_t::card_sts[6]")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":slot_led_8300_t::card_sts[7]")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":slot_led_8300_t::card_sts[8]")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":slot_led_8300_t::card_sts[9]")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":slot_led_8300_t::card_sts[10]")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":slot_led_8300_t::card_sts[11]")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":slot_led_8300_t::card_sts[12]")
+		i = i+4
+	end
+  elseif fid_name == "OTN_GET_OTU_TS_MAP_STATE" or fid_name == "OTN_SET_OTU_TS_MAP_STATE" or fid_name == "OTN_DEL_OTU_TS_MAP_STATE" then
+  if (length <= i) then return end
+	while (i < length) do
+	    subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_otu_port_ts_mapping_status_t::smi_pid->pid_type(i="..i..")")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_otu_port_ts_mapping_status_t::smi_pid->ne_type")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_otu_port_ts_mapping_status_t::smi_pid->card_id")
+		i = i+4
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_otu_port_ts_mapping_status_t::smi_pid->slot_id")
+		i = i+2
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_otu_port_ts_mapping_status_t::smi_pid->port_id")
+		i = i+2
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_otu_port_ts_mapping_status_t::if_index")
+		i = i+4
+		j = 0
+		while(j<80) do
+			subtree:add(msg_uint08, buffer(i,1)):append_text("["..j.."](ho:type(0:NONE,1:ODU0,2:ODU1,5:ODU2,8:ODU3,11:ODU4)")
+			i = i+1
+			subtree:add(msg_uint16, buffer(i,2)):append_text("["..j.."]smi_otu_port_ts_mapping_status_t::smi_oduk_ts_mapping_status:ho:trail_id")
+			i = i+2
+			subtree:add(msg_dst_add, buffer(i,4)):append_text("["..j.."]smi_otu_port_ts_mapping_status_t::smi_oduk_ts_mapping_status:ho:trail_ip")
+			i = i+4
+			subtree:add(msg_uint08, buffer(i,1)):append_text("["..j.."]mo:type(0:NONE,1:ODU0,2:ODU1,5:ODU2,8:ODU3,11:ODU4)")
+			i = i+1
+			subtree:add(msg_uint16, buffer(i,2)):append_text("["..j.."]smi_otu_port_ts_mapping_status_t::smi_oduk_ts_mapping_status:mo:trail_id")
+			i = i+2
+			subtree:add(msg_dst_add, buffer(i,4)):append_text("["..j.."]smi_otu_port_ts_mapping_status_t::smi_oduk_ts_mapping_status:mo:trail_ip")
+			i = i+4
+			subtree:add(msg_uint08, buffer(i,1)):append_text("["..j.."]lo:type(0:NONE,1:ODU0,2:ODU1,5:ODU2,8:ODU3,11:ODU4)")
+			i = i+1
+			subtree:add(msg_uint16, buffer(i,2)):append_text("["..j.."]smi_otu_port_ts_mapping_status_t::smi_oduk_ts_mapping_status:lo:trail_id")
+			i = i+2
+			subtree:add(msg_dst_add, buffer(i,4)):append_text("["..j.."]smi_otu_port_ts_mapping_status_t::smi_oduk_ts_mapping_status:lo:trail_ip")
+			i = i+4
+			subtree:add(msg_uint08, buffer(i,1)):append_text("["..j.."]map_type(0:NONE,1:SVC,2:XCON,3:MPLS,4:SDH,5:PDH")
+			i = i+1
+			subtree:add(msg_uint08, buffer(i,1)):append_text("["..j.."]smi_otu_port_ts_mapping_status_t::smi_oduk_ts_mapping_status:ho:slice")
+			i = i+1
+			subtree:add(msg_uint08, buffer(i,1)):append_text("["..j.."]smi_otu_port_ts_mapping_status_t::smi_oduk_ts_mapping_status:ho:ac_bind_cnt")
+			i = i+1
+			j = j+1
+		end
 	end
   elseif fid_name == "OP_QUERY" then
     local flags_number = buffer(16,4):le_uint()
@@ -1265,13 +1650,13 @@ function get_cod_name(sys_code,fid_code)
 	elseif fid_code == 0x7355 then code_name = "OTN_GET_OTU_PM_MONITOR_ENABLE"
 	elseif fid_code == 0x7356 then code_name = "OTN_CMD_ON_DEMAND_ODU_DM"
 	elseif fid_code == 0x7357 then code_name = "OTN_GET_ON_DEMAND_ODU_DM"
-	elseif fid_code == 0x8000 then code_name = "EVENT_SYS_MSG_ALARM"
-	elseif fid_code == 0x8001 then code_name = "EVENT_SYS_MSG_TCA_REPORT"
-	elseif fid_code == 0x8002 then code_name = "EVENT_SYS_MSG_SWITCH"
-	elseif fid_code == 0x8003 then code_name = "EVENT_SYS_MSG_EVENT"
-	elseif fid_code == 0x8004 then code_name = "EVENT_SYS_MSG_ETC_EVENT"
-	elseif fid_code == 0x8005 then code_name = "EVENT_SYS_MSG_PM_REPORT"
-	elseif fid_code == 0x8006 then code_name = "EVENT_SYS_MSG_CONFIG_CHANGE"
+	elseif fid_code == 0x8000 then code_name = "SMI_EVENT_SYS_MSG_ALARM"
+	elseif fid_code == 0x8001 then code_name = "SMI_EVENT_SYS_MSG_TCA_REPORT"
+	elseif fid_code == 0x8002 then code_name = "SMI_EVENT_SYS_MSG_SWITCH"
+	elseif fid_code == 0x8003 then code_name = "SMI_EVENT_SYS_MSG_EVENT"
+	elseif fid_code == 0x8004 then code_name = "SMI_EVENT_SYS_MSG_ETC_EVENT"
+	elseif fid_code == 0x8005 then code_name = "SMI_EVENT_SYS_MSG_PM_REPORT"
+	elseif fid_code == 0x8006 then code_name = "SMI_EVENT_SYS_MSG_CONFIG_CHANGE"
 	elseif fid_code == 0x303F then code_name = "SET_PW_XCONNECT"
 	elseif fid_code == 0x3040 then code_name = "GET_PW_XCONNECT"
 	elseif fid_code == 0x3041 then code_name = "DEL_PW_XCONNECT"
