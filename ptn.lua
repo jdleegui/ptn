@@ -209,7 +209,7 @@ function ptnems_protocol.dissector(buffer, pinfo, tree)
 		i = i+1
 		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->prov_llcf")
 		i = i+1
-		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->fec_mode")
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->fec_mode/form_factor")
 		i = i+1
 		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->combo_utp")
 		i = i+1
@@ -221,9 +221,73 @@ function ptnems_protocol.dissector(buffer, pinfo, tree)
 		i = i+1
 		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->module_type")
 		i = i+1
-		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->dummy5")
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->wave_length")
 		i = i+1
-		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->reserve6")
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->lambda_tunable")
+		i = i+1
+	end
+  elseif fid_name == "UT_7400_FID_SET_LINK_PORT" or fid_name == "SET_LINK_PORT" then
+    if (length <= i) then return end
+	while (i < length) do
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_set_link_port_t::smi_pid->pid_type(i="..i..")len="..length..")")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_set_link_port_t::smi_pid->ne_type")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_set_link_port_t::smi_pid->card_id")
+		i = i+4
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_set_link_port_t::smi_pid->slot_id")
+		i = i+2
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_set_link_port_t::smi_pid->port_id")
+		i = i+2
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_set_link_port_t->result")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_set_link_port_t->ifindex")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_set_link_port_t->flags")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_set_link_port_t->iftype")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_set_link_port_t->actype")
+		i = i+4
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_set_link_port_t->speed")
+		i = i+2
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_set_link_port_t->media_ch")
+		i = i+2
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_set_link_port_t->mtu_size")
+		i = i+2
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->auto_nego")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->duplex")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->flow_control")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->loopback")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->shutdown")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->act")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->advertise")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->llcf")
+		i = i+1
+		subtree:add(buffer(i,54):string()):append_text(":smi_set_link_port_t->desc")
+		i = i+54
+		subtree:add(msg_dst_add, buffer(i,4)):append_text(":smi_set_link_port_t->ip_address")
+		i = i+4
+		subtree:add(msg_mac, buffer(i,6)):append_text(":smi_set_link_port_t->mac_addr")
+		i = i+6
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->is_active")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->auto_nni")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->combo/form_factor")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->fec_mode")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->wave_length")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->lambda_tunable")
 		i = i+1
 	end
   elseif fid_name == "SET_STM_INTERFACE" or fid_name == "GET_STM_INTERFACE" then
@@ -1007,7 +1071,7 @@ function ptnems_protocol.dissector(buffer, pinfo, tree)
 		if (buffer(i,1):uchar() == 11) then
 			subtree:add(msg_uint08, buffer(i+ 0,1)):append_text(":smi_evt_msg_t->evt_data.smi_bw_overbooked_t.if_type")
 			subtree:add(msg_uint32, buffer(i+ 1,4)):append_text(":smi_evt_msg_t->evt_data.smi_bw_overbooked_t.u.smi_mif_info_t.if_index")
-			subtree:add(buffer(5+0,52):string()):   append_text(":smi_evt_msg_t->evt_data.smi_bw_overbooked_t.u.smi_mif_info_t.name")
+			subtree:add(buffer(5+i,52):string()):   append_text(":smi_evt_msg_t->evt_data.smi_bw_overbooked_t.u.smi_mif_info_t.name")
 			subtree:add(msg_uint16, buffer(i+57,2)):append_text(":smi_evt_msg_t->evt_data.smi_bw_overbooked_t.u.smi_mif_info_t.slot_id")
 			subtree:add(msg_uint16, buffer(i+59,2)):append_text(":smi_evt_msg_t->evt_data.smi_bw_overbooked_t.u.smi_mif_info_t.port_id")
 
@@ -1019,7 +1083,7 @@ function ptnems_protocol.dissector(buffer, pinfo, tree)
 			subtree:add(msg_uint32, buffer(i+13,4)):append_text(":smi_evt_msg_t->evt_data.smi_bw_overbooked_t.u.smi_alarm_pid_eth_t.s_index")
 			subtree:add(msg_uint32, buffer(i+17,4)):append_text(":smi_evt_msg_t->evt_data.smi_bw_overbooked_t.u.smi_alarm_pid_eth_t.s_instance")
 			subtree:add(msg_uint32, buffer(i+21,4)):append_text(":smi_evt_msg_t->evt_data.smi_bw_overbooked_t.u.smi_alarm_pid_eth_t.si_lsrid")
-			subtree:add(buffer(25+0,50):string()):   append_text(":smi_evt_msg_t->evt_data.smi_bw_overbooked_t.u.smi_alarm_pid_eth_t.tname")
+			subtree:add(buffer(25+i,50):string()):   append_text(":smi_evt_msg_t->evt_data.smi_bw_overbooked_t.u.smi_alarm_pid_eth_t.tname")
 			
 			subtree:add(msg_uint08, buffer(i+75,1)):append_text(":smi_evt_msg_t->evt_data.smi_bw_overbooked_t.bw_type")
 			subtree:add(msg_uint32, buffer(i+76,4)):append_text(":smi_evt_msg_t->evt_data.smi_bw_overbooked_t.cir_use_bw")
@@ -1223,6 +1287,178 @@ function ptnems_protocol.dissector(buffer, pinfo, tree)
 			i = i+1
 			subtree:add(msg_uint08, buffer(i,1)):append_text("["..j.."]smi_otu_port_ts_mapping_status_t::smi_oduk_ts_mapping_status:ho:ac_bind_cnt")
 			i = i+1
+			j = j+1
+		end
+	end
+  elseif fid_name == "OTN_ADD_ODU_BIND_SVC" or fid_name == "OTN_DEL_ODU_BIND_SVC" then
+  if (length <= i) then return end
+	while (i < length) do
+	    subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_odu_bind_service_add_t::svc_type[1=SVC,2=SDH,4=MPLS,8=PDH](i="..i..")")
+		i = i+4
+	    subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_odu_bind_service_add_t::smi_pid->pid_type(i="..i..")")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_odu_bind_service_add_t::smi_pid->ne_type")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_odu_bind_service_add_t::smi_pid->card_id")
+		i = i+4
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_odu_bind_service_add_t::smi_pid->slot_id")
+		i = i+2
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_odu_bind_service_add_t::smi_pid->port_id")
+		i = i+2
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_odu_bind_service_add_t::trail_id")
+		i = i+2
+		subtree:add(msg_dst_add, buffer(i,4)):append_text(":smi_odu_bind_service_add_t::egress_ip")
+		i = i+4
+		
+		subtree:add(msg_uint32, buffer(i+0,4)):append_text(":smi_odu_bind_service_add_t::union:ptn:ac_id")
+		subtree:add(buffer(i+4,32):string()):   append_text(":smi_odu_bind_service_add_t::union:ptn:svc_name")
+
+		subtree:add(msg_uint32,  buffer(i+0,4)):append_text(":smi_odu_bind_service_add_t::union:mpls:ifindex")
+		subtree:add(msg_dst_add, buffer(i+4,4)):append_text(":smi_odu_bind_service_add_t::union:mpls:peer_node")
+		subtree:add(msg_uint08, buffer(i+8,1)):append_text(":smi_odu_bind_service_add_t::union:mpls:shelf_id")
+		subtree:add(msg_uint08, buffer(i+9,1)):append_text(":smi_odu_bind_service_add_t::union:mpls:slot_id")
+		subtree:add(msg_uint08, buffer(i+10,1)):append_text(":smi_odu_bind_service_add_t::union:mpls:port_id")
+		subtree:add(msg_mac, buffer(i+11,6)):append_text(":smi_odu_bind_service_add_t::union:mpls:mac")
+		subtree:add(msg_uint08, buffer(i+17,1)):append_text(":smi_odu_bind_service_add_t::union:mpls:vtag")
+		subtree:add(msg_uint16, buffer(i+18,2)):append_text(":smi_odu_bind_service_add_t::union:mpls:vid")
+		subtree:add(buffer(i+20,50):string()):   append_text(":smi_odu_bind_service_add_t::union:mpos:mpls_name")
+
+		subtree:add(msg_uint32, buffer(i+0,4)):append_text(":smi_odu_bind_service_add_t::union:sdh:ac_id")
+		subtree:add(buffer(i+4,32):string()):   append_text(":smi_odu_bind_service_add_t::union:sdh:sdh_vc4")
+		subtree:add(msg_uint32,  buffer(i+36,4)):append_text(":smi_odu_bind_service_add_t::union:sdh:service_id")
+
+		subtree:add(msg_uint32, buffer(i+0,4)):append_text(":smi_odu_bind_service_add_t::union:pdh:ac_id")
+		subtree:add(buffer(i+4,32):string()):   append_text(":smi_odu_bind_service_add_t::union:pdh:stm_if")
+		-- i = i+4  =  4  -- ptn:peer node
+		-- i = i+32 = 36  -- ptn:peer name
+		--
+		-- i = i+4  =  4  -- mpls:ifindex
+		-- i = i+4  =  8  -- mpls:peer_node
+		-- i = i+1  =  9  -- mpls:shelf
+		-- i = i+1  = 10  -- mpls:slot
+		-- i = i+1  = 11  -- mpls:port
+		-- i = i+6  = 17  -- mpls:mac
+		-- i = i+1  = 18  -- mpls:tagged
+		-- i = i+2  = 20  -- mpls:vlan_id
+		-- i = i+50 = 70  -- mpls:name
+		--
+		-- i = i+4  =  4  -- sdh:ifindex
+		-- i = i+32 = 36  -- sdh:sdh_vc4
+		-- i = i+36 = 40  -- sdh:service_id
+		--
+		-- i = i+4  =  4  -- pdh:ifindex
+		-- i = i+32 = 36  -- pdh:stm_if
+		--
+		i = i + 158
+	end
+  elseif fid_name == "OTN_SET_ODU_TRAIL_PROTECTION_CFG" or fid_name == "OTN_GET_ODU_TRAIL_PROTECTION_CFG" then
+  if (length <= i) then return end
+	while (i < length) do
+	    subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_odu_trail_protection_cfg_t::smi_pid->pid_type(i="..i..")")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_odu_trail_protection_cfg_t::smi_pid->ne_type")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_odu_trail_protection_cfg_t::smi_pid->card_id")
+		i = i+4
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_odu_trail_protection_cfg_t::smi_pid->slot_id")
+		i = i+2
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_odu_trail_protection_cfg_t::smi_pid->port_id")
+		i = i+2
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_odu_trail_protection_cfg_t::flag")
+		i = i+4
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_odu_trail_protection_cfg_t::trail_id")
+		i = i+2
+		subtree:add(msg_dst_add, buffer(i,4)):append_text(":smi_odu_trail_protection_cfg_t::egress_ip")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_odu_trail_protection_cfg_t::mode(0=1+1,1=1:1)")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_odu_trail_protection_cfg_t::dir(0=UNI,1=BI)")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_odu_trail_protection_cfg_t::oper_mode(0=NON-REV,1=REV)")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_odu_trail_protection_cfg_t::wtr_time_(sec)")
+		i = i+4
+	end
+
+  elseif fid_name == "SYS_GET_SYSTEM_EVENT_HISTORY" or fid_name == "SYS_GET_SYSTEM_EVENT_HISTORY" then
+  if (length <= i) then return end
+	while (i < length) do
+	    subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_sw_msg_info_t::count(i="..i..")")
+		i = i+1
+		j = 0
+		while(j<7) do
+
+			subtree:add(msg_uint32, buffer(i,4)):append_text(":_smi_sw_msg_t::smi_pid->pid_type(i="..j..")")
+			i = i+4
+			subtree:add(msg_uint32, buffer(i,4)):append_text(":_smi_sw_msg_t::smi_pid->ne_type")
+			i = i+4
+			subtree:add(msg_uint32, buffer(i,4)):append_text(":_smi_sw_msg_t::smi_pid->card_id")
+			i = i+4
+			subtree:add(msg_uint16, buffer(i,2)):append_text(":_smi_sw_msg_t::smi_pid->slot_id")
+			i = i+2
+			subtree:add(msg_uint16, buffer(i,2)):append_text(":_smi_sw_msg_t::smi_pid->port_id")
+			i = i+2
+			subtree:add(msg_uint32, buffer(i,4)):append_text(":_smi_sw_msg_t::sw_cmd")
+			i = i+4
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":_smi_sw_msg_t::msg_type")
+			i = i+1
+
+			subtree:add(msg_uint08, buffer(i+0,1)):append_text(":_smi_sw_msg_t::union_papa::from_papa")
+			subtree:add(msg_uint08, buffer(i+1,1)):append_text(":_smi_sw_msg_t::union_papa::to_papa")
+			
+			subtree:add(msg_uint32, buffer(i+0,4)):append_text("::_smi_sw_msg_t::union_tnl::smi_mpls_tunnel_idInfo_t->role")
+			subtree:add(msg_dst_add, buffer(i+4,4)):append_text(":_smi_sw_msg_t::union_tnl::smi_mpls_tunnel_idInfo_t->igr_node_id")
+			subtree:add(msg_dst_add, buffer(i+8,4)):append_text(":_smi_sw_msg_t::union_tnl::smi_mpls_tunnel_idInfo_t->egr_node_id")
+			subtree:add(msg_uint16, buffer(i+12,2)):append_text(":_smi_sw_msg_t::union_tnl::smi_mpls_tunnel_idInfo_t->igr_tunnel_id")
+			subtree:add(msg_uint16, buffer(i+14,2)):append_text(":_smi_sw_msg_t::union_tnl::smi_mpls_tunnel_idInfo_t->egr_tunnel_id")
+			subtree:add(msg_uint16, buffer(i+16,2)):append_text(":_smi_sw_msg_t::union_tnl::smi_mpls_tunnel_idInfo_t->assoticated_tunnel_id")
+			subtree:add(msg_uint08, buffer(i+18,1)):append_text(":_smi_sw_msg_t::union_tnl::smi_mpls_tunnel_idInfo_t->direction")
+			subtree:add(buffer(i+19,50):string()):append_text(":_smi_sw_msg_t::union_tnl::smi_mpls_tunnel_idInfo_t->names")
+			subtree:add(msg_uint08, buffer(i+69,1)):append_text(":_smi_sw_msg_t::union_tnl::smi_mpls_tunnel_idInfo_t->is_remote")
+			subtree:add(msg_uint08, buffer(i+70,1)):append_text(":_smi_sw_msg_t::union_tnl::smi_mpls_tunnel_idInfo_t->from_lsp")
+			subtree:add(msg_uint08, buffer(i+71,1)):append_text(":_smi_sw_msg_t::union_tnl::smi_mpls_tunnel_idInfo_t->to_lsp")
+			subtree:add(msg_uint08, buffer(i+72,1)):append_text(":_smi_sw_msg_t::union_tnl::smi_mpls_tunnel_idInfo_t->from_lsp_type")
+			subtree:add(msg_uint08, buffer(i+73,1)):append_text(":_smi_sw_msg_t::union_tnl::smi_mpls_tunnel_idInfo_t->to_lsp_type")
+			subtree:add(msg_uint32, buffer(i+74,4)):append_text(":_smi_sw_msg_t::union_tnl::smi_mpls_tunnel_idInfo_t->from_ifindex")
+			subtree:add(msg_uint32, buffer(i+78,4)):append_text(":_smi_sw_msg_t::union_tnl::smi_mpls_tunnel_idInfo_t->to_ifindex")
+			subtree:add(buffer(i+82,50):string()):append_text(":_smi_sw_msg_t::union_tnl::smi_mpls_tunnel_idInfo_t->from_names")
+			subtree:add(buffer(i+132,50):string()):append_text(":_smi_sw_msg_t::union_tnl::smi_mpls_tunnel_idInfo_t->to_names")
+			
+			subtree:add(msg_uint32, buffer(i+0,4)):append_text(":_smi_sw_msg_t::union_odu::smi_pid->pid_type")
+			subtree:add(msg_uint32, buffer(i+4,4)):append_text(":_smi_sw_msg_t::union_odu::smi_pid->ne_type")
+			subtree:add(msg_uint32, buffer(i+8,4)):append_text(":_smi_sw_msg_t::union_odu::smi_pid->card_id")
+			subtree:add(msg_uint16, buffer(i+12,2)):append_text(":_smi_sw_msg_t::union_odu::smi_pid->slot_id")
+			subtree:add(msg_uint16, buffer(i+14,2)):append_text(":_smi_sw_msg_t::union_odu::smi_pid->port_id")
+			subtree:add(msg_uint16, buffer(i+16,2)):append_text(":_smi_sw_msg_t::union_odu::trail_id")
+			subtree:add(msg_dst_add, buffer(i+18,4)):append_text(":_smi_sw_msg_t::union_odu::egress_ip")
+			subtree:add(buffer(i+22,32):string()):append_text(":_smi_sw_msg_t::union_odu::names")
+			subtree:add(msg_uint32, buffer(i+54,4)):append_text(":_smi_sw_msg_t::union_odu::reason")
+			subtree:add(msg_uint32, buffer(i+58,4)):append_text(":_smi_sw_msg_t::union_odu::from")
+			subtree:add(msg_uint32, buffer(i+62,4)):append_text(":_smi_sw_msg_t::union_odu::to")
+
+			i = i+4
+			i = i+4
+			i = i+4
+			i = i+2
+			i = i+2
+			i = i+2
+			i = i+1
+			i = i+50
+			i = i+1
+			i = i+1
+			i = i+1
+			i = i+1
+			i = i+1
+			i = i+4
+			i = i+4
+			i = i+50
+			i = i+50
+
+			subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_sw_msg_t->reason")
+			i = i+4
+			subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_sw_msg_t->e_time")
+			i = i+4
+
 			j = j+1
 		end
 	end
