@@ -137,9 +137,17 @@ function ptnems_protocol.dissector(buffer, pinfo, tree)
 		i = i+4
 		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_slot_msg_status_info_t::smi_pid->slot_id")
 		i = i+2
-		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_slot_msg_status_info_t::smi_pid->switch_group")
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_slot_msg_status_info_t::smi_pid->port_id")
 		i = i+2
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_slot_msg_status_info_t::flags")
+		i = i+4
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_slot_msg_status_info_t->slot_id")
+		i = i+1
+		subtree:add(msg_uint16, buffer(i,1)):append_text(":smi_slot_msg_status_info_t::switch_group")
+		i = i+1
 		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_slot_msg_status_info_t->installed")
+		i = i+1
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_slot_msg_status_info_t->adminAct")
 		i = i+1
 		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_slot_msg_status_info_t->svcType")
 		i = i+1
@@ -147,9 +155,9 @@ function ptnems_protocol.dissector(buffer, pinfo, tree)
 		i = i+1
 		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_slot_msg_status_info_t->sw_state")
 		i = i+1
-		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_slot_msg_status_info_t->port_number")
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_slot_msg_status_info_t->port_number,fpga_cot")
 		i = i+1
-		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_slot_msg_status_info_t->vendor")
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_slot_msg_status_info_t->vendor(enduro=0,saver=1)")
 		i = i+1
 		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_slot_msg_status_info_t->wdm_degree_tx")
 		i = i+1
@@ -201,6 +209,50 @@ function ptnems_protocol.dissector(buffer, pinfo, tree)
 		i = i+1
 		subtree:add(buffer(i,18):string()):append_text(":smi_slot_msg_cfg_info_t->names")
 		i = i+18
+	end
+  elseif fid_name == "SYS_SW_GET_PROM" or fid_name == "SYS_SW_SET_PROM" then
+    if (length <= i) then return end
+	while (i < length) do
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":mib_rtrv_prom_ack->smi_pid->pid_type(i="..i..")len="..length..")")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":mib_rtrv_prom_ack->smi_pid->ne_type")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":mib_rtrv_prom_ack->smi_pid->card_id")
+		i = i+4
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":mib_rtrv_prom_ack->smi_pid->slot_id")
+		i = i+2
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":mib_rtrv_prom_ack->smi_pid->port_id")
+		i = i+2
+		subtree:add(buffer(i,64):string()):append_text(":mib_rtrv_prom_ack->szfile")
+		i = i+64
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":mib_rtrv_prom_ack->length")
+		i = i+4
+		j = 0
+		while(j<4) do
+			subtree:add(msg_uint32, buffer(i,4)):append_text(":mib_rtrv_prom_ack::mib_rtrv_prom_r->chksum.j="..j.."[0=FROM1,1=FROM2,2=RAM,3=RUN]")
+			i = i+4
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":mib_rtrv_prom_ack::mib_rtrv_prom_r->active")
+			i = i+1
+			subtree:add(msg_uint16, buffer(i,2)):append_text(":mib_rtrv_prom_ack::mib_rtrv_prom_r->version")
+			i = i+2
+			subtree:add(msg_uint32, buffer(i,4)):append_text(":mib_rtrv_prom_ack::mib_rtrv_prom_r->length")
+			i = i+4
+			subtree:add(msg_uint16, buffer(i,2)):append_text(":mib_rtrv_prom_ack::mib_rtrv_prom_r::STIME->year")
+			i = i+2
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":mib_rtrv_prom_ack::mib_rtrv_prom_r::STIME->month")
+			i = i+1
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":mib_rtrv_prom_ack::mib_rtrv_prom_r::STIME->date")
+			i = i+1
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":mib_rtrv_prom_ack::mib_rtrv_prom_r::STIME->hour")
+			i = i+1
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":mib_rtrv_prom_ack::mib_rtrv_prom_r::STIME->min")
+			i = i+1
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":mib_rtrv_prom_ack::mib_rtrv_prom_r::STIME->sec")
+			i = i+1
+			subtree:add(buffer(i,44):string()):append_text(":mib_rtrv_prom_ack::mib_rtrv_prom_r->szdesc")
+			i = i+44
+			j = j+1
+		end
 	end
   elseif fid_name == "OTN_SET_OTU_PORT_CFG" or fid_name == "OTN_GET_OTU_PORT_CFG" then
     if (length <= i) then return end
@@ -2229,8 +2281,8 @@ function get_cod_name(sys_code,fid_code)
 	elseif fid_code == 0x0030 then code_name = "GET_SYSTEM_INFO"
 	elseif fid_code == 0x0031 then code_name = "SET_SYSTEM_INFO"
 	elseif fid_code == 0x0032 then code_name = "DEL_SYSTEM_INFO"
-	elseif fid_code == 0x0043 then code_name = "SYS_SW_GET_RPOM"
-	elseif fid_code == 0x0044 then code_name = "SYS_SW_SET_RPOM"
+	elseif fid_code == 0x0043 then code_name = "SYS_SW_GET_PROM"
+	elseif fid_code == 0x0044 then code_name = "SYS_SW_SET_PROM"
 	elseif fid_code == 0x0045 then code_name = "SYS_SW_PROM_UPDATE"
 	elseif fid_code == 0x0046 then code_name = "SYS_SW_UPDATE_REBOOT"
 	elseif fid_code == 0x0047 then code_name = "SYS_SW_PROM_ACTIVE"
