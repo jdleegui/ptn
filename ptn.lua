@@ -1687,7 +1687,7 @@ function ptnems_protocol.dissector(buffer, pinfo, tree)
 			i = i+2
 			j = 0
 			while(j<12) do
-				subtree:add(msg_uint16, buffer(i,2)):append_text(":emsagt_smi_led_73K0_status_t::link_sts["..j.."]")
+				subtree:add(msg_uint16, buffer(i,2)):append_text(":emsagt_smi_led_73K0_status_t::link_sts["..j.."]->"..tobits(buffer(i,2):uint()))
 				-- subtree:add(byte2bin(buffer(i,2)))
 				i = i+2	
 				j = j+1
@@ -2242,6 +2242,35 @@ elseif fid_name == "SYS_GET_PORT_MODULE" then
     subtree:add(number_returned,  buffer(32,4))
     subtree:add(documents,        buffer(36,length-36))
   end
+end
+
+function reverse(t)
+  local nt = {} -- new table
+  local size = #t + 1
+  for k,v in ipairs(t) do
+    nt[size - k] = v
+  end
+  return nt
+end
+
+function tobits(num)
+    local t={}
+    while num>0 do
+        rest=num%2
+        t[#t+1]=rest
+        num=(num-rest)/2
+    end
+    t = reverse(t)
+    return table.concat(t)
+end
+
+function byte2bin(n)
+  local t = {}
+  for i=7,0,-1 do
+    t[#t+1] = math.floor(n / 2^i)
+    n = n % 2^i
+   end
+  return table.concat(t)
 end
 
 function get_fid_name(fid)
@@ -2895,15 +2924,6 @@ function get_response_flag_description(flags)
 
   return flags_description
 end
-
--- function byte2bin(n)
---   local t = {}
---   for i=7,0,-1 do
---     t[#t+1] = math.floor(n / 2^i)
---     n = n % 2^i
---    end
---   return table.concat(t)
--- end
 
 local tcp_port = DissectorTable.get("tcp.port")
 tcp_port:add(3408, ptnems_protocol)
