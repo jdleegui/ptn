@@ -56,7 +56,9 @@ function ptnems_protocol.dissector(buffer, pinfo, tree)
   local subtree = tree:add(ptnems_protocol, buffer(), "PTN WDM EMS Protocol Data")
 
   -- Header
-  local i = 0
+  local p_len = 0
+  while (p_len < length) do
+  local i = p_len
   subtree:add(msg_hdr, buffer(i,2))
   i = i+2
   local pay_len = buffer(i,2):uint()
@@ -98,7 +100,7 @@ function ptnems_protocol.dissector(buffer, pinfo, tree)
 	subtree:add(msg_tid_name, buffer(i,21))
   elseif fid_name == "HELLO_ACK" then
 	if (length <= i) then return end
-	while (i < length) do
+	--while (i < length) do
 	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_ne_hello_ack_msg_t::upv.key_ring(i="..i..")len="..length..")")
 	i = i+4
 	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_ne_hello_ack_msg_t::upv.version")
@@ -125,7 +127,7 @@ function ptnems_protocol.dissector(buffer, pinfo, tree)
 	i = i+4
 	subtree:add(msg_mac, buffer(i,6)):append_text(":smi_ne_hello_ack_msg_t->mac")
 	i = i+6
-	end
+	--end
   elseif fid_name == "GET_SLOT_PROVISION" then
     if (length <= i) then return end
 	while (i < length) do
@@ -251,6 +253,18 @@ function ptnems_protocol.dissector(buffer, pinfo, tree)
 			i = i+1
 			subtree:add(buffer(i,44):string()):append_text(":mib_rtrv_prom_ack::mib_rtrv_prom_r->szdesc")
 			i = i+44
+			j = j+1
+		end
+	end
+  elseif fid_name == "SYS_GET_SYSTEM_ALARM_COND" or fid_name == "SYS_SET_SYSTEM_ALARM_COND"  or fid_name == "SYS_DEL_SYSTEM_ALARM_COND" then
+    if (length <= i) then return end
+	while (i < length) do
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_oam_aaa_sev_t->flags(i="..i..")len="..length..")")
+		i = i+4
+		j = 0
+		while(j<255) do
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_oam_aaa_sev_t::severity.j="..j.."[0=CRI,1=MAJ,2=MIN,3=NOALM]")
+			i = i+1
 			j = j+1
 		end
 	end
@@ -1163,7 +1177,7 @@ function ptnems_protocol.dissector(buffer, pinfo, tree)
 		i = i+1
 		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_t->sw_state")
 		i = i+1
-		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t::flags")
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_mpls_tunnel_t::flags[0=CREATE,1=QOS,2=ASSO,3=NAME,4=PROT,5=WTR,6=HOLD,7=STACK]->"..tobits(buffer(i,4):uint()))
 		i = i+4
 		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_mpls_tunnel_t->outer")
 		i = i+1
@@ -1523,12 +1537,12 @@ function ptnems_protocol.dissector(buffer, pinfo, tree)
 		i = i+2
 		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_evt_msg_t::smi_pid->port_id")
 		i = i+2
-		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_evt_msg_t->sw_cmd")
-		i = i+4
+--		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_evt_msg_t->sw_cmd")
+--		i = i+4
 		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_evt_msg_t->msg_type")
+		local pdu_type = buffer(i,1):uint()
 		i = i+1
-
-		if (buffer(i,1):uchar() == 11) then
+		if (pdu_type == 11) then
 			subtree:add(msg_uint08, buffer(i+ 0,1)):append_text(":smi_evt_msg_t->evt_data.smi_bw_overbooked_t.if_type")
 			subtree:add(msg_uint32, buffer(i+ 1,4)):append_text(":smi_evt_msg_t->evt_data.smi_bw_overbooked_t.u.smi_mif_info_t.if_index")
 			subtree:add(buffer(5+i,52):string()):   append_text(":smi_evt_msg_t->evt_data.smi_bw_overbooked_t.u.smi_mif_info_t.name")
@@ -1550,6 +1564,27 @@ function ptnems_protocol.dissector(buffer, pinfo, tree)
 			subtree:add(msg_uint32, buffer(i+80,4)):append_text(":smi_evt_msg_t->evt_data.smi_bw_overbooked_t.cir_all_bw")
 			subtree:add(msg_uint32, buffer(i+84,4)):append_text(":smi_evt_msg_t->evt_data.smi_bw_overbooked_t.use_pir_bw")
 			subtree:add(msg_uint32, buffer(i+88,4)):append_text(":smi_evt_msg_t->evt_data.smi_bw_overbooked_t.all_pir_bw")
+		elseif (pdu_type == 25) then
+			subtree:add(msg_uint08, buffer(i+ 0,1)):append_text(":smi_evt_msg_t->evt_data.battery.test_starta(1=START,2=END)")
+			subtree:add(msg_uint08, buffer(i+ 1,1)):append_text(":smi_evt_msg_t->evt_data.battery.test_startb(1=START,2=END)")
+			subtree:add(msg_uint08, buffer(i+ 2,1)):append_text(":smi_evt_msg_t->evt_data.battery.test_startc(1=START,2=END)")
+			subtree:add(msg_uint08, buffer(i+ 3,1)):append_text(":smi_evt_msg_t->evt_data.battery.test_startd(1=START,2=END)")
+			subtree:add(msg_uint08, buffer(i+ 4,1)):append_text(":smi_evt_msg_t->evt_data.battery.test_waya(1=MAN,2=AUTO)")
+			subtree:add(msg_uint08, buffer(i+ 5,1)):append_text(":smi_evt_msg_t->evt_data.battery.test_wayb(1=MAN,2=AUTO)")
+			subtree:add(msg_uint08, buffer(i+ 6,1)):append_text(":smi_evt_msg_t->evt_data.battery.test_wayc(1=MAN,2=AUTO)")
+			subtree:add(msg_uint08, buffer(i+ 7,1)):append_text(":smi_evt_msg_t->evt_data.battery.test_wayd(1=MAN,2=AUTO)")
+			subtree:add(msg_uint32, buffer(i+ 8,4):float()):append_text(":smi_evt_msg_t->evt_data.battery.cell1_4")
+			subtree:add(msg_uint32, buffer(i+12,4):float()):append_text(":smi_evt_msg_t->evt_data.battery.cell1_7")
+			subtree:add(msg_uint32, buffer(i+16,4):float()):append_text(":smi_evt_msg_t->evt_data.battery.cell1_10")
+			subtree:add(msg_uint32, buffer(i+20,4):float()):append_text(":smi_evt_msg_t->evt_data.battery.cell2_4")
+			subtree:add(msg_uint32, buffer(i+24,4):float()):append_text(":smi_evt_msg_t->evt_data.battery.cell2_7")
+			subtree:add(msg_uint32, buffer(i+28,4):float()):append_text(":smi_evt_msg_t->evt_data.battery.cell2_10")
+			subtree:add(msg_uint32, buffer(i+32,4):float()):append_text(":smi_evt_msg_t->evt_data.battery.cell3_4")
+			subtree:add(msg_uint32, buffer(i+36,4):float()):append_text(":smi_evt_msg_t->evt_data.battery.cell3_7")
+			subtree:add(msg_uint32, buffer(i+40,4):float()):append_text(":smi_evt_msg_t->evt_data.battery.cell3_10")
+			subtree:add(msg_uint32, buffer(i+44,4):float()):append_text(":smi_evt_msg_t->evt_data.battery.cell4_4")
+			subtree:add(msg_uint32, buffer(i+48,4):float()):append_text(":smi_evt_msg_t->evt_data.battery.cell4_7")
+			subtree:add(msg_uint32, buffer(i+52,4):float()):append_text(":smi_evt_msg_t->evt_data.battery.cell4_10")
 		end
 	-- 	subtree:add(msg_uint08, buffer(i+0,1)):append_text(":smi_evt_msg_t->union1.papa.from")
 	-- 	subtree:add(msg_uint08, buffer(i+1,1)):append_text(":smi_evt_msg_t->union1.papa.to")
@@ -1774,7 +1809,22 @@ function ptnems_protocol.dissector(buffer, pinfo, tree)
 			subtree:add(msg_uint32, buffer(i,4)):append_text(":slot_led_8300_t::card_sts[12]")
 			i = i+4
 		end
-	
+	end
+  elseif fid_name == "SYS_SW_PROM_ACTIVE" then
+    if (length <= i) then return end
+	while (i < length) do
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":mib_set_prom::smi_pid->pid_type(i="..i..")")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":mib_set_prom::smi_pid->ne_type")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":mib_set_prom::smi_pid->card_id")
+		i = i+4
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":mib_set_prom::smi_pid->slot_id")
+		i = i+2
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":mib_set_prom::smi_pid->port_id")
+		i = i+2
+		subtree:add(msg_uint08, buffer(i,1)):append_text("mib_set_prom(1=BANK1,2=BANK2)")
+		i = i+1
 	end
   elseif fid_name == "OTN_GET_OTU_TS_MAP_STATE" or fid_name == "OTN_SET_OTU_TS_MAP_STATE" or fid_name == "OTN_DEL_OTU_TS_MAP_STATE" then
   if (length <= i) then return end
@@ -2242,6 +2292,8 @@ elseif fid_name == "SYS_GET_PORT_MODULE" then
     subtree:add(number_returned,  buffer(32,4))
     subtree:add(documents,        buffer(36,length-36))
   end
+  p_len = p_len + i
+  end
 end
 
 function reverse(t)
@@ -2314,7 +2366,8 @@ function get_cod_name(sys_code,fid_code)
 	elseif fid_code == 0x0044 then code_name = "SYS_SW_SET_PROM"
 	elseif fid_code == 0x0045 then code_name = "SYS_SW_PROM_UPDATE"
 	elseif fid_code == 0x0046 then code_name = "SYS_SW_UPDATE_REBOOT"
-	elseif fid_code == 0x0047 then code_name = "SYS_SW_PROM_ACTIVE"
+	elseif fid_code == 0x0047 then code_name = "SMI_MSG_SYS_SW_UPDATE_REBOOT"
+	elseif fid_code == 0x0048 then code_name = "SYS_SW_PROM_ACTIVE"
 	elseif fid_code == 0x0061 then code_name = "SET_MEM_OVER_THRLD"
 	elseif fid_code == 0x0083 then code_name = "SYS_GET_SYSTEM_GM_EVENT_HIST"
 	elseif fid_code == 0x0084 then code_name = "SYS_DEL_SYSTEM_GM_EVENT_HIST"
