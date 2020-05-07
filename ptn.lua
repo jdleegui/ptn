@@ -67,7 +67,7 @@ function ptnems_protocol.dissector(buffer, pinfo, tree)
   i = i+2
   local fid_code = buffer(i,2):uint()
   local sys_code = buffer(i+6,1):uint()
-  local fid_name = get_cod_name(sys_code, fid_code)
+  fid_name = get_cod_name(sys_code, fid_code)
   subtree:add(msg_fid, buffer(i,2)):append_text(" (" .. fid_name .. ")")
   i = i+2
   subtree:add(msg_ser, buffer(i,2))
@@ -92,7 +92,6 @@ function ptnems_protocol.dissector(buffer, pinfo, tree)
   subtree:add(msg_crc, buffer(i,2))
   i = i+2
   -- Payload
-
   if fid_name == "SYS_GET_SYSTEM_FAN_INFO" then
   elseif fid_name == "NE_CONFIG" then
 	subtree:add(msg_cfg_type, buffer(i,1))
@@ -375,58 +374,94 @@ function ptnems_protocol.dissector(buffer, pinfo, tree)
 			i = i+1
 			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->osc_port.inband(AUTO(1),OSPF(2))")
 			i = i+1
-			subtree:add(msg_dst_add, buffer(i,4)):append_text(":smi_set_link_port_t->osc_port.peer_node")
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->osc_port.src_slot")
+			i = i+1
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->osc_port.src_port(0xff)")
+			i = i+1
+			subtree:add(msg_dst_add, buffer(i,4)):append_text(":smi_set_link_port_t->osc_port.dst_node")
 			i = i+4
-			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->osc_port.peer_rack")
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->osc_port.dst_slot")
 			i = i+1
-			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->osc_port.peer_slot")
-			i = i+1
-			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->osc_port.peer_port")
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->osc_port.dst_port")
 			i = i+1
 			subtree:add(msg_uint32, buffer(i,4):float()):append_text(":smi_get_link_port_t->osc_port.distance")
 			i = i+4
-			subtree:add(buffer(i,63):string()):append_text(":smi_get_link_port_t->desc[63]")
-			i = i+63
-			subtree:add(buffer(i,13):string()):append_text(":smi_get_link_port_t->dummy[13]")
-			i = i+13
+			subtree:add(buffer(i,11):string()):append_text(":smi_get_link_port_t->dummy[11]")
+			i = i+11
+			subtree:add(buffer(i,64):string()):append_text(":smi_get_link_port_t->desc[64]")
+			i = i+64
 		elseif (pdu_type == 2) then
 			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->wss_port.lambda")
 			i = i+1
-			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->wss_port.add_port")
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->wss_port.mux_slot")
 			i = i+1
-			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->wss_port.apc_mode(AUTO(1),MAN(2))")
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->wss_port.mux_port(NONE(0),ADD/DROP(1),PASS(2)")
 			i = i+1
-			subtree:add(msg_uint32, buffer(i,4):float()):append_text(":smi_get_link_port_t->wss_port.attn")
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->wss_port.apc_mode(OFF(0),AUTO(1),MAN(2))")
+			i = i+1
+			subtree:add(msg_uint32, buffer(i,4):float()):append_text(":smi_get_link_port_t->wss_port.set_pwr")
 			i = i+4
-			subtree:add(msg_uint32, buffer(i,4):float()):append_text(":smi_get_link_port_t->wss_port.out_pwr")
+			subtree:add(msg_uint32, buffer(i,4):float()):append_text(":smi_get_link_port_t->wss_port.attn")
 			i = i+4
 			subtree:add(msg_uint32, buffer(i,4):float()):append_text(":smi_get_link_port_t->wss_port.max")
 			i = i+4
 			subtree:add(msg_uint32, buffer(i,4):float()):append_text(":smi_get_link_port_t->wss_port.min")
 			i = i+4
+			subtree:add(msg_uint32, buffer(i,4):float()):append_text(":smi_get_link_port_t->wss_port.dummy")
+			i = i+4
 			subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_get_link_port_t->wss_port.slice_from")
 			i = i+2
 			subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_get_link_port_t->wss_port.slice_to")
 			i = i+2
-			subtree:add(buffer(i,68):string()):append_text(":smi_get_link_port_t->dummy[68]")
-			i = i+68
+			subtree:add(msg_dst_add, buffer(i,4)):append_text(":smi_set_link_port_t->wss_port.src_node")
+			i = i+4
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->wss_port.src_slot")
+			i = i+1
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->wss_port.src_port")
+			i = i+1
+			subtree:add(msg_dst_add, buffer(i,4)):append_text(":smi_set_link_port_t->wss_port.dst_node")
+			i = i+4
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->wss_port.dst_slot")
+			i = i+1
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->wss_port.dst_port")
+			i = i+1
+			subtree:add(buffer(i,32):string()):append_text(":smi_get_link_port_t->desc[32]")
+			i = i+32
+			subtree:add(buffer(i,19):string()):append_text(":smi_get_link_port_t->dummy1[19]")
+			i = i+19
 		elseif (pdu_type == 3 or pdu_type == 4) then
-			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->amp_port.amp_id(dummy)")
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->amp_port.shutdown(OFF(0),ON(1))")
 			i = i+1
 			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->amp_port.apc_mode(AUTO(1),MAN(2))")
 			i = i+1
+			subtree:add(msg_uint32, buffer(i,4):float()):append_text(":smi_get_link_port_t->amp_port.set_pwr")
+			i = i+4
 			subtree:add(msg_uint32, buffer(i,4):float()):append_text(":smi_get_link_port_t->amp_port.attn")
 			i = i+4
 			subtree:add(msg_uint32, buffer(i,4):float()):append_text(":smi_get_link_port_t->amp_port.max")
 			i = i+4
 			subtree:add(msg_uint32, buffer(i,4):float()):append_text(":smi_get_link_port_t->amp_port.min")
 			i = i+4
+			subtree:add(msg_uint32, buffer(i,4):float()):append_text(":smi_get_link_port_t->amp_port.dummy")
+			i = i+4
 			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->amp_port.amp_act")
 			i = i+1
 			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->amp_port.tune")
 			i = i+1
-			subtree:add(buffer(i,75):string()):append_text(":smi_get_link_port_t->dummy[75]")
-			i = i+75
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->amp_port.dummy1")
+			i = i+1
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->amp_port.dummy2")
+			i = i+1
+			subtree:add(msg_dst_add, buffer(i,4)):append_text(":smi_set_link_port_t->amp_port.dst_node")
+			i = i+4
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->amp_port.dst_slot")
+			i = i+1
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->amp_port.dst_port")
+			i = i+1
+			subtree:add(buffer(i,32):string()):append_text(":smi_get_link_port_t->amp_port.desc[32]")
+			i = i+32 
+			subtree:add(buffer(i,27):string()):append_text(":smi_get_link_port_t->amp_port.dummy3[27]")
+			i = i+27
 		elseif (pdu_type == 5) then
 			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->ptp_port.act")
 			i = i+1
@@ -458,8 +493,18 @@ function ptnems_protocol.dissector(buffer, pinfo, tree)
 			i = i+1
 			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->ptp_port.utp_port")
 			i = i+1
-			subtree:add(buffer(i,65):string()):append_text(":smi_get_link_port_t->dummy[65]")
-			i = i+65
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->ptp_port.src_slot")
+			i = i+1
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->ptp_port.src_port(0xff)")
+			i = i+1
+			subtree:add(msg_dst_add, buffer(i,4)):append_text(":smi_set_link_port_t->ptp_port.dst_node")
+			i = i+4
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->ptp_port.dst_slot")
+			i = i+1
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_get_link_port_t->ptp_port.dst_port")
+			i = i+1
+			subtree:add(buffer(i,57):string()):append_text(":smi_get_link_port_t->desc[57]")
+			i = i+57
 		else
 			subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_get_link_port_t->actype")
 			i = i+4
@@ -532,7 +577,7 @@ function ptnems_protocol.dissector(buffer, pinfo, tree)
 		i = i+4
 		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_set_link_port_t->ifindex")
 		i = i+4
-		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_set_link_port_t->flags")
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_set_link_port_t::flags(La|Ff|Fe|Co|Mp|De|Ll|Ac|At|Mt|Ca|Mc|Rd|Sh|Lp|Fc|Dx|Sp|Ne)->"..tobits(buffer(i,4):uint()))
 		i = i+4
 		local pdu_type = buffer(i,1):uint()
 		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->pdu_type(ETH(0),OSC(1),WSS(2),PRE(3),BST(4),CLK(5))")
@@ -562,95 +607,94 @@ function ptnems_protocol.dissector(buffer, pinfo, tree)
 			i = i+1
 			subtree:add(msg_uint32, buffer(i,4):float()):append_text(":smi_set_link_port_t->osc_port.distance")
 			i = i+4
-			subtree:add(buffer(i,67):string()):append_text(":smi_set_link_port_t->osc_port.dummy")
-			i = i+67
+			subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_set_link_port_t->osc_port.flags[CXC|DESC|PEER|BAND|DCC|DEG|ACT]->"..tobits(buffer(i,4):uint()))
+			i = i+4
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->osc_port.src_slot")
+			i = i+1
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->osc_port.src_port(0xff)")
+			i = i+1
+			subtree:add(msg_dst_add, buffer(i,4)):append_text(":smi_set_link_port_t->osc_port.dst_node")
+			i = i+4
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->osc_port.dst_slot")
+			i = i+1
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->osc_port.dst_port")
+			i = i+1
+			subtree:add(buffer(i,55):string()):append_text(":smi_set_link_port_t->osc_port.desc[55]")
+			i = i+55
 		elseif (pdu_type == 2) then
-			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->wss_port.act")
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->wss_port.lambda")
 			i = i+1
-			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->wss_port.apc_mode(AUTO(1),MAN(2))")
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->wss_port.mux_slot")
 			i = i+1
-			subtree:add(msg_uint32, buffer(i,4):float()):append_text(":smi_set_link_port_t->wss_port.output")
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->wss_port.mux_port(NONE(0),ADD/DROP(1),PASS(2))")
+			i = i+1
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->wss_port.apc_mode(OFF(0),AUTO(1),MAN(2))")
+			i = i+1
+			subtree:add(msg_uint32, buffer(i,4):float()):append_text(":smi_set_link_port_t->wss_port.set_pwr")
+			i = i+4
+			subtree:add(msg_uint32, buffer(i,4):float()):append_text(":smi_set_link_port_t->wss_port.attn")
 			i = i+4
 			subtree:add(msg_uint32, buffer(i,4):float()):append_text(":smi_set_link_port_t->wss_port.max")
 			i = i+4
 			subtree:add(msg_uint32, buffer(i,4):float()):append_text(":smi_set_link_port_t->wss_port.min")
 			i = i+4
-			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->wss_port.slice")
-			i = i+1
-			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->wss_port.local_rack")
-			i = i+1
-			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->wss_port.local_slot")
-			i = i+1
-			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->wss_port.local_port")
-			i = i+1
-			subtree:add(msg_dst_add, buffer(i,4)):append_text(":smi_set_link_port_t->wss_port.peer_node")
+			subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_set_link_port_t->wss_port.slice_from")
+			i = i+2
+			subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_set_link_port_t->wss_port.slice_to")
+			i = i+2
+			subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_set_link_port_t->wss_port.flags[DESC|PEER|ATTN|CXC]->"..tobits(buffer(i,4):uint()))
 			i = i+4
-			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->wss_port.peer_rack")
+			subtree:add(msg_dst_add, buffer(i,4)):append_text(":smi_set_link_port_t->wss_port.src_node")
+			i = i+4
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->wss_port.src_slot")
 			i = i+1
-			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->wss_port.peer_slot")
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->wss_port.src_port")
 			i = i+1
-			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->wss_port.peer_port")
+			subtree:add(msg_dst_add, buffer(i,4)):append_text(":smi_set_link_port_t->wss_port.dst_node")
+			i = i+4
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->wss_port.dst_slot")
 			i = i+1
-			subtree:add(buffer(i,57):string()):append_text(":smi_set_link_port_t->wss_port.dummy")
-			i = i+57
-		elseif (pdu_type == 3) then
-			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->amp_port.act")
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->wss_port.dst_port")
 			i = i+1
-			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->amp_port.edfa(AUTO(1),MAN(2))")
+			subtree:add(buffer(i,32):string()):append_text(":smi_set_link_port_t->wss_port.desc[32]")
+			i = i+32
+			subtree:add(buffer(i,10):string()):append_text(":smi_set_link_port_t->wss_port.dummy[10]")
+			i = i+10
+		elseif (pdu_type == 3 or pdu_type == 4) then
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->amp_port.shutdown{OFF(0),ON(1)}")
 			i = i+1
-			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->amp_port.apc_mode(AUTO(1),MAN(2))")
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->amp_port.apc_mode{OFF(0),AUTO(1),MAN(2)}")
 			i = i+1
-			subtree:add(msg_uint32, buffer(i,4):float()):append_text(":smi_set_link_port_t->amp_port.gain")
+			subtree:add(msg_uint32, buffer(i,4):float()):append_text(":smi_set_link_port_t->amp_port.set_pwr")
+			i = i+4
+			subtree:add(msg_uint32, buffer(i,4):float()):append_text(":smi_set_link_port_t->amp_port.attn")
 			i = i+4
 			subtree:add(msg_uint32, buffer(i,4):float()):append_text(":smi_set_link_port_t->amp_port.max")
 			i = i+4
 			subtree:add(msg_uint32, buffer(i,4):float()):append_text(":smi_set_link_port_t->amp_port.min")
 			i = i+4
-			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->amp_port.local_rack")
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->amp_port.tune")
 			i = i+1
-			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->amp_port.local_slot")
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->amp_port.act")
 			i = i+1
-			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->amp_port.local_port")
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->amp_port.edfa(AUTO(1),MAN(2))")
 			i = i+1
-			subtree:add(msg_dst_add, buffer(i,4)):append_text(":smi_set_link_port_t->amp_port.peer_node")
+			subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_set_link_port_t->amp_port.flags[DESC|PEER|ATTN|POWER|APC_MODE|SHUTDOWN]->"..tobits(buffer(i,4):uint()))
 			i = i+4
-			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->amp_port.peer_rack")
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->wss_port.dummy1")
 			i = i+1
-			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->amp_port.peer_slot")
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->wss_port.dummy2")
 			i = i+1
-			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->amp_port.peer_port")
-			i = i+1
-			subtree:add(buffer(i,57):string()):append_text(":smi_set_link_port_t->amp_port.dummy")
-			i = i+57
-		elseif (pdu_type == 4) then
-			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->booster.act")
-			i = i+1
-			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->booster.edfa(AUTO(1),MAN(2))")
-			i = i+1
-			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->booster.apc_mode(AUTO(1),MAN(2))")
-			i = i+1
-			subtree:add(msg_uint32, buffer(i,4):float()):append_text(":smi_set_link_port_t->booster.gain")
+			subtree:add(msg_dst_add, buffer(i,4)):append_text(":smi_set_link_port_t->wss_port.dst_node")
 			i = i+4
-			subtree:add(msg_uint32, buffer(i,4):float()):append_text(":smi_set_link_port_t->booster.max")
-			i = i+4
-			subtree:add(msg_uint32, buffer(i,4):float()):append_text(":smi_set_link_port_t->booster.min")
-			i = i+4
-			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->booster.local_rack")
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->wss_port.dst_slot")
 			i = i+1
-			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->booster.local_slot")
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->wss_port.dst_port")
 			i = i+1
-			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->booster.local_port")
-			i = i+1
-			subtree:add(msg_dst_add, buffer(i,4)):append_text(":smi_set_link_port_t->booster.peer_node")
-			i = i+4
-			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->booster.peer_rack")
-			i = i+1
-			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->booster.peer_slot")
-			i = i+1
-			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->booster.peer_port")
-			i = i+1
-			subtree:add(buffer(i,57):string()):append_text(":smi_set_link_port_t->booster.dummy")
-			i = i+57
+			subtree:add(buffer(i,32):string()):append_text(":smi_set_link_port_t->amp_port.desc[32]")
+			i = i+32
+			subtree:add(buffer(i,17):string()):append_text(":smi_set_link_port_t->amp_port.dummy3[17]")
+			i = i+17
 		elseif (pdu_type == 5) then
 			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->ptp_port.act")
 			i = i+1
@@ -680,8 +724,20 @@ function ptnems_protocol.dissector(buffer, pinfo, tree)
 			i = i+1
 			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->ptp_port.utp_port")
 			i = i+1
-			subtree:add(buffer(i,57):string()):append_text(":smi_set_link_port_t->ptp_port.dummy")
-			i = i+57
+			subtree:add(msg_dst_add, buffer(i,4)):append_text(":smi_set_link_port_t->ptp_port.flags[CXC|DESC|SHUT|EDFA|ACT|TUNE|MIN|MAX|ATTN|APC]->"..tobits(buffer(i,4):uint()))
+			i = i+4
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->ptp_port.src_slot")
+			i = i+1
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->ptp_port.src_port(0xff)")
+			i = i+1
+			subtree:add(msg_dst_add, buffer(i,4)):append_text(":smi_set_link_port_t->ptp_port.dst_node")
+			i = i+4
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->ptp_port.dst_slot")
+			i = i+1
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_set_link_port_t->ptp_port.dst_port")
+			i = i+1
+			subtree:add(buffer(i,44):string()):append_text(":smi_set_link_port_t->ptp_port.desc[44]")
+			i = i+44
 		else
 			subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_set_link_port_t->eth_port.actype")
 			i = i+4
@@ -960,6 +1016,122 @@ function ptnems_protocol.dissector(buffer, pinfo, tree)
 		i = i+2
 		subtree:add(buffer(i,127):string()):append_text(":smi_pw_interface_t->desc")
 		i = i+127
+	end
+  elseif fid_name == "SET_PDH_INTERFACE" or fid_name == "GET_PDH_INTERFACE" or fid_name == "SMI_FID_GET_INTER_PDH_STATUS" then
+    if (length <= i) then return end
+	while (i < length) do
+	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pdh_link_port_t::smi_pid->pid_type(i="..i..")len="..length..")")
+	i = i+4
+	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pdh_link_port_t::smi_pid->ne_type")
+	i = i+4
+	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pdh_link_port_t::smi_pid->card_id")
+	i = i+4
+	subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_pdh_link_port_t::smi_pid->slot_id")
+	i = i+2
+	subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_pdh_link_port_t::smi_pid->port_id")
+	i = i+2
+	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pdh_link_port_t->smi_frame::reserved0")
+	i = i+1
+	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pdh_link_port_t->smi_frame::reserved1")
+	i = i+1
+	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pdh_link_port_t->smi_frame::frame_mode")
+	i = i+1
+	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pdh_link_port_t->smi_frame::crc4_frame")
+	i = i+1
+	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pdh_link_port_t->ifindex")
+	i = i+4
+	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pdh_link_port_t->flags")
+	i = i+4
+	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_pdh_link_port_t->admin")
+	i = i+1
+	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_pdh_link_port_t->act_status")
+	i = i+1
+	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_pdh_link_port_t->type")
+	i = i+1
+	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_pdh_link_port_t->code")
+	i = i+1
+	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_pdh_link_port_t->lbo")
+	i = i+1
+	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_pdh_link_port_t->loopback")
+	i = i+1
+	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pdh_link_port_t->sw_mode_t")
+	i = i+4
+	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pdh_link_port_t->sw_dir")
+	i = i+4
+	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_pdh_link_port_t->member_bmp")
+	i = i+4
+	subtree:add(buffer(i,64):string()):append_text(":smi_pdh_link_port_t->desc")
+	i = i+64
+	end
+  elseif fid_name == "SMI_U7400_FID_GET_SVC_INTERFACE" or fid_name == "CE_7200_FID_GET_SVC_INTERFACE" then
+    if (length <= i) then return end
+	while (i < length) do
+	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_svc_interface_t::smi_pid->pid_type(i="..i..")len="..length..")")
+	i = i+4
+	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_svc_interface_t::smi_pid->ne_type")
+	i = i+4
+	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_svc_interface_t::smi_pid->card_id")
+	i = i+4
+	subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_svc_interface_t::smi_pid->slot_id")
+	i = i+2
+	subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_svc_interface_t::smi_pid->port_id")
+	i = i+2
+	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_svc_interface_t->flags")
+	i = i+4
+	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_svc_interface_t::result")
+	i = i+4
+	subtree:add(buffer(i,31):string()):append_text(":smi_svc_interface_t->name")
+	i = i+31
+	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_svc_interface_t->acport_type")
+	i = i+1
+	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_svc_interface_t->ifindex")
+	i = i+4
+	subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_svc_interface_t::svid")
+	i = i+2
+	subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_svc_interface_t::cvid")
+	i = i+2
+	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_svc_interface_t->smi_svc_info_t::svc_type")
+	i = i+4
+	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_svc_interface_t->smi_svc_info_t::flow")
+	i = i+1
+	subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_svc_interface_t::smi_svc_info_t::vpn_id")
+	i = i+2
+	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_svc_interface_t->smi_svc_qos_info_t::qos_info:qos_type")
+	i = i+4
+	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_svc_interface_t->smi_svc_qos_info_t::qos_info:cos_type")
+	i = i+4
+	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_svc_interface_t->smi_svc_qos_info_t::tc")
+	i = i+1
+	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_svc_interface_t->smi_svc_qos_info_t::pfofile")
+	i = i+1
+	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_svc_interface_t->smi_svc_qos_info_t::in_p")
+	i = i+1
+	subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_svc_interface_t->smi_svc_qos_info_t::out_p")
+	i = i+1
+	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_svc_interface_t->ac_id")
+	i = i+4
+	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_svc_interface_t->multi_ac_id[0]")
+	i = i+4
+	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_svc_interface_t->multi_ac_id[1]")
+	i = i+4
+	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_svc_interface_t->multi_ac_id[2]")
+	i = i+4
+	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_svc_interface_t->multi_ac_id[3]")
+	i = i+4
+	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_svc_interface_t->multi_ac_id[4]")
+	i = i+4
+	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_svc_interface_t->multi_ac_id[5]")
+	i = i+4
+	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_svc_interface_t->multi_ac_id[6]")
+	i = i+4
+	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_svc_interface_t->multi_ac_id[7]")
+	i = i+4
+	subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_svc_interface_t::lag_id")
+	i = i+2
+	subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_svc_interface_t->output_queue")
+	i = i+1
+	subtree:add(buffer(i,127):string()):append_text(":smi_svc_interface_t->desc")
+	i = i+127
 	end
   elseif fid_name == "SET_SVC_REMARK_PROFILE" or fid_name == "GET_SVC_REMARK_PROFILE" then
     if (length <= i) then return end
@@ -1434,6 +1606,50 @@ function ptnems_protocol.dissector(buffer, pinfo, tree)
 		i = i+2
 		i = i+2
 	end	
+  elseif fid_name == "GET_SYSTEM_ALARM_REPORT" or fid_name == "SMI_UT7400_MSG_SYS_GET_SYSTEM_ALARM_REPORT" then
+    if (length <= i) then return end
+	while (i < length) do
+		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_oam_aaa_crnt_alarm_t->count")
+		i = i+1
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_oam_aaa_crnt_alarm_t->max_alloc_alarm")
+		i = i+2
+		j = 0
+		while(j<15) do
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_oam_aaa_crnt_alarm_t::ami_pid->sys"..j.."]")
+			i = i+1
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_oam_aaa_crnt_alarm_t::ami_pid->type")
+			i = i+1
+			subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_oam_aaa_crnt_alarm_t::ami_pid->card_id")
+			i = i+4
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_oam_aaa_crnt_alarm_t::ami_pid->uid")
+			i = i+1
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_oam_aaa_crnt_alarm_t::ami_pid->npo")
+			i = i+1
+			subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_oam_aaa_crnt_alarm_t::ami_pid->tdm::index")
+			i = i+4
+			subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_oam_aaa_crnt_alarm_t::ami_pid->tdm::inst")
+			i = i+4
+			subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_oam_aaa_crnt_alarm_t::ami_pid->tdm::lsr")
+			i = i+4
+			subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_oam_aaa_crnt_alarm_t::ami_pid->tdm::s_index")
+			i = i+4
+			subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_oam_aaa_crnt_alarm_t::ami_pid->tdm::s_inst")
+			i = i+4
+			subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_oam_aaa_crnt_alarm_t::ami_pid->tdm::lsr")
+			i = i+4
+			subtree:add(buffer(i,50):string()):append_text(":smi_oam_aaa_crnt_alarm_t::ami_pid->tdm->tname[50]")
+			i = i+50
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_oam_aaa_crnt_alarm_t::code")
+			i = i+1
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_oam_aaa_crnt_alarm_t::seve")
+			i = i+1
+			subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_oam_aaa_crnt_alarm_t::sa")
+			i = i+1
+			subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_oam_aaa_crnt_alarm_t::e_time")
+			i = i+4
+			j = j+1
+		end
+	end
   elseif fid_name == "SMI_EVENT_SYS_MSG_SWITCH" then
     if (length <= i) then return end
 	while (i < length) do
@@ -2263,34 +2479,36 @@ elseif fid_name == "SYS_GET_PORT_MODULE" then
 			j = j+1
 		end
 	end
-  elseif fid_name == "OP_QUERY" then
-    local flags_number = buffer(16,4):le_uint()
-    local flags_description = get_flag_description(flags_number)
-    subtree:add(flags,      buffer(16,4)):append_text(" (" .. flags_description .. ")")
-
-    -- Loop over string
-    local string_length
-
-    for i = 20, length - 1, 1 do
-      if (buffer(i,1):le_uint() == 0) then
-        string_length = i - 20
-        break
-      end
-    end
-
-    subtree:add(full_coll_name,   buffer(20,string_length))
-    subtree:add(number_to_skip,   buffer(20+string_length,4))
-    subtree:add(number_to_return, buffer(24+string_length,4))
-    subtree:add(query,            buffer(28+string_length,length-string_length-28))
-  elseif fid_name == "OP_REPLY" then
-    local response_flags_number = buffer(16,4):le_uint()
-    local response_flags_description = get_response_flag_description(response_flags_number)
-    
-    subtree:add(response_flags,   buffer(16,4)):append_text(" (" .. response_flags_description .. ")")
-    subtree:add(cursor_id,        buffer(20,8))
-    subtree:add(starting_from,    buffer(28,4))
-    subtree:add(number_returned,  buffer(32,4))
-    subtree:add(documents,        buffer(36,length-36))
+  --elseif fid_name == "OP_QUERY" then
+  --  local flags_number = buffer(16,4):le_uint()
+  --  local flags_description = get_flag_description(flags_number)
+  --  subtree:add(flags,      buffer(16,4)):append_text(" (" .. flags_description .. ")")
+  --
+  --  -- Loop over string
+  --  local string_length
+  --
+  --  for i = 20, length - 1, 1 do
+  --    if (buffer(i,1):le_uint() == 0) then
+  --      string_length = i - 20
+  --      break
+  --    end
+  --  end
+  --
+  --  subtree:add(full_coll_name,   buffer(20,string_length))
+  --  subtree:add(number_to_skip,   buffer(20+string_length,4))
+  --  subtree:add(number_to_return, buffer(24+string_length,4))
+  --  subtree:add(query,            buffer(28+string_length,length-string_length-28))
+  --elseif fid_name == "OP_REPLY" then
+  --  local response_flags_number = buffer(16,4):le_uint()
+  --  local response_flags_description = get_response_flag_description(response_flags_number)
+  --  
+  --  subtree:add(response_flags,   buffer(16,4)):append_text(" (" .. response_flags_description .. ")")
+  --  subtree:add(cursor_id,        buffer(20,8))
+  --  subtree:add(starting_from,    buffer(28,4))
+  --  subtree:add(number_returned,  buffer(32,4))
+  --  subtree:add(documents,        buffer(36,length-36))
+  else
+    i = i+pay_len
   end
   p_len = p_len + i
   end
@@ -2326,28 +2544,27 @@ function byte2bin(n)
 end
 
 function get_fid_name(fid)
-  local fid_name = "Unknown"
+  local fidname = "Unknown"
 
-      if fid ==    1 then fid_name = "OP_REPLY"
-  elseif fid == 2001 then fid_name = "OP_UPDATE"
-  elseif fid == 2002 then fid_name = "OP_INSERT"
-  elseif fid == 2003 then fid_name = "RESERVED"
-  elseif fid == 2004 then fid_name = "OP_QUERY"
-  elseif fid == 2005 then fid_name = "OP_GET_MORE"
-  elseif fid == 2006 then fid_name = "OP_DELETE"
-  elseif fid == 2007 then fid_name = "OP_KILL_CURSORS"
-  elseif fid == 2010 then fid_name = "OP_COMMAND"
-  elseif fid ==    2 then fid_name = "OP_STATUS"
-  elseif fid ==    3 then fid_name = "OP_ALARM"
-  elseif fid ==    4 then fid_name = "OP_HELLO"
-  elseif fid == 2011 then fid_name = "OP_COMMANDREPLY" end
+      if fid ==    1 then fidname = "OP_REPLY"
+  elseif fid == 2001 then fidname = "OP_UPDATE"
+  elseif fid == 2002 then fidname = "OP_INSERT"
+  elseif fid == 2003 then fidname = "RESERVED"
+  elseif fid == 2004 then fidname = "OP_QUERY"
+  elseif fid == 2005 then fidname = "OP_GET_MORE"
+  elseif fid == 2006 then fidname = "OP_DELETE"
+  elseif fid == 2007 then fidname = "OP_KILL_CURSORS"
+  elseif fid == 2010 then fidname = "OP_COMMAND"
+  elseif fid ==    2 then fidname = "OP_STATUS"
+  elseif fid ==    3 then fidname = "OP_ALARM"
+  elseif fid ==    4 then fidname = "OP_HELLO"
+  elseif fid == 2011 then fidname = "OP_COMMANDREPLY" end
 
-  return fid_name
+  return fidname
 end
 
 function get_cod_name(sys_code,fid_code)
 	local code_name = "Unknown"
-
 	    if fid_code == 0x0001 then code_name = "NE_CONFIG"
 	elseif fid_code == 0x0002 then code_name = "NE_STATUS"
 	elseif fid_code == 0x0003 then code_name = "NE_ALARM"
@@ -2593,6 +2810,8 @@ function get_cod_name(sys_code,fid_code)
 	elseif fid_code == 0x5101 then code_name = "SET_PDH_INTERFACE"
 	elseif fid_code == 0x5102 then code_name = "GET_PDH_INTERFACE"
 	elseif fid_code == 0x5103 then code_name = "DEL_PDH_INTERFACE"
+	elseif fid_code == 0x5217 then code_name = "SMI_FID_SET_INTER_PDH_STATUS"
+	elseif fid_code == 0x5218 then code_name = "SMI_FID_GET_INTER_PDH_STATUS"
 	elseif fid_code == 0x5104 then code_name = "SET_PDH_TDM_AC_INTERFACE"
 	elseif fid_code == 0x5105 then code_name = "GET_PDH_TDM_AC_INTERFACE"
 	elseif fid_code == 0x5106 then code_name = "DEL_PDH_TDM_AC_INTERFACE"
@@ -2789,106 +3008,112 @@ function get_cod_name(sys_code,fid_code)
 
 	local sys_name = get_sys_name(sys_code)
 	if code_name == "Unknown" then
-		if sys_name == "CE7200" or sys_name == "CE8300" or sys_name == "CE7300" then
+		if sys_name == "CE7200" or sys_name == "CE7300" then
 			code_name1 = get_cot_cod_name(fid_code)
-		else code_name2 = get_rot_cod_name(fid_code) end
+			return code_name1
+		else 
+			code_name2 = get_rot_cod_name(fid_code)
+			return code_name2
+		end
 		if code_name1 ~= "Unknown" then code_name = code_name1;
 		elseif code_name2 ~= "Unknown" then code_name = code_name2;
 		end
 	end
+	if (code_name == nil)
+	then code_name = "Unknown" end
 	return code_name
 end
 
 function get_cot_cod_name(fid_code)
-	local code_name = "Unknown"
-	    if fid_code == 0x0041 then code_name = "SET_SW_UPDATE_INFO"
-	elseif fid_code == 0x0050 then code_name = "GET_SYSTEM_CPU_INFO"
-	elseif fid_code == 0x0051 then code_name = "SET_SYSTEM_CPU_THRESHOLD"
-	elseif fid_code == 0x0060 then code_name = "GET_SYSTEM_MEMORY_INFO"
-	elseif fid_code == 0x0061 then code_name = "SET_SYSTEM_MEMORY_THRESHOLD"
-	elseif fid_code == 0x0070 then code_name = "GET_SYSTEM_FAN_INFO"
-	elseif fid_code == 0x0071 then code_name = "SET_SYSTEM_FAN_OPER"
-	elseif fid_code == 0x0080 then code_name = "GET_SYSTEM_TEMP_INFO"
-	elseif fid_code == 0x0081 then code_name = "SET_SYSTEM_TEMPERATURE_OVER"
-	elseif fid_code == 0x0093 then code_name = "GET_SYSTEM_ALARM_REPORT"
-	elseif fid_code == 0x0094 then code_name = "DEL_SYSTEM_ALARM_REPORT"
-	elseif fid_code == 0x0095 then code_name = "GET_SYSTEM_ALARM_HISTORY"
-	elseif fid_code == 0x0096 then code_name = "DEL_SYSTEM_ALARM_HISTORY"
-	elseif fid_code == 0x0097 then code_name = "GET_SYSTEM_ALARM_AUTO_REPORT"
-	elseif fid_code == 0x3014 then code_name = "CE_7200_FID_SET_SVC_PROFILE"
-	elseif fid_code == 0x3015 then code_name = "CE_7200_FID_GET_SVC_PROFILE"
-	elseif fid_code == 0x3016 then code_name = "CE_7200_FID_DEL_SVC_PROFILE"	
-	elseif fid_code == 0x3017 then code_name = "CE_7200_FID_SET_SVC_INTERFACE"
-	elseif fid_code == 0x3018 then code_name = "CE_7200_FID_GET_SVC_INTERFACE"
-	elseif fid_code == 0x3019 then code_name = "CE_7200_FID_DEL_SVC_INTERFACE"
-	elseif fid_code == 0x301E then code_name = "CE_7200_FID_SET_MPLS_INTERFACE"
-	elseif fid_code == 0x301F then code_name = "CE_7200_FID_GET_MPLS_INTERFACE"
-	elseif fid_code == 0x3020 then code_name = "CE_7200_FID_DEL_MPLS_INTERFACE"
-	elseif fid_code == 0x3028 then code_name = "CE_7200_FID_SET_MPLS_TUNNEL"
-	elseif fid_code == 0x3029 then code_name = "CE_7200_FID_GET_MPLS_TUNNEL"
-	elseif fid_code == 0x302A then code_name = "CE_7200_FID_DEL_MPLS_TUNNEL"
-	elseif fid_code == 0x302B then code_name = "CE_7200_FID_SET_MPLS_TUNNEL_LSP"
-	elseif fid_code == 0x302C then code_name = "CE_7200_FID_GET_MPLS_TUNNEL_LSP"
-	elseif fid_code == 0x302D then code_name = "CE_7200_FID_DEL_MPLS_TUNNEL_LSP"
-	elseif fid_code == 0x3032 then code_name = "CE_7200_FID_SET_MPLS_TRANSIT"
-	elseif fid_code == 0x3033 then code_name = "CE_7200_FID_GET_MPLS_TRANSIT"
-	elseif fid_code == 0x3034 then code_name = "CE_7200_FID_DEL_MPLS_TRANSIT"
-	elseif fid_code == 0x303C then code_name = "CE_7200_FID_SET_PW_INTERFACE"
-	elseif fid_code == 0x303D then code_name = "CE_7200_FID_GET_PW_INTERFACE"
-	elseif fid_code == 0x303E then code_name = "CE_7200_FID_DEL_PW_INTERFACE"
-	elseif fid_code == 0x3046 then code_name = "CE_7200_FID_SET_VPLS"
-	elseif fid_code == 0x3047 then code_name = "CE_7200_FID_GET_VPLS"
-	elseif fid_code == 0x3048 then code_name = "CE_7200_FID_DEL_VPLS"
-	else   code_name = "Unknown" end
-	return code_name
+	local ccode_name = "Unknown"
+	    if fid_code == 0x0041 then ccode_name = "SET_SW_UPDATE_INFO"
+	elseif fid_code == 0x0050 then ccode_name = "GET_SYSTEM_CPU_INFO"
+	elseif fid_code == 0x0051 then ccode_name = "SET_SYSTEM_CPU_THRESHOLD"
+	elseif fid_code == 0x0060 then ccode_name = "GET_SYSTEM_MEMORY_INFO"
+	elseif fid_code == 0x0061 then ccode_name = "SET_SYSTEM_MEMORY_THRESHOLD"
+	elseif fid_code == 0x0070 then ccode_name = "GET_SYSTEM_FAN_INFO"
+	elseif fid_code == 0x0071 then ccode_name = "SET_SYSTEM_FAN_OPER"
+	elseif fid_code == 0x0080 then ccode_name = "GET_SYSTEM_TEMP_INFO"
+	elseif fid_code == 0x0081 then ccode_name = "SET_SYSTEM_TEMPERATURE_OVER"
+	elseif fid_code == 0x0093 then ccode_name = "GET_SYSTEM_ALARM_REPORT"
+	elseif fid_code == 0x0094 then ccode_name = "DEL_SYSTEM_ALARM_REPORT"
+	elseif fid_code == 0x0095 then ccode_name = "GET_SYSTEM_ALARM_HISTORY"
+	elseif fid_code == 0x0096 then ccode_name = "DEL_SYSTEM_ALARM_HISTORY"
+	elseif fid_code == 0x0097 then ccode_name = "GET_SYSTEM_ALARM_AUTO_REPORT"
+	elseif fid_code == 0x3014 then ccode_name = "CE_7200_FID_SET_SVC_PROFILE"
+	elseif fid_code == 0x3015 then ccode_name = "CE_7200_FID_GET_SVC_PROFILE"
+	elseif fid_code == 0x3016 then ccode_name = "CE_7200_FID_DEL_SVC_PROFILE"	
+	elseif fid_code == 0x3017 then ccode_name = "CE_7200_FID_SET_SVC_INTERFACE"
+	elseif fid_code == 0x3018 then ccode_name = "CE_7200_FID_GET_SVC_INTERFACE"
+	elseif fid_code == 0x3019 then ccode_name = "CE_7200_FID_DEL_SVC_INTERFACE"
+	elseif fid_code == 0x301E then ccode_name = "CE_7200_FID_SET_MPLS_INTERFACE"
+	elseif fid_code == 0x301F then ccode_name = "CE_7200_FID_GET_MPLS_INTERFACE"
+	elseif fid_code == 0x3020 then ccode_name = "CE_7200_FID_DEL_MPLS_INTERFACE"
+	elseif fid_code == 0x3028 then ccode_name = "CE_7200_FID_SET_MPLS_TUNNEL"
+	elseif fid_code == 0x3029 then ccode_name = "CE_7200_FID_GET_MPLS_TUNNEL"
+	elseif fid_code == 0x302A then ccode_name = "CE_7200_FID_DEL_MPLS_TUNNEL"
+	elseif fid_code == 0x302B then ccode_name = "CE_7200_FID_SET_MPLS_TUNNEL_LSP"
+	elseif fid_code == 0x302C then ccode_name = "CE_7200_FID_GET_MPLS_TUNNEL_LSP"
+	elseif fid_code == 0x302D then ccode_name = "CE_7200_FID_DEL_MPLS_TUNNEL_LSP"
+	elseif fid_code == 0x3032 then ccode_name = "CE_7200_FID_SET_MPLS_TRANSIT"
+	elseif fid_code == 0x3033 then ccode_name = "CE_7200_FID_GET_MPLS_TRANSIT"
+	elseif fid_code == 0x3034 then ccode_name = "CE_7200_FID_DEL_MPLS_TRANSIT"
+	elseif fid_code == 0x303C then ccode_name = "CE_7200_FID_SET_PW_INTERFACE"
+	elseif fid_code == 0x303D then ccode_name = "CE_7200_FID_GET_PW_INTERFACE"
+	elseif fid_code == 0x303E then ccode_name = "CE_7200_FID_DEL_PW_INTERFACE"
+	elseif fid_code == 0x3046 then ccode_name = "CE_7200_FID_SET_VPLS"
+	elseif fid_code == 0x3047 then ccode_name = "CE_7200_FID_GET_VPLS"
+	elseif fid_code == 0x3048 then ccode_name = "CE_7200_FID_DEL_VPLS"
+	else   ccode_name = "Unknown" end
+	return ccode_name
 end
 
 function get_rot_cod_name(fid_code)
-	local code_name = "Unknown"
-	    if fid_code == 0x0022 then code_name = "SMI_UT7400_MSG_SYS_GET_SYSTEM_ALARM_REPORT"
-	elseif fid_code == 0x0023 then code_name = "SMI_UT7400_MSG_SYS_DEL_SYSTEM_ALARM_REPORT"
-	elseif fid_code == 0x0024 then code_name = "SMI_UT7400_MSG_SYS_GET_SYSTEM_ALARM_HISTORY"
-	elseif fid_code == 0x0025 then code_name = "SMI_UT7400_MSG_SYS_DEL_SYSTEM_ALARM_HISTORY"
-	elseif fid_code == 0x1001 then code_name = "UT_7400_FID_SET_LINK_PORT"
-	elseif fid_code == 0x1002 then code_name = "UT_7400_FID_GET_LINK_PORT"
-	elseif fid_code == 0x1003 then code_name = "UT_7400_FID_DEL_LINK_PORT"
-	elseif fid_code == 0x3014 then code_name = "SMI_7400_FID_SET_MPLS_INTERFACE"
-	elseif fid_code == 0x3015 then code_name = "SMI_7400_FID_GET_MPLS_INTERFACE"
-	elseif fid_code == 0x3016 then code_name = "SMI_7400_FID_DEL_MPLS_INTERFACE"
-	elseif fid_code == 0x3017 then code_name = "SMI_U7400_FID_SET_SVC_PROFILE"
-	elseif fid_code == 0x3018 then code_name = "SMI_U7400_FID_GET_SVC_PROFILE"
-	elseif fid_code == 0x3019 then code_name = "SMI_U7400_FID_DEL_SVC_PROFILE"
-	elseif fid_code == 0x301A then code_name = "SMI_U7400_FID_SET_SVC_INTERFACE"
-	elseif fid_code == 0x301B then code_name = "SMI_U7400_FID_GET_SVC_INTERFACE"
-	elseif fid_code == 0x301C then code_name = "SMI_U7400_FID_DEL_SVC_INTERFACE"
-	elseif fid_code == 0x301E then code_name = "SMI_7400_FID_SET_MPLS_TUNNEL"
-	elseif fid_code == 0x301F then code_name = "SMI_7400_FID_GET_MPLS_TUNNEL"
-	elseif fid_code == 0x3020 then code_name = "SMI_7400_FID_DEL_MPLS_TUNNEL"
-	elseif fid_code == 0x3021 then code_name = "SMI_7400_FID_SET_MPLS_TUNNEL_LSP"
-	elseif fid_code == 0x3022 then code_name = "SMI_7400_FID_GET_MPLS_TUNNEL_LSP"
-	elseif fid_code == 0x3023 then code_name = "SMI_7400_FID_DEL_MPLS_TUNNEL_LSP"
-	elseif fid_code == 0x3028 then code_name = "SMI_U7400_FID_SET_MPLS_TRANSIT"
-	elseif fid_code == 0x3029 then code_name = "SMI_U7400_FID_GET_MPLS_TRANSIT"
-	elseif fid_code == 0x302A then code_name = "SMI_U7400_FID_DEL_MPLS_TRANSIT"
-	elseif fid_code == 0x3032 then code_name = "SMI_U7400_FID_SET_PW_INTERFACE"
-	elseif fid_code == 0x3033 then code_name = "SMI_U7400_FID_GET_PW_INTERFACE"
-	elseif fid_code == 0x3034 then code_name = "SMI_U7400_FID_DEL_PW_INTERFACE"
-	elseif fid_code == 0x3060 then code_name = "SMI_U7400_FID_SET_VPLS"
-	elseif fid_code == 0x3061 then code_name = "SMI_U7400_FID_GET_VPLS"
-	elseif fid_code == 0x3062 then code_name = "SMI_U7400_FID_DEL_VPLS"
-	elseif fid_code == 0x3010 then code_name = "SMI_U7400_FID_SET_AC_INTERFACE"
-	elseif fid_code == 0x3011 then code_name = "SMI_U7400_FID_GET_AC_INTERFACE"
-	elseif fid_code == 0x3012 then code_name = "SMI_U7400_FID_DEL_AC_INTERFACE"
-	elseif fid_code == 0x3070 then code_name = "SMI_U7400_FID_SET_MAC_LIMIT_PROFILE"
-	elseif fid_code == 0x3071 then code_name = "SMI_U7400_FID_GET_MAC_LIMIT_PROFILE"
-	elseif fid_code == 0x3072 then code_name = "SMI_U7400_FID_DEL_MAC_LIMIT_PROFILE"
-	elseif fid_code == 0x0040 then code_name = "UT_7400_SMI_MSG_SYS_SW_UPDATE_OPEN"
-	elseif fid_code == 0x0041 then code_name = "UT_7400_SMI_MSG_SYS_SW_UPDATE_WRITE"
-	elseif fid_code == 0x0042 then code_name = "UT_7400_SMI_MSG_SYS_SW_UPDATE_CLOSE"
-	elseif fid_code == 0x004B then code_name = "UT_7400_SMI_MSG_SYS_SW_PROV_BACKUP"
-	elseif fid_code == 0x004C then code_name = "UT_7400_SMI_MSG_SYS_SW_PROV_RESTORE"
-	else   code_name = "Unknown" end
-	return code_name
+	local rcode_name = "Unknown"
+	    if fid_code == 0x0022 then rcode_name = "SMI_UT7400_MSG_SYS_GET_SYSTEM_ALARM_REPORT"
+	elseif fid_code == 0x0023 then rcode_name = "SMI_UT7400_MSG_SYS_DEL_SYSTEM_ALARM_REPORT"
+	elseif fid_code == 0x0024 then rcode_name = "SMI_UT7400_MSG_SYS_GET_SYSTEM_ALARM_HISTORY"
+	elseif fid_code == 0x0025 then rcode_name = "SMI_UT7400_MSG_SYS_DEL_SYSTEM_ALARM_HISTORY"
+	elseif fid_code == 0x1001 then rcode_name = "UT_7400_FID_SET_LINK_PORT"
+	elseif fid_code == 0x1002 then rcode_name = "UT_7400_FID_GET_LINK_PORT"
+	elseif fid_code == 0x1003 then rcode_name = "UT_7400_FID_DEL_LINK_PORT"
+	elseif fid_code == 0x3014 then rcode_name = "SMI_7400_FID_SET_MPLS_INTERFACE"
+	elseif fid_code == 0x3015 then rcode_name = "SMI_7400_FID_GET_MPLS_INTERFACE"
+	elseif fid_code == 0x3016 then rcode_name = "SMI_7400_FID_DEL_MPLS_INTERFACE"
+	elseif fid_code == 0x3017 then rcode_name = "SMI_U7400_FID_SET_SVC_PROFILE"
+	elseif fid_code == 0x3018 then rcode_name = "SMI_U7400_FID_GET_SVC_PROFILE"
+	elseif fid_code == 0x3019 then rcode_name = "SMI_U7400_FID_DEL_SVC_PROFILE"
+	elseif fid_code == 0x301A then rcode_name = "SMI_U7400_FID_SET_SVC_INTERFACE"
+	elseif fid_code == 0x301B then rcode_name = "SMI_U7400_FID_GET_SVC_INTERFACE"
+	elseif fid_code == 0x301C then rcode_name = "SMI_U7400_FID_DEL_SVC_INTERFACE"
+	elseif fid_code == 0x301E then rcode_name = "SMI_7400_FID_SET_MPLS_TUNNEL"
+	elseif fid_code == 0x301F then rcode_name = "SMI_7400_FID_GET_MPLS_TUNNEL"
+	elseif fid_code == 0x3020 then rcode_name = "SMI_7400_FID_DEL_MPLS_TUNNEL"
+	elseif fid_code == 0x3021 then rcode_name = "SMI_7400_FID_SET_MPLS_TUNNEL_LSP"
+	elseif fid_code == 0x3022 then rcode_name = "SMI_7400_FID_GET_MPLS_TUNNEL_LSP"
+	elseif fid_code == 0x3023 then rcode_name = "SMI_7400_FID_DEL_MPLS_TUNNEL_LSP"
+	elseif fid_code == 0x3028 then rcode_name = "SMI_U7400_FID_SET_MPLS_TRANSIT"
+	elseif fid_code == 0x3029 then rcode_name = "SMI_U7400_FID_GET_MPLS_TRANSIT"
+	elseif fid_code == 0x302A then rcode_name = "SMI_U7400_FID_DEL_MPLS_TRANSIT"
+	elseif fid_code == 0x3032 then rcode_name = "SMI_U7400_FID_SET_PW_INTERFACE"
+	elseif fid_code == 0x3033 then rcode_name = "SMI_U7400_FID_GET_PW_INTERFACE"
+	elseif fid_code == 0x3034 then rcode_name = "SMI_U7400_FID_DEL_PW_INTERFACE"
+	elseif fid_code == 0x3060 then rcode_name = "SMI_U7400_FID_SET_VPLS"
+	elseif fid_code == 0x3061 then rcode_name = "SMI_U7400_FID_GET_VPLS"
+	elseif fid_code == 0x3062 then rcode_name = "SMI_U7400_FID_DEL_VPLS"
+	elseif fid_code == 0x3010 then rcode_name = "SMI_U7400_FID_SET_AC_INTERFACE"
+	elseif fid_code == 0x3011 then rcode_name = "SMI_U7400_FID_GET_AC_INTERFACE"
+	elseif fid_code == 0x3012 then rcode_name = "SMI_U7400_FID_DEL_AC_INTERFACE"
+	elseif fid_code == 0x3070 then rcode_name = "SMI_U7400_FID_SET_MAC_LIMIT_PROFILE"
+	elseif fid_code == 0x3071 then rcode_name = "SMI_U7400_FID_GET_MAC_LIMIT_PROFILE"
+	elseif fid_code == 0x3072 then rcode_name = "SMI_U7400_FID_DEL_MAC_LIMIT_PROFILE"
+	elseif fid_code == 0x0040 then rcode_name = "UT_7400_SMI_MSG_SYS_SW_UPDATE_OPEN"
+	elseif fid_code == 0x0041 then rcode_name = "UT_7400_SMI_MSG_SYS_SW_UPDATE_WRITE"
+	elseif fid_code == 0x0042 then rcode_name = "UT_7400_SMI_MSG_SYS_SW_UPDATE_CLOSE"
+	elseif fid_code == 0x004B then rcode_name = "UT_7400_SMI_MSG_SYS_SW_PROV_BACKUP"
+	elseif fid_code == 0x004C then rcode_name = "UT_7400_SMI_MSG_SYS_SW_PROV_RESTORE"
+	else   rcode_name = "Unknown" end
+	return rcode_name
 end
 
 function get_sys_name(sys)
@@ -2930,8 +3155,8 @@ function get_sys_name(sys)
   elseif sys == 0x1A then sys_name = "UT5200"
   elseif sys == 0x1B then sys_name = "CE5300"
   elseif sys == 0x1B then sys_name = "UT5300"
-  elseif sys == 0x1C then sys_name = "CE5400"
-  elseif sys == 0x1C then sys_name = "UT5400"
+  elseif sys == 0x1C then sys_name = "CE7400_V2"
+  elseif sys == 0x1C then sys_name = "UT8400_V2"
   elseif sys == 0x1D then sys_name = "CE5500"
   elseif sys == 0x1D then sys_name = "UT5500"
   elseif sys == 0x1E then sys_name = "CE9000"
