@@ -64,3 +64,23 @@ git add ptn/api/src/main/yang/tsdn-tunnel-xc.yang
 git add ptn/api/src/main/yang/tsdn-tunnel.yang
 git add ptn/api/src/main/yang/yang-ext.yang 
 ```
+## 4.Configuration to call karaf
+```
+tsdn:~/Documents/distribution-karaf-0.4.4-Beryllium-SR4.0.8.0/etc$vim lgup.plugin.manager.cfg 
+tsdn:~/Documents/distribution-karaf-0.4.4-Beryllium-SR4.0.8.0/etc$cat lgup.plugin.manager.cfg 
+plugins.rootDir=/Users/jdleegui/tsdn_plugins
+plugin.manager.log.on=true
+plugin.manager.jdbc.datasource.default_name=ds-oracledb
+plugin.manager.log_level=debug
+plugin.count=1
+plugin.1.id=7412
+plugin.1.provider.count=1
+plugin.1.provider.1.id=7412_1
+plugin.1.provider.1.url=172.31.12.127
+plugin.1.provider.1.userName=admin
+plugin.1.provider.1.password=admin
+tsdn:~/Documents/distribution-karaf-0.4.4-Beryllium-SR4.0.8.0/etc$
+tsdn:~/Documents/workspace/CSU/SDK_0_8_0/tsdn_plugin_api$
+tsdn:~/Documents/workspace/CSU/SDK_0_8_0/tsdn_plugin_api$mvn clean install -DskipTests -Dcheskstyle.skip=true > /tmp/error.txt && cp target/tsdn-plugin-api-0.8.0.jar ~/Documents/distribution-karaf-0.4.4-Beryllium-SR4.0.8.0/deploy/tsdn-plugin-api-0.8.0.jar 
+tsdn:~/Documents/workspace/CSU/SDK_0_8_0/tsdn_plugin_api$mvn clean install -DskipTests -Dcheckstyle.skip=true > /tmp/error.txt && cp target/tsdn-plugin-api-0.8.0.jar ~/Documents/distribution-karaf-0.4.4-Beryllium-SR4.0.8.0/deploy/tsdn-plugin-api-0.8.0.jar 
+```
