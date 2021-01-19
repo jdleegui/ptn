@@ -60,8 +60,6 @@ function ptnems_protocol.dissector(buffer, pinfo, tree)
   while (p_len < length) do
   local i = p_len
   subtree:add(msg_hdr, buffer(i,2))
-  local hdr = buffer(i,2)
-  subtree:add(msg_hdr, buffer(i,2)):append_text(":(i="..i..")hdr="..hdr..")")
   if (buffer(i,2):uint() ~= 47806) then return end
   i = i+2
   local pay_len = buffer(i,2):uint()
@@ -2513,7 +2511,7 @@ function ptnems_protocol.dissector(buffer, pinfo, tree)
   elseif fid_name == "OTN_ADD_ODU_BIND_SVC" or fid_name == "OTN_DEL_ODU_BIND_SVC" then
   if (length <= i) then return end
 	while (i < length) do
-	    subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_odu_bind_service_add_t::svc_type[1=SVC,2=SDH,4=MPLS,8=PDH](i="..i..")")
+	    subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_odu_bind_service_add_t::svc_type[1=SVC,2=SDH,4=MPLS,8=PDH,16=ODUX](i="..i..")")
 		local svc_type = buffer(i,4):uint()
 		i = i+4
 	    subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_odu_bind_service_add_t::smi_pid->pid_type(i="..i..")")
@@ -2833,6 +2831,40 @@ function ptnems_protocol.dissector(buffer, pinfo, tree)
 		i = i+1
 		subtree:add(msg_uint08, buffer(i,1)):append_text(":smi_odu_trail_cfg_t->p_trail->tcm_alm_mon")
 		i = i+1
+	end
+  elseif fid_name == "OTN_SET_ODU_XC_CFG" or fid_name == "OTN_DEL_ODU_XC_CFG"  or fid_name == "OTN_GET_ODU_XC_CFG" then
+    if (length <= i) then return end
+	while (i < length) do
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_odu_xc_cfg_t::smi_pid->pid_type(i="..i..")len="..length..")")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_odu_xc_cfg_t::smi_pid->ne_type")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_odu_xc_cfg_t::smi_pid->card_id")
+		i = i+4
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_odu_xc_cfg_t::smi_pid->slot_id")
+		i = i+2
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_odu_xc_cfg_t::smi_pid->port_id")
+		i = i+2
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_odu_xc_cfg_t->flag")
+		i = i+4
+		subtree:add(msg_uint16, buffer(i,2)):append_text(":smi_odu_xc_cfg_t->trail_id")
+		i = i+2
+		subtree:add(msg_dst_add, buffer(i,4)):append_text(":smi_odu_xc_cfg_t->igr_lsr_id")
+		i = i+4
+		subtree:add(msg_dst_add, buffer(i,4)):append_text(":smi_odu_xc_cfg_t->egr_lsr_id")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_odu_xc_cfg_t->instance(0=W,1=P)")
+		i = i+4
+		subtree:add(msg_uint32, buffer(i,4)):append_text(":smi_odu_xc_cfg_t->if_type")
+		i = i+4
+		subtree:add(buffer(i,32):string()):append_text(":smi_odu_xc_cfg_t->name")
+		i = i+32
+		subtree:add(buffer(i,32):string()):append_text(":smi_odu_xc_cfg_t->desc")
+		i = i+32
+		subtree:add(buffer(i,32):string()):append_text(":smi_odu_xc_cfg_t->east")
+		i = i+32
+		subtree:add(buffer(i,32):string()):append_text(":smi_odu_xc_cfg_t->west")
+		i = i+32
 	end
   elseif fid_name == "SYS_PROTECTION_SWITCH" or fid_name == "SYS_PROTECTION_SWITCH" then
   if (length <= i) then return end
